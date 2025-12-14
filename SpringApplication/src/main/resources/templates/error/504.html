@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>504 - Gateway Timeout</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css}"/>
+    <style>
+        .error-container {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .error-code {
+            font-size: 120px;
+            font-weight: bold;
+            color: #17a2b8;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/}">BDBT Spring Boot Project</a>
+    </div>
+</nav>
+
+<div class="container error-container">
+    <div class="text-center">
+        <!-- Kod błędu -->
+        <div class="error-code">504</div>
+
+        <!-- Tytuł -->
+        <h1 class="display-4 mb-4 text-info">Gateway Timeout</h1>
+
+        <!-- Opis -->
+        <p class="lead text-muted mb-4">
+            ⏱️ The server took too long to respond.
+        </p>
+
+        <div class="alert alert-info d-inline-block" role="alert">
+            <strong>What does this mean?</strong><br/>
+            The server didn't receive a timely response from an upstream server.
+            This is usually temporary and trying again might help.
+        </div>
+
+        <!-- URL który spowodował błąd -->
+        <p class="text-muted mt-3" th:if="${errorUrl}">
+            Requested URL: <code th:text="${errorUrl}"></code>
+        </p>
+
+        <!-- Sugestie -->
+        <div class="card mt-4 d-inline-block text-left" style="max-width: 500px;">
+            <div class="card-body">
+                <h5 class="card-title">💡 What can you do?</h5>
+                <ul class="mb-0">
+                    <li>Wait a moment and try refreshing the page</li>
+                    <li>Check your internet connection</li>
+                    <li>Try again in a few minutes</li>
+                    <li>Contact support if the issue persists</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Przyciski -->
+        <div class="mt-4">
+            <a href="javascript:location.reload()" class="btn btn-info btn-lg mr-2">
+                🔄 Refresh Page
+            </a>
+            <a th:href="@{/index}" class="btn btn-primary btn-lg mr-2">
+                🏠 Go Home
+            </a>
+            <a href="javascript:history.back()" class="btn btn-secondary btn-lg">
+                ⬅️ Go Back
+            </a>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>403 - Access Denied</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css}"/>
+    <style>
+        .error-container {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .error-code {
+            font-size: 120px;
+            font-weight: bold;
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/}">BDBT Spring Boot Project</a>
+    </div>
+</nav>
+
+<div class="container error-container">
+    <div class="text-center">
+        <!-- Kod błędu -->
+        <div class="error-code">403</div>
+
+        <!-- Tytuł -->
+        <h1 class="display-4 mb-4 text-danger">Access Denied</h1>
+
+        <!-- Opis -->
+        <p class="lead text-muted mb-4">
+             Sorry, you don't have permission to access this resource.
+        </p>
+
+        <div class="alert alert-warning d-inline-block" role="alert">
+            <strong>Why am I seeing this?</strong><br/>
+            You may need to log in with an account that has the required permissions,
+            or this resource might be restricted to certain users only.
+        </div>
+
+        <!-- URL który spowodował błąd -->
+        <p class="text-muted mt-3" th:if="${errorUrl}">
+            Requested URL: <code th:text="${errorUrl}"></code>
+        </p>
+
+        <!-- Przyciski -->
+        <div class="mt-4">
+            <a th:href="@{/index}" class="btn btn-primary btn-lg mr-2">
+                 Go Home
+            </a>
+            <a th:href="@{/login}" class="btn btn-success btn-lg mr-2">
+                 Login
+            </a>
+            <a href="javascript:history.back()" class="btn btn-secondary btn-lg">
+                 Go Back
+            </a>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>500 - Internal Server Error</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css}"/>
+    <style>
+        .error-container {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .error-code {
+            font-size: 120px;
+            font-weight: bold;
+            color: #ffc107;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/}">BDBT Spring Boot Project</a>
+    </div>
+</nav>
+
+<div class="container error-container">
+    <div class="text-center">
+        <!-- Kod błędu -->
+        <div class="error-code">500</div>
+
+        <!-- Tytuł -->
+        <h1 class="display-4 mb-4 text-warning">Internal Server Error</h1>
+
+        <!-- Opis -->
+        <p class="lead text-muted mb-4">
+            🔧 Oops! Something went wrong on our end.
+        </p>
+
+        <div class="alert alert-danger d-inline-block" role="alert">
+            <strong>What happened?</strong><br/>
+            The server encountered an unexpected condition that prevented it from fulfilling your request.
+            Our team has been notified and we're working on it!
+        </div>
+
+        <!-- Szczegóły błędu (opcjonalnie, tylko w development) -->
+        <p class="text-muted mt-3" th:if="${errorMessage}">
+            Error details: <code th:text="${errorMessage}"></code>
+        </p>
+
+        <p class="text-muted" th:if="${errorUrl}">
+            Requested URL: <code th:text="${errorUrl}"></code>
+        </p>
+
+        <!-- Przyciski -->
+        <div class="mt-4">
+            <a th:href="@{/index}" class="btn btn-primary btn-lg mr-2">
+                🏠 Go Home
+            </a>
+            <a href="javascript:location.reload()" class="btn btn-warning btn-lg mr-2">
+                🔄 Try Again
+            </a>
+            <a href="javascript:history.back()" class="btn btn-secondary btn-lg">
+                ⬅️ Go Back
+            </a>
+        </div>
+
+        <p class="text-muted mt-4 small">
+            If this problem persists, please contact support with error code: <strong th:text="${statusCode}">500</strong>
+        </p>
+    </div>
+</div>
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+</body>
+</html>
