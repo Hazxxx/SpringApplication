@@ -2,7 +2,6 @@ package bada_project.SpringApplication;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,20 +33,30 @@ public class SecurityConfiguration {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance(); // ⚠️ dev only
+        return NoOpPasswordEncoder.getInstance(); // DEV ONLY
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/index").permitAll()
+                        .requestMatchers("/", "/index", "/login").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/webjars/**").permitAll()
+                        .requestMatchers("/main").authenticated()
                         .anyRequest().authenticated()
                 )
-                .formLogin(Customizer.withDefaults())
-                .logout(Customizer.withDefaults());
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/main", true)
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/index")
+                        .permitAll()
+                );
 
         return http.build();
     }
-
 }
