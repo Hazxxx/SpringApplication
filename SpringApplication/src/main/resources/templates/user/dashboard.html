@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>User Dashboard</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css}"/>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary static-top">
+    <div class="container">
+        <a class="navbar-brand" href="/">BDBT Spring Boot - User Panel</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/index}">Home</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">User Dashboard
+                        <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <!-- Wyświetlamy nazwę użytkownika z modelu -->
+                <li class="nav-item">
+                    <span class="nav-link" style="color:lightcyan;">
+                        Logged as: <b style="text-transform:capitalize" th:text="${username}">Guest</b>
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 mt-5">
+
+            <!-- Powitanie -->
+            <h2 class="text-primary">👤 User Dashboard</h2>
+            <p class="lead">
+                Welcome <b style="color:#007bff; text-transform:capitalize" th:text="${username}">User</b>,
+                this is your personal user panel.
+            </p>
+
+            <hr/>
+
+            <!-- Karta z uprawnieniami -->
+            <div class="card border-primary mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Your Roles & Permissions</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Active Roles:</strong></p>
+                    <ul>
+                        <!-- Iterujemy przez role -->
+                        <li th:each="role : ${roles}" th:text="${role.authority}">ROLE_USER</li>
+                    </ul>
+                    <p class="mt-3"><strong>User Capabilities:</strong></p>
+                    <ul>
+                        <li>View and edit your personal profile</li>
+                        <li>Access your assigned resources</li>
+                        <li>Submit requests and forms</li>
+                        <li>View your activity history</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Przyciski szybkich akcji -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <a href="#" class="btn btn-primary mr-2 mb-2"> My Profile</a>
+                    <a href="#" class="btn btn-info mr-2 mb-2"> My Documents</a>
+                    <a href="#" class="btn btn-success mr-2 mb-2"> Messages</a>
+                    <a href="#" class="btn btn-warning mr-2 mb-2"> Settings</a>
+                </div>
+            </div>
+
+            <!-- Formularz wylogowania -->
+            <form method="post" th:action="@{/logout}">
+                <button class="btn btn-danger" type="submit"> Logout</button>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap scripts -->
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+</body>
+</html>

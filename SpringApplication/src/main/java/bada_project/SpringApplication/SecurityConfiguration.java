@@ -25,7 +25,7 @@ public class SecurityConfiguration {
 
         UserDetails admin = User.withUsername("admin")
                 .password("admin")
-                .roles("ADMIN")
+                .roles("ADMIN", "USER")
                 .build();
 
         return new InMemoryUserDetailsManager(user, admin);
@@ -41,9 +41,20 @@ public class SecurityConfiguration {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                        // Publiczne endpointy
                         .requestMatchers("/", "/index", "/login").permitAll()
                         .requestMatchers("/css/**", "/js/**", "/webjars/**").permitAll()
+
+                        // Endpoint tylko dla ADMIN
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+
+                        // Endpoint dla USER (admin też ma dostęp bo ma rolę USER)
+                        .requestMatchers("/user/**").hasRole("USER")
+
+                        // Główna strona dla zalogowanych
                         .requestMatchers("/main").authenticated()
+
+                        // Wszystko inne wymaga uwierzytelnienia
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -55,7 +66,10 @@ public class SecurityConfiguration {
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/index")
                         .permitAll()
-                );
+                )
+                .exceptionHandling(ex -> ex
+                        .accessDeniedPage("/access-denied")
+                );;
 
         return http.build();
     }
