@@ -29,10 +29,10 @@
 	<properties>
 		<java.version>21</java.version>
 		<!-- New adding -->
-		<bootstrap.version>4.0.0-2</bootstrap.version>
+		<bootstrap.version>5.0.0-beta1</bootstrap.version>
 		<webjars-locator.version>0.30</webjars-locator.version>
 		<lombok.version>1.18.2</lombok.version>
-		<commons-validator.version>1.6</commons-validator.version>
+		<commons-validator.version>1.10.0</commons-validator.version>
 	</properties>
 	<dependencies>
 		<dependency>

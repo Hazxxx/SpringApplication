@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
@@ -19,21 +20,26 @@ public class SecurityConfiguration {
     @Bean
     public UserDetailsService userDetailsService() {
         UserDetails user = User.withUsername("user")
-                .password("user")
+                .password(passwordEncoder().encode("user"))
+                .roles("USER")
+                .build();
+
+        UserDetails user1 = User.withUsername("user1")
+                .password(passwordEncoder().encode("user1"))
                 .roles("USER")
                 .build();
 
         UserDetails admin = User.withUsername("admin")
-                .password("admin")
+                .password(passwordEncoder().encode("admin"))
                 .roles("ADMIN", "USER")
                 .build();
 
-        return new InMemoryUserDetailsManager(user, admin);
+        return new InMemoryUserDetailsManager(user, user1, admin);
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance(); // DEV ONLY
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -48,7 +54,7 @@ public class SecurityConfiguration {
                         // Endpoint tylko dla ADMIN
                         .requestMatchers("/admin/**").hasRole("ADMIN")
 
-                        // Endpoint dla USER (admin też ma dostęp bo ma rolę USER)
+                        // Endpoint dla USER
                         .requestMatchers("/user/**").hasRole("USER")
 
                         // Główna strona dla zalogowanych
