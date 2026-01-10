@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SpringApplication/SpringApplication.iml" filepath="$PROJECT_DIR$/SpringApplication/SpringApplication.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/SpringApplication.iml" filepath="$PROJECT_DIR$/.idea/SpringApplication.iml" />
     </modules>
   </component>
 </project>

@@ -49,7 +49,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         // Publiczne endpointy
                         .requestMatchers("/", "/index", "/login").permitAll()
-                        .requestMatchers("/css/**", "/js/**", "/webjars/**").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/webjars/**", "/assets/**").permitAll()
 
                         // Endpoint tylko dla ADMIN
                         .requestMatchers("/admin/**").hasRole("ADMIN")
