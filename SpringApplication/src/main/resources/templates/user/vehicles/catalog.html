@@ -1,0 +1,319 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Vehicle Catalog</title>
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.0.0-beta1/css/bootstrap.min.css}"/>
+
+    <style>
+        html, body { height: 100%; }
+
+        body {
+            margin: 0;
+            background: url('/assets/img/porscheview3.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+        }
+
+        /* NAVBAR */
+        .theme-nav {
+            background: rgba(10, 12, 14, 0.55) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.10);
+            padding: 10px 0;
+        }
+
+        .theme-nav .navbar-brand {
+            font-weight: 700;
+            color: rgba(255,255,255,.92) !important;
+        }
+
+        .theme-nav .nav-link {
+            color: rgba(255,255,255,.78) !important;
+            padding: .45rem .75rem;
+            border-radius: 10px;
+            transition: all .2s ease;
+        }
+
+        .theme-nav .nav-link:hover {
+            color: rgba(255,255,255,.95) !important;
+            background: rgba(255,255,255,.10);
+        }
+
+        /* PAGE OVERLAY */
+        .page-overlay {
+            min-height: calc(100vh - 64px);
+            background: linear-gradient(
+                    90deg,
+                    rgba(0,0,0,0.75) 0%,
+                    rgba(0,0,0,0.45) 45%,
+                    rgba(0,0,0,0.18) 100%
+            );
+            padding: 44px 0;
+        }
+
+        /* GLASS CARDS */
+        .glass-card {
+            border-radius: 18px;
+            background: rgba(0,0,0,0.35);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.12);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .vehicle-card {
+            border-radius: 14px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .vehicle-card:hover {
+            background: rgba(255,255,255,0.12);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        .vehicle-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .vehicle-price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #4CAF50;
+            margin: 10px 0;
+        }
+
+        .vehicle-specs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 12px 0;
+        }
+
+        .spec-badge {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .form-control, .form-select {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.4);
+            color: white;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+
+        .form-select option {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        .muted { color: rgba(255,255,255,0.70); }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark static-top theme-nav">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+            <img th:src="@{/assets/img/aando8.png}" alt="Logo" style="height:26px; margin-right:10px;">
+            Alpha&Omega Motors
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/user/dashboard}">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/user/profile}">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <form method="post" th:action="@{/logout}" class="d-inline">
+                        <button class="nav-link btn btn-link">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- CONTENT -->
+<div class="page-overlay">
+    <div class="container">
+
+        <!-- HEADER -->
+        <div class="glass-card">
+            <h2 class="mb-1">Vehicle Catalog</h2>
+            <p class="muted mb-0">Browse available vehicles in our showrooms</p>
+        </div>
+
+        <!-- FILTERS -->
+        <div class="glass-card">
+            <h5 class="mb-3">Search Filters</h5>
+            <form th:action="@{/user/vehicles/search}" method="post" th:object="${filter}">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Brand</label>
+                        <select class="form-select" th:field="*{nazwaMarki}">
+                            <option value="">All</option>
+                            <option th:each="marka : ${marki}"
+                                    th:value="${marka}"
+                                    th:text="${marka}"></option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Body Type</label>
+                        <select class="form-select" th:field="*{typNadwozia}">
+                            <option value="">All</option>
+                            <option th:each="typ : ${typyNadwozia}"
+                                    th:value="${typ}"
+                                    th:text="${typ}"></option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Fuel Type</label>
+                        <select class="form-select" th:field="*{typPaliwa}">
+                            <option value="">All</option>
+                            <option th:each="paliwo : ${typyPaliwa}"
+                                    th:value="${paliwo}"
+                                    th:text="${paliwo}"></option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Color</label>
+                        <input type="text" class="form-control" th:field="*{kolor}" placeholder="e.g. black">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Price From</label>
+                        <input type="number" class="form-control" th:field="*{cenaOd}" placeholder="0">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Price To</label>
+                        <input type="number" class="form-control" th:field="*{cenaDo}" placeholder="1000000">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Year From</label>
+                        <input type="number" class="form-control" th:field="*{rocznikOd}" placeholder="2000">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Year To</label>
+                        <input type="number" class="form-control" th:field="*{rocznikDo}" placeholder="2024">
+                    </div>
+
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary-custom me-2">
+                            Search
+                        </button>
+                        <a th:href="@{/user/vehicles}" class="btn btn-secondary">
+                            Clear Filters
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- VEHICLES LIST -->
+        <div class="glass-card">
+            <h5 class="mb-3">
+                Found vehicles: <span th:text="${vehicles.size()}">0</span>
+            </h5>
+
+            <div th:if="${vehicles.isEmpty()}" class="text-center py-5">
+                <p class="muted">No vehicles available matching your criteria</p>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 col-lg-4" th:each="vehicle : ${vehicles}">
+                    <div class="vehicle-card">
+                        <div class="vehicle-title" th:text="${vehicle.fullName}">
+                            Brand Model
+                        </div>
+
+                        <div class="muted" style="font-size:0.9rem">
+                            VIN: <span th:text="${vehicle.vin}">ABC123</span>
+                        </div>
+
+                        <div class="vehicle-price" th:text="${vehicle.priceFormatted}">
+                            100,000.00 PLN
+                        </div>
+
+                        <div class="vehicle-specs">
+                            <span class="spec-badge" th:text="${vehicle.rocznikModelowy}">2020</span>
+                            <span class="spec-badge" th:text="${vehicle.typNadwozia}">Sedan</span>
+                            <span class="spec-badge" th:text="${vehicle.typPaliwa}">Petrol</span>
+                            <span class="spec-badge" th:text="${vehicle.kolor}">Black</span>
+                            <span class="spec-badge" th:text="${vehicle.mocSilnika + ' HP'}">200 HP</span>
+                            <span class="spec-badge" th:text="${vehicle.pojemnoscFormatted}">2.0 L</span>
+                        </div>
+
+                        <div class="muted mb-2" style="font-size:0.85rem">
+                            Location: <span th:text="${vehicle.nazwaSalonu}">Showroom</span>,
+                            <span th:text="${vehicle.miastoSalonu}">City</span>
+                        </div>
+
+                        <a th:href="@{'/user/vehicles/' + ${vehicle.idPojazdu}}"
+                           class="btn btn-primary-custom btn-sm w-100">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

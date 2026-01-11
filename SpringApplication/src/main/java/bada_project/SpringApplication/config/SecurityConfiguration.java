@@ -40,6 +40,7 @@ public class SecurityConfiguration {
 
                         // User endpoints - both clients and employees
                         .requestMatchers("/user/**").hasRole("USER")
+                        .requestMatchers("/user/vehicles/**").hasRole("USER")
 
                         // Main page for authenticated users
                         .requestMatchers("/main").authenticated()

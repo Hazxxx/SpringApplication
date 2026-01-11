@@ -93,11 +93,29 @@
             border: 1px solid rgba(255,255,255,0.35);
             background: transparent;
             color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
         }
 
         .btn-ghost:hover {
             background: rgba(255,255,255,0.12);
             color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
         }
     </style>
 </head>
@@ -112,7 +130,7 @@
             Alpha&Omega Motors
         </a>
 
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
             <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -131,25 +149,20 @@
                 </li>
 
                 <li class="nav-item d-flex align-items-center">
-    <span class="nav-link" style="color: rgba(255,255,255,.85);">
-        Logged as:
-        <b style="text-transform:capitalize" sec:authentication="name">Guest</b>
-    </span>
+                    <span class="nav-link" style="color: rgba(255,255,255,.85);">
+                        Logged as:
+                        <b style="text-transform:capitalize" sec:authentication="name">Guest</b>
+                    </span>
                 </li>
 
                 <li class="nav-item">
                     <form method="post" th:action="@{/logout}" class="d-inline">
                         <button class="nav-link btn btn-link"
-                                style="
-                    color:rgba(255,255,255,.85);
-                    padding:.45rem .75rem;
-                    border-radius:10px;
-                ">
+                                style="color:rgba(255,255,255,.85); padding:.45rem .75rem; border-radius:10px;">
                             Logout
                         </button>
                     </form>
                 </li>
-
             </ul>
         </div>
     </div>
@@ -171,36 +184,53 @@
             </div>
         </div>
 
-        <!-- ROLES -->
-        <!-- <div class="glass-card p-4 mb-4">
-            <h5 class="mb-2">🔐 Your Roles</h5>
-            <div class="muted mb-2">Roles assigned to your account:</div>-->
-
-            <!-- Using Spring Security Thymeleaf extras -->
-        <!--<span class="pill" sec:authorize="hasRole('USER')">ROLE_USER</span>
-        <span class="pill" sec:authorize="hasRole('ADMIN')">ROLE_ADMIN</span> -->
-
-        <!-- Fallback if no roles -->
-        <!--<span class="pill" sec:authorize="!hasAnyRole('USER', 'ADMIN')">
-            (no roles assigned)
-        </span>
-    </div> -->
-
-    <!-- QUICK ACTIONS -->
-        <div class="glass-card p-4">
+        <!-- QUICK ACTIONS -->
+        <div class="glass-card p-4 mb-4">
             <h5 class="mb-3">⚡ Quick Actions</h5>
             <div class="d-flex flex-wrap gap-2">
-                <a class="btn btn-ghost" th:href="@{/user/profile}">My Profile</a>
-                <!-- <a class="btn btn-info" href="#">My Documents</a> -->
-                <!-- <a class="btn btn-success" href="#">Messages</a> -->
-                <a class="btn btn-ghost" href="#">Settings</a>
-                <a class="btn btn-ghost" th:href="@{/main}">Back to Main</a>
+                <a class="btn btn-primary-custom" th:href="@{/user/vehicles}">
+                     Browse our catalog
+                </a>
+                <a class="btn btn-ghost" th:href="@{/user/profile}">
+                     My Profile
+                </a>
+                <a class="btn btn-ghost" href="#">
+                    My reservations
+                </a>
+                <a class="btn btn-ghost" href="#">
+                    Settings
+                </a>
+            </div>
+        </div>
+
+        <!-- INFO SECTION -->
+        <div class="glass-card p-4">
+            <h5 class="mb-3">What can you do?</h5>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <div style="background: rgba(255,255,255,0.08); padding: 20px; border-radius: 12px;">
+                        <h6>Browse vehicles</h6>
+                        <p class="muted mb-0">Browse available vehicles, filter according to your preferences</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div style="background: rgba(255,255,255,0.08); padding: 20px; border-radius: 12px;">
+                        <h6>Reservations</h6>
+                        <p class="muted mb-0">Schedule a test drive or a visit in our salon</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div style="background: rgba(255,255,255,0.08); padding: 20px; border-radius: 12px;">
+                        <h6>Profile</h6>
+                        <p class="muted mb-0">Modify your personal data and address</p>
+                    </div>
+                </div>
             </div>
         </div>
 
     </div>
 </div>
 
-<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>
