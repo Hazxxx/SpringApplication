@@ -1,0 +1,218 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>My Profile</title>
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.0.0-beta1/css/bootstrap.min.css}"/>
+
+    <style>
+        html, body { height: 100%; }
+        body {
+            margin: 0;
+            background: url('/assets/img/porscheview3.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+        }
+        .theme-nav {
+            background: rgba(10, 12, 14, 0.55) !important;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.10);
+            padding: 10px 0;
+        }
+        .theme-nav .nav-link {
+            color: rgba(255,255,255,.78) !important;
+            padding: .45rem .75rem;
+            border-radius: 10px;
+        }
+        .theme-nav .nav-link:hover {
+            color: rgba(255,255,255,.95) !important;
+            background: rgba(255,255,255,.10);
+        }
+
+        .page-overlay {
+            min-height: calc(100vh - 64px);
+            background: linear-gradient(
+                    90deg,
+                    rgba(0,0,0,0.75) 0%,
+                    rgba(0,0,0,0.45) 45%,
+                    rgba(0,0,0,0.18) 100%
+            );
+            padding: 44px 0;
+        }
+        .glass-card {
+            border-radius: 18px;
+            background: rgba(0,0,0,0.35);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.12);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+        }
+        .muted { color: rgba(255,255,255,0.80); }
+
+        .form-control, .form-select {
+            background: rgba(255,255,255,0.10);
+            border: 1px solid rgba(255,255,255,0.20);
+            color: #fff;
+        }
+        .form-control:focus, .form-select:focus {
+            background: rgba(255,255,255,0.12);
+            color: #fff;
+            border-color: rgba(255,255,255,0.35);
+            box-shadow: none;
+        }
+        .invalid-feedback { display: block; }
+    </style>
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark static-top theme-nav">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+            <img th:src="@{/assets/img/aando8.png}" alt="Logo" style="height:26px; margin-right:10px;">
+            Alpha&Omega Motors
+        </a>
+
+        <div class="collapse navbar-collapse show">
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/main}">Main</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/user/dashboard}">Dashboard</a>
+                </li>
+
+                <li class="nav-item">
+                    <span class="nav-link" style="color: rgba(255,255,255,.85);">
+                        Logged as:
+                        <b style="text-transform:capitalize" sec:authentication="name">User</b>
+                    </span>
+                </li>
+
+                <li class="nav-item ms-2">
+                    <form method="post" th:action="@{/logout}">
+                        <button class="btn btn-sm btn-danger">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="page-overlay">
+    <div class="container">
+
+        <div class="glass-card p-4 mb-4">
+            <h2 class="mb-1">👤 My Profile</h2>
+            <div class="muted">
+                Update your personal data and home address.
+            </div>
+        </div>
+
+        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+
+        <div class="glass-card p-4">
+            <form th:action="@{/user/profile}" th:object="${profile}" method="post">
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">First name</label>
+                        <input class="form-control"
+                               th:field="*{imie}"
+                               th:classappend="${#fields.hasErrors('imie')} ? 'is-invalid' : ''">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('imie')}" th:errors="*{imie}"></div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Last name</label>
+                        <input class="form-control"
+                               th:field="*{nazwisko}"
+                               th:classappend="${#fields.hasErrors('nazwisko')} ? 'is-invalid' : ''">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('nazwisko')}" th:errors="*{nazwisko}"></div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Phone</label>
+                        <input class="form-control"
+                               th:field="*{telefon}"
+                               th:classappend="${#fields.hasErrors('telefon')} ? 'is-invalid' : ''">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('telefon')}" th:errors="*{telefon}"></div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Email (must match login if you use username==email)</label>
+                        <input class="form-control"
+                               th:field="*{email}"
+                               th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                    </div>
+
+                    <div class="col-12 mt-4">
+                        <h5 class="mb-2">🏠 Home address</h5>
+                        <div class="muted">Saved in table ADRESY.</div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">City</label>
+                        <input class="form-control"
+                               th:field="*{miasto}"
+                               th:classappend="${#fields.hasErrors('miasto')} ? 'is-invalid' : ''">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('miasto')}" th:errors="*{miasto}"></div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Street</label>
+                        <input class="form-control"
+                               th:field="*{ulica}"
+                               th:classappend="${#fields.hasErrors('ulica')} ? 'is-invalid' : ''">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('ulica')}" th:errors="*{ulica}"></div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="form-label">Building no.</label>
+                        <input type="number" class="form-control" th:field="*{numerBudynku}">
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="form-label">Apartment no. (0 if none)</label>
+                        <input type="number" class="form-control" th:field="*{numerLokalu}">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">ZIP code</label>
+                        <input class="form-control"
+                               th:field="*{kodPocztowy}"
+                               th:classappend="${#fields.hasErrors('kodPocztowy')} ? 'is-invalid' : ''">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('kodPocztowy')}" th:errors="*{kodPocztowy}"></div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Country</label>
+                        <input class="form-control"
+                               th:field="*{kraj}"
+                               th:classappend="${#fields.hasErrors('kraj')} ? 'is-invalid' : ''">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('kraj')}" th:errors="*{kraj}"></div>
+                    </div>
+
+                    <div class="col-12 mt-3 d-flex gap-2">
+                        <button class="btn btn-success" type="submit">Save changes</button>
+                        <a class="btn btn-secondary" th:href="@{/user/dashboard}">Back</a>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</body>
+</html>

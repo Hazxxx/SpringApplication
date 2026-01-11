@@ -1,4 +1,4 @@
-package bada_project.SpringApplication;
+package bada_project.SpringApplication.user.dashboard;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

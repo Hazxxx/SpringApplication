@@ -1,102 +1,254 @@
 <!DOCTYPE HTML>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>Admin Dashboard</title>
+
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.0.0-beta1/css/bootstrap.min.css}"/>
+
+    <style>
+        html, body { height: 100%; }
+
+        body {
+            margin: 0;
+            background: url('/assets/img/porscheview3.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+        }
+
+        /* ===== NAVBAR (ADMIN THEME) ===== */
+        .theme-nav {
+            background: rgba(139, 0, 0, 0.65) !important;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.10);
+            padding: 10px 0;
+        }
+
+        .theme-nav .navbar-brand {
+            font-weight: 700;
+            letter-spacing: .4px;
+            color: rgba(255,255,255,.92) !important;
+        }
+
+        .theme-nav .navbar-brand img {
+            filter: drop-shadow(0 6px 16px rgba(0,0,0,.45));
+        }
+
+        .theme-nav .nav-link {
+            color: rgba(255,255,255,.78) !important;
+            padding: .45rem .75rem;
+            border-radius: 10px;
+            transition: background .2s ease, color .2s ease, transform .2s ease;
+        }
+
+        .theme-nav .nav-link:hover {
+            color: rgba(255,255,255,.95) !important;
+            background: rgba(255,255,255,.10);
+            transform: translateY(-1px);
+        }
+
+        .theme-nav .nav-item.active .nav-link {
+            color: rgba(255,255,255,.95) !important;
+            background: rgba(255,255,255,.14);
+            border: 1px solid rgba(255,255,255,.12);
+        }
+
+        /* ===== PAGE OVERLAY ===== */
+        .page-overlay {
+            min-height: calc(100vh - 64px);
+            background: linear-gradient(
+                    90deg,
+                    rgba(0,0,0,0.75) 0%,
+                    rgba(0,0,0,0.45) 45%,
+                    rgba(0,0,0,0.18) 100%
+            );
+            padding: 44px 0;
+        }
+
+        /* ===== GLASS CARDS ===== */
+        .glass-card {
+            border-radius: 18px;
+            background: rgba(139,0,0,0.25);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.12);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+        }
+
+        .glass-card-danger {
+            background: rgba(220,53,69,0.30);
+            border: 1px solid rgba(220,53,69,0.20);
+        }
+
+        .muted { color: rgba(255,255,255,0.80); }
+
+        .pill {
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(220,53,69,0.25);
+            border: 1px solid rgba(220,53,69,0.30);
+            margin: 6px 8px 0 0;
+            color: #fff;
+        }
+
+        .admin-badge {
+            display: inline-block;
+            background: rgba(220,53,69,0.85);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .btn-ghost {
+            border: 1px solid rgba(255,255,255,0.35);
+            background: transparent;
+            color: #fff;
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255,255,255,0.12);
+            color: #fff;
+        }
+
+        .capability-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .capability-list li {
+            padding: 8px 0;
+            padding-left: 24px;
+            position: relative;
+        }
+
+        .capability-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #28a745;
+            font-weight: bold;
+        }
+    </style>
 </head>
+
 <body>
 
-<!-- Navigation -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-danger static-top">
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark static-top theme-nav">
     <div class="container">
-        <a class="navbar-brand" href="/">BDBT Spring Boot - Admin Panel</a>
+        <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+            <img th:src="@{/assets/img/aando8.png}" alt="Logo" style="height:26px; margin-right:10px;">
+            Alpha&Omega Motors
+            <span class="admin-badge">ADMIN</span>
+        </a>
+
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto">
+            <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/index}">Home</a>
+                    <a class="nav-link" th:href="@{/}">Home</a>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/main}">Admin Main</a>
+                </li>
+
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/user/dashboard}">User Panel</a>
                 </li>
+
                 <li class="nav-item active">
-                    <a class="nav-link" href="#">Admin Dashboard
-                        <span class="sr-only">(current)</span>
-                    </a>
+                    <a class="nav-link" href="#">Admin Dashboard</a>
                 </li>
-                <!-- Wyświetlamy nazwę użytkownika z modelu przekazanego przez controller -->
+
+                <li class="nav-item d-flex align-items-center">
+    <span class="nav-link" style="color: rgba(255,255,255,.85);">
+        Logged as:
+        <b style="text-transform:capitalize" sec:authentication="name">Admin</b>
+    </span>
+                </li>
+
                 <li class="nav-item">
-                    <span class="nav-link" style="color:lightyellow;">
-                        Logged as: <b style="text-transform:capitalize" th:text="${username}">Guest</b>
-                    </span>
+                    <form method="post" th:action="@{/logout}" class="d-inline">
+                        <button class="nav-link btn btn-link"
+                                style="
+                    color:#ffb3b3;
+                    padding:.45rem .75rem;
+                    border-radius:10px;
+                ">
+                            Logout
+                        </button>
+                    </form>
                 </li>
+
             </ul>
         </div>
     </div>
 </nav>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-10 mt-5">
+<!-- CONTENT -->
+<div class="page-overlay">
+    <div class="container">
 
-            <!-- Powitanie -->
-            <h2 class="text-danger">⚙️ Administrator Dashboard</h2>
-            <p class="lead">
-                Welcome <b style="color:#dc3545; text-transform:capitalize" th:text="${username}">Admin</b>,
-                you have full administrative access to the system.
-            </p>
-
-            <hr/>
-
-            <!-- Karta z uprawnieniami -->
-            <div class="card border-danger mb-4">
-                <div class="card-header bg-danger text-white">
-                    <h5 class="mb-0">Your Roles & Permissions</h5>
-                </div>
-                <div class="card-body">
-                    <p><strong>Active Roles:</strong></p>
-                    <ul>
-                        <!-- Iterujemy przez role przekazane z controllera -->
-                        <li th:each="role : ${roles}" th:text="${role.authority}">ROLE_ADMIN</li>
-                    </ul>
-                    <p class="mt-3"><strong>Admin Capabilities:</strong></p>
-                    <ul>
-                        <li>Manage all users and their permissions</li>
-                        <li>Access system logs and analytics</li>
-                        <li>Configure application settings</li>
-                        <li>Database management and backups</li>
-                        <li>View all user panels</li>
-                    </ul>
+        <!-- HEADER -->
+        <div class="glass-card p-4 mb-4">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                <div>
+                    <h2 class="mb-1">⚙️ Administrator Dashboard</h2>
+                    <div class="muted">
+                        Welcome <b style="text-transform:capitalize; color:#ff6b6b;" sec:authentication="name">Admin</b> — you have full administrative access to the system.
+                    </div>
                 </div>
             </div>
-
-            <!-- Przyciski szybkich akcji -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5 class="mb-0">Quick Actions</h5>
-                </div>
-                <div class="card-body">
-                    <a href="#" class="btn btn-primary mr-2 mb-2"> Manage Users</a>
-                    <a href="#" class="btn btn-info mr-2 mb-2"> View Reports</a>
-                    <a href="#" class="btn btn-warning mr-2 mb-2"> System Settings</a>
-                    <a href="#" class="btn btn-success mr-2 mb-2"> Database Backup</a>
-                </div>
-            </div>
-
-            <!-- Formularz wylogowania - WAŻNE: method="post" i th:action="@{/logout}" -->
-            <form method="post" th:action="@{/logout}">
-                <button class="btn btn-danger" type="submit"> Logout</button>
-            </form>
-
         </div>
+
+        <!-- ROLES & PERMISSIONS -->
+        <!--<div class="glass-card glass-card-danger p-4 mb-4">
+            <h5 class="mb-3">🔐 Your Roles & Permissions</h5>
+
+            <div class="mb-3">
+                <p class="mb-2"><strong>Active Roles:</strong></p>
+                <span class="pill" sec:authorize="hasRole('USER')">ROLE_USER</span>
+                <span class="pill" sec:authorize="hasRole('ADMIN')">ROLE_ADMIN</span>
+            </div>
+
+                        <div class="mt-4">
+                            <p class="mb-2"><strong>Admin Capabilities:</strong></p>
+                            <ul class="capability-list muted">
+                                <li>Manage all users and their permissions</li>
+                                <li>Access system logs and analytics</li>
+                                <li>Configure application settings</li>
+                                <li>Database management and backups</li>
+                                <li>View all user panels</li>
+                            </ul>
+                        </div>
+                    </div> -->
+
+                    <!-- QUICK ACTIONS -->
+        <div class="glass-card p-4">
+            <h5 class="mb-3">⚡ Quick Actions</h5>
+            <div class="d-flex flex-wrap gap-2">
+                <a class="btn btn-ghost" href="#">👥 Manage Users</a>
+                <!-- <a class="btn btn-info" href="#">📊 View Reports</a> -->
+                <a class="btn btn-ghost" href="#">⚙️ System Settings</a>
+                <a class="btn btn-ghost" href="#">💾 Database Backup</a>
+                <a class="btn btn-ghost" th:href="@{/admin/main}">Back to Admin Main</a>
+            </div>
+        </div>
+
     </div>
 </div>
 
-<!-- Bootstrap scripts -->
 <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
-
 </body>
 </html>

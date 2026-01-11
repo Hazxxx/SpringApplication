@@ -3,31 +3,126 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <title>Main Page</title>
+
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.0.0-beta1/css/bootstrap.min.css}"/>
+
+    <style>
+        /* ===== GLOBAL ===== */
+        html, body { height: 100%; }
+
+        body {
+            margin: 0;
+            background: url('/assets/img/porscheview4.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+        }
+
+        /* ===== NAVBAR (GLASS / THEME) ===== */
+        .theme-nav {
+            background: rgba(10, 12, 14, 0.55) !important;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.10);
+            padding: 10px 0;
+        }
+
+        .theme-nav .navbar-brand {
+            font-weight: 700;
+            letter-spacing: .4px;
+            color: rgba(255,255,255,.92) !important;
+        }
+
+        .theme-nav .navbar-brand img {
+            filter: drop-shadow(0 6px 16px rgba(0,0,0,.45));
+        }
+
+        .theme-nav .nav-link {
+            color: rgba(255,255,255,.78) !important;
+            padding: .45rem .75rem;
+            border-radius: 10px;
+            transition: background .2s ease, color .2s ease, transform .2s ease;
+        }
+
+        .theme-nav .nav-link:hover {
+            color: rgba(255,255,255,.95) !important;
+            background: rgba(255,255,255,.10);
+            transform: translateY(-1px);
+        }
+
+        .theme-nav .nav-item.active .nav-link {
+            color: rgba(255,255,255,.95) !important;
+            background: rgba(255,255,255,.14);
+            border: 1px solid rgba(255,255,255,.12);
+        }
+
+        /* ===== PAGE OVERLAY ===== */
+        .page-overlay {
+            min-height: calc(100vh - 64px);
+            background: linear-gradient(
+                    90deg,
+                    rgba(0,0,0,0.75) 0%,
+                    rgba(0,0,0,0.45) 45%,
+                    rgba(0,0,0,0.18) 100%
+            );
+            display: flex;
+            align-items: center;
+            padding: 42px 0;
+        }
+
+        .glass-card {
+            border-radius: 18px;
+            background: rgba(0,0,0,0.35);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.12);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+        }
+
+        .muted { color: rgba(255,255,255,0.78); }
+
+        .btn-ghost {
+            border: 1px solid rgba(255,255,255,0.35);
+            background: transparent;
+            color: #fff;
+        }
+        .btn-ghost:hover {
+            background: rgba(255,255,255,0.12);
+            color: #fff;
+        }
+    </style>
 </head>
+
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark static-top theme-nav">
     <div class="container">
-        <a class="navbar-brand" href="/">BDBT Spring Boot Project - Part II</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive">
+        <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+            <img th:src="@{/assets/img/aando8.png}" alt="Logo" style="height:26px; margin-right:10px;">
+            Alpha&Omega Motors
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto">
+            <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/index}">Home</a>
+                    <a class="nav-link" th:href="@{/}">Home</a>
                 </li>
+
                 <li class="nav-item active">
                     <a class="nav-link" href="#">Main</a>
                 </li>
+
                 <li class="nav-item">
-                    <span class="nav-link" style="color:lightskyblue;">
-                        You are logged in as
-                        <b style="text-transform:capitalize"
-                           th:text="${#authentication.name}">Guest</b>
+                    <span class="nav-link" style="color:rgba(255,255,255,.85);">
+                        Logged as:
+                        <b style="text-transform:capitalize" th:text="${#authentication.name}">Guest</b>
                     </span>
                 </li>
             </ul>
@@ -35,46 +130,57 @@
     </div>
 </nav>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-10 mt-5">
+<!-- CONTENT -->
+<div class="page-overlay">
+    <div class="container">
+        <div class="glass-card p-4 p-md-5">
 
-            <h3>Welcome
-                <b style="color:lightskyblue; text-transform:capitalize"
-                   th:text="${#authentication.name}">Guest</b>!
-            </h3>
-
-            <p class="mt-3">Choose your dashboard:</p>
-
-            <!-- Panel użytkownika - dostępny dla USER i ADMIN -->
-            <div class="card mb-3" sec:authorize="hasRole('USER')">
-                <div class="card-body">
-                    <h5 class="card-title">👤 User Dashboard</h5>
-                    <p class="card-text">Access your personal user panel.</p>
-                    <a th:href="@{/user/dashboard}" class="btn btn-primary">Go to User Dashboard</a>
+            <div class="d-flex align-items-center gap-3 mb-2">
+                <img th:src="@{/assets/img/aando8.png}" alt="Logo" style="height:44px; width:auto;">
+                <div>
+                    <h1 class="h3 mb-1" style="font-weight:800;">Main</h1>
+                    <div class="muted">
+                        Choose your dashboard,
+                        <b style="text-transform:capitalize" th:text="${#authentication.name}">Guest</b>.
+                    </div>
                 </div>
             </div>
 
-            <!-- Panel admina - tylko dla ADMIN -->
-            <div class="card mb-3 border-danger" sec:authorize="hasRole('ADMIN')">
-                <div class="card-body">
-                    <h5 class="card-title text-danger">⚙️ Admin Dashboard</h5>
-                    <p class="card-text">Access administrative panel with full permissions.</p>
-                    <a th:href="@{/admin/dashboard}" class="btn btn-danger">Go to Admin Dashboard</a>
+            <hr style="border-color: rgba(255,255,255,0.14);" />
+
+            <div class="row g-3">
+
+                <!-- User dashboard -->
+                <div class="col-md-6" sec:authorize="hasRole('USER')">
+                    <div class="glass-card p-4 h-100">
+                        <h2 class="h5 mb-2">👤 User Dashboard</h2>
+                        <div class="muted mb-3">Access your personal user panel.</div>
+                        <a th:href="@{/user/dashboard}" class="btn btn-primary">Go to User Dashboard</a>
+                    </div>
                 </div>
+
+                <!-- Admin dashboard -->
+                <div class="col-md-6" sec:authorize="hasRole('ADMIN')">
+                    <div class="glass-card p-4 h-100" style="border-color: rgba(255, 80, 80, 0.25);">
+                        <h2 class="h5 mb-2">⚙️ Admin Dashboard</h2>
+                        <div class="muted mb-3">Administrative panel with full permissions.</div>
+                        <a th:href="@{/admin/dashboard}" class="btn btn-danger">Go to Admin Dashboard</a>
+                    </div>
+                </div>
+
             </div>
 
-            <form th:action="@{/logout}" method="post" class="mt-4">
-                <button class="btn btn-secondary" type="submit">Logout</button>
-            </form>
+            <div class="d-flex flex-wrap gap-2 mt-4">
+                <form th:action="@{/logout}" method="post" class="m-0">
+                    <button class="btn btn-secondary" type="submit">Logout</button>
+                </form>
+                <a class="btn btn-ghost" th:href="@{/}">Back</a>
+            </div>
 
         </div>
     </div>
 </div>
 
-
-
-<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
-
+<script th:src="@{/webjars/bootstrap/5.0.0-beta1/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>

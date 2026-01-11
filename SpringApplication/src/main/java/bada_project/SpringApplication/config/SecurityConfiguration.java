@@ -1,15 +1,13 @@
-package bada_project.SpringApplication;
+package bada_project.SpringApplication.config;
 
+import bada_project.SpringApplication.auth.UnifiedUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
@@ -17,24 +15,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails user = User.withUsername("user")
-                .password(passwordEncoder().encode("user"))
-                .roles("USER")
-                .build();
+    private final UnifiedUserDetailsService unifiedUserDetailsService;
 
-        UserDetails user1 = User.withUsername("user1")
-                .password(passwordEncoder().encode("user1"))
-                .roles("USER")
-                .build();
-
-        UserDetails admin = User.withUsername("admin")
-                .password(passwordEncoder().encode("admin"))
-                .roles("ADMIN", "USER")
-                .build();
-
-        return new InMemoryUserDetailsManager(user, user1, admin);
+    public SecurityConfiguration(UnifiedUserDetailsService unifiedUserDetailsService) {
+        this.unifiedUserDetailsService = unifiedUserDetailsService;
     }
 
     @Bean
@@ -47,25 +31,28 @@ public class SecurityConfiguration {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // Publiczne endpointy
-                        .requestMatchers("/", "/index", "/login").permitAll()
+                        // Public endpoints
+                        .requestMatchers("/", "/index", "/login", "/register").permitAll()
                         .requestMatchers("/css/**", "/js/**", "/webjars/**", "/assets/**").permitAll()
 
-                        // Endpoint tylko dla ADMIN
+                        // Admin endpoints - only for employees with CZY_ADMIN = 1
                         .requestMatchers("/admin/**").hasRole("ADMIN")
 
-                        // Endpoint dla USER
+                        // User endpoints - both clients and employees
                         .requestMatchers("/user/**").hasRole("USER")
 
-                        // Główna strona dla zalogowanych
+                        // Main page for authenticated users
                         .requestMatchers("/main").authenticated()
 
-                        // Wszystko inne wymaga uwierzytelnienia
+                        // Everything else requires authentication
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
+                        .usernameParameter("username")  // matches your form field
+                        .passwordParameter("password")  // matches your form field
                         .defaultSuccessUrl("/main", true)
+                        .failureUrl("/login?error=true")
                         .permitAll()
                 )
                 .logout(logout -> logout
@@ -75,8 +62,20 @@ public class SecurityConfiguration {
                 )
                 .exceptionHandling(ex -> ex
                         .accessDeniedPage("/access-denied")
-                );;
+                );
 
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authManagerBuilder =
+                http.getSharedObject(AuthenticationManagerBuilder.class);
+
+        authManagerBuilder
+                .userDetailsService(unifiedUserDetailsService)
+                .passwordEncoder(passwordEncoder());
+
+        return authManagerBuilder.build();
     }
 }

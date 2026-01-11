@@ -1,4 +1,4 @@
-package bada_project.SpringApplication;
+package bada_project.SpringApplication.controller;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
