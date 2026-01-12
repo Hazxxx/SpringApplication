@@ -2,83 +2,141 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>504 - Gateway Timeout</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>504 – Gateway Timeout</title>
+
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.0.0-beta1/css/bootstrap.min.css}"/>
+
     <style>
-        .error-container {
-            min-height: 80vh;
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+            background: url('/assets/img/porscheview3.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+        }
+
+        /* ===== NAVBAR ===== */
+        .theme-nav {
+            background: rgba(10, 12, 14, 0.55);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .theme-nav .navbar-brand {
+            font-weight: 700;
+            letter-spacing: .4px;
+            color: rgba(255,255,255,.95);
+        }
+
+        /* ===== OVERLAY ===== */
+        .page-overlay {
+            min-height: calc(100vh - 64px);
+            background: linear-gradient(
+                    90deg,
+                    rgba(0,0,0,0.78) 0%,
+                    rgba(0,0,0,0.50) 45%,
+                    rgba(0,0,0,0.22) 100%
+            );
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 40px;
         }
+
+        /* ===== GLASS CARD ===== */
+        .glass-card {
+            max-width: 760px;
+            width: 100%;
+            border-radius: 20px;
+            background: rgba(0,0,0,0.45);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255,255,255,0.14);
+            box-shadow: 0 25px 70px rgba(0,0,0,0.65);
+            padding: 50px;
+            text-align: center;
+        }
+
+        /* ===== ERROR CODE ===== */
         .error-code {
-            font-size: 120px;
-            font-weight: bold;
-            color: #17a2b8;
+            font-size: 140px;
+            font-weight: 900;
+            line-height: 1;
+            color: #00e5ff;
+            text-shadow:
+                    0 0 25px rgba(0,229,255,0.55),
+                    0 0 60px rgba(0,229,255,0.35);
+        }
+
+        .muted {
+            color: rgba(255,255,255,0.78);
+        }
+
+        .btn-ghost {
+            border: 1px solid rgba(255,255,255,0.35);
+            background: transparent;
+            color: #fff;
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255,255,255,0.12);
+            color: #fff;
         }
     </style>
 </head>
+
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark static-top theme-nav">
     <div class="container">
-        <a class="navbar-brand" th:href="@{/}">BDBT Spring Boot Project</a>
+        <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+            <img th:src="@{/assets/img/aando8.png}" alt="Logo" style="height:26px; margin-right:10px;">
+            Alpha&Omega Motors
+        </a>
     </div>
 </nav>
 
-<div class="container error-container">
-    <div class="text-center">
-        <!-- Kod błędu -->
+<!-- CONTENT -->
+<div class="page-overlay">
+    <div class="glass-card">
+
+        <!-- ERROR CODE -->
         <div class="error-code">504</div>
 
-        <!-- Tytuł -->
-        <h1 class="display-4 mb-4 text-info">Gateway Timeout</h1>
+        <!-- TITLE -->
+        <h1 class="mb-3">Gateway Timeout</h1>
 
-        <!-- Opis -->
-        <p class="lead text-muted mb-4">
-            ⏱️ The server took too long to respond.
+        <!-- DESCRIPTION -->
+        <p class="muted mb-4">
+            The server is still alive — but it didn’t answer in time.<br/>
+            Looks like the engine stalled while waiting for a response.
         </p>
 
-        <div class="alert alert-info d-inline-block" role="alert">
-            <strong>What does this mean?</strong><br/>
-            The server didn't receive a timely response from an upstream server.
-            This is usually temporary and trying again might help.
-        </div>
-
-        <!-- URL który spowodował błąd -->
-        <p class="text-muted mt-3" th:if="${errorUrl}">
-            Requested URL: <code th:text="${errorUrl}"></code>
+        <!-- OPTIONAL URL -->
+        <p class="muted mb-4" th:if="${path}">
+            Requested URL: <code th:text="${path}"></code>
         </p>
 
-        <!-- Sugestie -->
-        <div class="card mt-4 d-inline-block text-left" style="max-width: 500px;">
-            <div class="card-body">
-                <h5 class="card-title">💡 What can you do?</h5>
-                <ul class="mb-0">
-                    <li>Wait a moment and try refreshing the page</li>
-                    <li>Check your internet connection</li>
-                    <li>Try again in a few minutes</li>
-                    <li>Contact support if the issue persists</li>
-                </ul>
-            </div>
+        <!-- ACTIONS -->
+        <div class="d-flex justify-content-center gap-2 flex-wrap">
+            <a href="javascript:location.reload()" class="btn btn-info">
+                Refresh
+            </a>
+            <a th:href="@{/index}" class="btn btn-primary">
+                Go Home
+            </a>
+            <a href="javascript:history.back()" class="btn btn-ghost">
+                Go Back
+            </a>
         </div>
 
-        <!-- Przyciski -->
-        <div class="mt-4">
-            <a href="javascript:location.reload()" class="btn btn-info btn-lg mr-2">
-                🔄 Refresh Page
-            </a>
-            <a th:href="@{/index}" class="btn btn-primary btn-lg mr-2">
-                🏠 Go Home
-            </a>
-            <a href="javascript:history.back()" class="btn btn-secondary btn-lg">
-                ⬅️ Go Back
-            </a>
-        </div>
     </div>
 </div>
 
 <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
-
 </body>
 </html>

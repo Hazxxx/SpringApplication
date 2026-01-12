@@ -2,70 +2,139 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>403 - Access Denied</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>403 – Access Denied</title>
+
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.0.0-beta1/css/bootstrap.min.css}"/>
+
     <style>
-        .error-container {
-            min-height: 80vh;
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+            background: url('/assets/img/porscheview3.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+        }
+
+        /* ===== NAVBAR ===== */
+        .theme-nav {
+            background: rgba(10, 12, 14, 0.55);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .theme-nav .navbar-brand {
+            font-weight: 700;
+            letter-spacing: .4px;
+            color: rgba(255,255,255,.95);
+        }
+
+        /* ===== OVERLAY ===== */
+        .page-overlay {
+            min-height: calc(100vh - 64px);
+            background: linear-gradient(
+                    90deg,
+                    rgba(0,0,0,0.75) 0%,
+                    rgba(0,0,0,0.45) 45%,
+                    rgba(0,0,0,0.18) 100%
+            );
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 40px;
         }
+
+        /* ===== GLASS CARD ===== */
+        .glass-card {
+            max-width: 720px;
+            width: 100%;
+            border-radius: 20px;
+            background: rgba(0,0,0,0.40);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.12);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.55);
+            padding: 48px;
+            text-align: center;
+        }
+
         .error-code {
-            font-size: 120px;
-            font-weight: bold;
-            color: #dc3545;
+            font-size: 140px;
+            font-weight: 900;
+            line-height: 1;
+            color: #ff4d4d;
+            text-shadow:
+                    0 0 20px rgba(255, 77, 77, 0.45),
+                    0 0 40px rgba(255, 77, 77, 0.25);
+        }
+
+
+        .muted {
+            color: rgba(255,255,255,0.75);
+        }
+
+        .btn-ghost {
+            border: 1px solid rgba(255,255,255,0.35);
+            background: transparent;
+            color: #fff;
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255,255,255,0.12);
+            color: #fff;
         }
     </style>
 </head>
+
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark static-top theme-nav">
     <div class="container">
-        <a class="navbar-brand" th:href="@{/}">BDBT Spring Boot Project</a>
+        <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+            <img th:src="@{/assets/img/aando8.png}" alt="Logo" style="height:26px; margin-right:10px;">
+            Alpha&Omega Motors
+        </a>
     </div>
 </nav>
 
-<div class="container error-container">
-    <div class="text-center">
-        <!-- Kod błędu -->
+<!-- CONTENT -->
+<div class="page-overlay">
+    <div class="glass-card">
+
+        <!-- ERROR CODE -->
         <div class="error-code">403</div>
 
-        <!-- Tytuł -->
-        <h1 class="display-4 mb-4 text-danger">Access Denied</h1>
+        <!-- TITLE -->
+        <h1 class="mb-3">Access Denied</h1>
 
-        <!-- Opis -->
-        <p class="lead text-muted mb-4">
-             Sorry, you don't have permission to access this resource.
+        <!-- DESCRIPTION -->
+        <p class="muted mb-4">
+            You don’t have permission to access this resource.
         </p>
 
-        <div class="alert alert-warning d-inline-block" role="alert">
-            <strong>Why am I seeing this?</strong><br/>
-            You may need to log in with an account that has the required permissions,
-            or this resource might be restricted to certain users only.
-        </div>
-
-        <!-- URL który spowodował błąd -->
-        <p class="text-muted mt-3" th:if="${errorUrl}">
-            Requested URL: <code th:text="${errorUrl}"></code>
+        <p class="muted mb-4">
+            If you believe this is a mistake, please contact the administrator.
         </p>
 
-        <!-- Przyciski -->
-        <div class="mt-4">
-            <a th:href="@{/index}" class="btn btn-primary btn-lg mr-2">
-                 Go Home
+        <!-- ACTIONS -->
+        <div class="d-flex justify-content-center gap-2 flex-wrap">
+            <a th:href="@{/index}" class="btn btn-primary">
+                Go Home
             </a>
-            <a th:href="@{/login}" class="btn btn-success btn-lg mr-2">
-                 Login
+            <a th:href="@{/main}" class="btn btn-success">
+                Dashboard
             </a>
-            <a href="javascript:history.back()" class="btn btn-secondary btn-lg">
-                 Go Back
+            <a href="javascript:history.back()" class="btn btn-ghost">
+                Go Back
             </a>
         </div>
+
     </div>
 </div>
 
 <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
-
 </body>
 </html>

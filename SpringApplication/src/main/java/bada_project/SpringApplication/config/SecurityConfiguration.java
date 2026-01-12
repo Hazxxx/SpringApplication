@@ -60,10 +60,10 @@ public class SecurityConfiguration {
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/index")
                         .permitAll()
-                )
-                .exceptionHandling(ex -> ex
-                        .accessDeniedPage("/access-denied")
                 );
+                /*.exceptionHandling(ex -> ex
+                        .accessDeniedPage("/access-denied")
+                );*/
 
         return http.build();
     }
