@@ -23,39 +23,42 @@ public class VehicleDAO {
     /**
      * Pobierz wszystkie dostępne pojazdy (nie sprzedane)
      */
+    /**
+     * Pobierz wszystkie dostępne pojazdy (nie sprzedane i mające ofertę)
+     */
     public List<Vehicle> findAllAvailable() {
         String sql = """
-            SELECT 
-                p.id_pojazdu,
-                p.kolor,
-                p.vin,
-                p.id_modelu,
-                m.pojemnosc_silnika,
-                m.moc_silnika,
-                m.typ_paliwa,
-                m.rocznik_modelowy,
-                m.typ_nadwozia,
-                m.masa_wlasna,
-                m.id_marki,
-                mar.nazwa as nazwa_marki,
-                o.id_oferty,
-                o.cena_katalogowa,
-                o.id_salonu,
-                s.nazwa as nazwa_salonu,
-                s.telefon as telefon_salonu,
-                a.miasto as miasto_salonu,
-                a.ulica as ulica_salonu,
-                CASE WHEN sp.id_sprzedazy IS NULL THEN 0 ELSE 1 END as sprzedany
-            FROM POJAZDY p
-            INNER JOIN MODELE m ON p.id_modelu = m.id_modelu
-            INNER JOIN MARKI mar ON m.id_marki = mar.id_marki
-            LEFT JOIN OFERTY o ON p.id_pojazdu = o.id_pojazdu
-            LEFT JOIN SALONY_SAMOCHODOWE s ON o.id_salonu = s.id_salonu
-            LEFT JOIN ADRESY a ON s.id_adresu = a.id_adresu
-            LEFT JOIN SPRZEDAZE sp ON o.id_oferty = sp.id_oferty
-            WHERE sp.id_sprzedazy IS NULL
-            ORDER BY o.id_oferty DESC
-            """;
+                SELECT
+                    p.id_pojazdu,
+                    p.kolor,
+                    p.vin,
+                    p.id_modelu,
+                    m.pojemnosc_silnika,
+                    m.moc_silnika,
+                    m.typ_paliwa,
+                    m.rocznik_modelowy,
+                    m.typ_nadwozia,
+                    m.masa_wlasna,
+                    m.id_marki,
+                    mar.nazwa as nazwa_marki,
+                    o.id_oferty,
+                    o.cena_katalogowa,
+                    o.id_salonu,
+                    s.nazwa as nazwa_salonu,
+                    s.telefon as telefon_salonu,
+                    a.miasto as miasto_salonu,
+                    a.ulica as ulica_salonu,
+                    CASE WHEN sp.id_sprzedazy IS NULL THEN 0 ELSE 1 END as sprzedany
+                FROM POJAZDY p
+                INNER JOIN MODELE m ON p.id_modelu = m.id_modelu
+                INNER JOIN MARKI mar ON m.id_marki = mar.id_marki
+                INNER JOIN OFERTY o ON p.id_pojazdu = o.id_pojazdu
+                INNER JOIN SALONY_SAMOCHODOWE s ON o.id_salonu = s.id_salonu
+                INNER JOIN ADRESY a ON s.id_adresu = a.id_adresu
+                LEFT JOIN SPRZEDAZE sp ON o.id_oferty = sp.id_oferty
+                WHERE sp.id_sprzedazy IS NULL
+                ORDER BY o.id_oferty DESC
+                """;
 
         return jdbc.query(sql, new VehicleRowMapper());
     }
@@ -65,36 +68,36 @@ public class VehicleDAO {
      */
     public Vehicle findById(Integer idPojazdu) {
         String sql = """
-            SELECT 
-                p.id_pojazdu,
-                p.kolor,
-                p.vin,
-                p.id_modelu,
-                m.pojemnosc_silnika,
-                m.moc_silnika,
-                m.typ_paliwa,
-                m.rocznik_modelowy,
-                m.typ_nadwozia,
-                m.masa_wlasna,
-                m.id_marki,
-                mar.nazwa as nazwa_marki,
-                o.id_oferty,
-                o.cena_katalogowa,
-                o.id_salonu,
-                s.nazwa as nazwa_salonu,
-                s.telefon as telefon_salonu,
-                a.miasto as miasto_salonu,
-                a.ulica as ulica_salonu,
-                CASE WHEN sp.id_sprzedazy IS NULL THEN 0 ELSE 1 END as sprzedany
-            FROM POJAZDY p
-            INNER JOIN MODELE m ON p.id_modelu = m.id_modelu
-            INNER JOIN MARKI mar ON m.id_marki = mar.id_marki
-            LEFT JOIN OFERTY o ON p.id_pojazdu = o.id_pojazdu
-            LEFT JOIN SALONY_SAMOCHODOWE s ON o.id_salonu = s.id_salonu
-            LEFT JOIN ADRESY a ON s.id_adresu = a.id_adresu
-            LEFT JOIN SPRZEDAZE sp ON o.id_oferty = sp.id_oferty
-            WHERE p.id_pojazdu = ?
-            """;
+                SELECT
+                    p.id_pojazdu,
+                    p.kolor,
+                    p.vin,
+                    p.id_modelu,
+                    m.pojemnosc_silnika,
+                    m.moc_silnika,
+                    m.typ_paliwa,
+                    m.rocznik_modelowy,
+                    m.typ_nadwozia,
+                    m.masa_wlasna,
+                    m.id_marki,
+                    mar.nazwa as nazwa_marki,
+                    o.id_oferty,
+                    o.cena_katalogowa,
+                    o.id_salonu,
+                    s.nazwa as nazwa_salonu,
+                    s.telefon as telefon_salonu,
+                    a.miasto as miasto_salonu,
+                    a.ulica as ulica_salonu,
+                    CASE WHEN sp.id_sprzedazy IS NULL THEN 0 ELSE 1 END as sprzedany
+                FROM POJAZDY p
+                INNER JOIN MODELE m ON p.id_modelu = m.id_modelu
+                INNER JOIN MARKI mar ON m.id_marki = mar.id_marki
+                LEFT JOIN OFERTY o ON p.id_pojazdu = o.id_pojazdu
+                LEFT JOIN SALONY_SAMOCHODOWE s ON o.id_salonu = s.id_salonu
+                LEFT JOIN ADRESY a ON s.id_adresu = a.id_adresu
+                LEFT JOIN SPRZEDAZE sp ON o.id_oferty = sp.id_oferty
+                WHERE p.id_pojazdu = ?
+                """;
 
         List<Vehicle> results = jdbc.query(sql, new VehicleRowMapper(), idPojazdu);
         return results.isEmpty() ? null : results.get(0);
@@ -105,36 +108,36 @@ public class VehicleDAO {
      */
     public List<Vehicle> search(VehicleSearchFilter filter) {
         StringBuilder sql = new StringBuilder("""
-            SELECT 
-                p.id_pojazdu,
-                p.kolor,
-                p.vin,
-                p.id_modelu,
-                m.pojemnosc_silnika,
-                m.moc_silnika,
-                m.typ_paliwa,
-                m.rocznik_modelowy,
-                m.typ_nadwozia,
-                m.masa_wlasna,
-                m.id_marki,
-                mar.nazwa as nazwa_marki,
-                o.id_oferty,
-                o.cena_katalogowa,
-                o.id_salonu,
-                s.nazwa as nazwa_salonu,
-                s.telefon as telefon_salonu,
-                a.miasto as miasto_salonu,
-                a.ulica as ulica_salonu,
-                CASE WHEN sp.id_sprzedazy IS NULL THEN 0 ELSE 1 END as sprzedany
-            FROM POJAZDY p
-            INNER JOIN MODELE m ON p.id_modelu = m.id_modelu
-            INNER JOIN MARKI mar ON m.id_marki = mar.id_marki
-            LEFT JOIN OFERTY o ON p.id_pojazdu = o.id_pojazdu
-            LEFT JOIN SALONY_SAMOCHODOWE s ON o.id_salonu = s.id_salonu
-            LEFT JOIN ADRESY a ON s.id_adresu = a.id_adresu
-            LEFT JOIN SPRZEDAZE sp ON o.id_oferty = sp.id_oferty
-            WHERE sp.id_sprzedazy IS NULL
-            """);
+                SELECT
+                    p.id_pojazdu,
+                    p.kolor,
+                    p.vin,
+                    p.id_modelu,
+                    m.pojemnosc_silnika,
+                    m.moc_silnika,
+                    m.typ_paliwa,
+                    m.rocznik_modelowy,
+                    m.typ_nadwozia,
+                    m.masa_wlasna,
+                    m.id_marki,
+                    mar.nazwa as nazwa_marki,
+                    o.id_oferty,
+                    o.cena_katalogowa,
+                    o.id_salonu,
+                    s.nazwa as nazwa_salonu,
+                    s.telefon as telefon_salonu,
+                    a.miasto as miasto_salonu,
+                    a.ulica as ulica_salonu,
+                    CASE WHEN sp.id_sprzedazy IS NULL THEN 0 ELSE 1 END as sprzedany
+                    FROM POJAZDY p
+                    INNER JOIN MODELE m ON p.id_modelu = m.id_modelu
+                    INNER JOIN MARKI mar ON m.id_marki = mar.id_marki
+                    INNER JOIN OFERTY o ON p.id_pojazdu = o.id_pojazdu
+                    INNER JOIN SALONY_SAMOCHODOWE s ON o.id_salonu = s.id_salonu
+                    INNER JOIN ADRESY a ON s.id_adresu = a.id_adresu
+                    LEFT JOIN SPRZEDAZE sp ON o.id_oferty = sp.id_oferty
+                    WHERE sp.id_sprzedazy IS NULL
+                """);
 
         List<Object> params = new ArrayList<>();
 
