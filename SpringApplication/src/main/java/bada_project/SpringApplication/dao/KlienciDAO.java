@@ -16,55 +16,56 @@ public class KlienciDAO {
         this.jdbc = jdbc;
     }
 
-    /* =========================
-       SPRAWDZENIE EMAILA
-       ========================= */
+    /*
+     * =========================
+     * SPRAWDZENIE EMAILA
+     * =========================
+     */
     public boolean existsByEmail(String email) {
         Integer cnt = jdbc.queryForObject(
                 "SELECT COUNT(*) FROM KLIENCI WHERE LOWER(EMAIL) = LOWER(?)",
                 Integer.class,
-                email
-        );
+                email);
         return cnt != null && cnt > 0;
     }
 
-    /* =========================
-       REJESTRACJA (ADRES + KLIENT)
-       ========================= */
-    @Transactional  // 👈 CRITICAL: Ensures proper transaction management
+    /*
+     * =========================
+     * REJESTRACJA (ADRES + KLIENT)
+     * =========================
+     */
+    @Transactional // 👈 CRITICAL: Ensures proper transaction management
     public void insertClient(RegisterForm f, String passwordHash) {
 
         try {
             // 1. Insert into ADRESY - let trigger generate ID
             jdbc.update("""
-                INSERT INTO ADRESY
-                (MIASTO, ULICA, NUMER_BUDYNKU, NUMER_LOKALU, KOD_POCZTOWY, KRAJ)
-                VALUES (?, ?, ?, ?, ?, ?)
-            """,
+                        INSERT INTO ADRESY
+                        (MIASTO, ULICA, NUMER_BUDYNKU, NUMER_LOKALU, KOD_POCZTOWY, KRAJ)
+                        VALUES (?, ?, ?, ?, ?, ?)
+                    """,
                     f.getCity(),
                     f.getStreet(),
                     f.getHouseNumber(),
                     f.getApartmentNumber() != null && !f.getApartmentNumber().isEmpty()
-                            ? f.getApartmentNumber() : "0",
+                            ? f.getApartmentNumber()
+                            : "0",
                     f.getPostalCode(),
-                    "Polska"
-            );
+                    "Polska");
 
             System.out.println(">>> ADRESY insert completed");
 
             // 2. Get the generated adresId from sequence
             Long adresId = jdbc.queryForObject(
                     "SELECT Adresy_id_adresu_SEQ.CURRVAL FROM DUAL",
-                    Long.class
-            );
+                    Long.class);
 
             System.out.println(">>> Retrieved adresId: " + adresId);
 
             // 3. Find first available salon
             Long salonId = jdbc.queryForObject(
                     "SELECT MIN(ID_SALONU) FROM SALONY_SAMOCHODOWE",
-                    Long.class
-            );
+                    Long.class);
 
             if (salonId == null) {
                 throw new IllegalStateException("No salon exists in database. Create at least one salon first.");
@@ -74,18 +75,17 @@ public class KlienciDAO {
 
             // 4. Insert into KLIENCI - let trigger generate ID
             jdbc.update("""
-                INSERT INTO KLIENCI
-                (EMAIL, HASLO, IMIE, NAZWISKO, TELEFON, ID_ADRESU, ID_SALONU)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-            """,
+                        INSERT INTO KLIENCI
+                        (EMAIL, HASLO, IMIE, NAZWISKO, TELEFON, ID_ADRESU, ID_SALONU)
+                        VALUES (?, ?, ?, ?, ?, ?, ?)
+                    """,
                     f.getEmail().toLowerCase(),
                     passwordHash,
                     f.getFirstName(),
                     f.getLastName(),
                     f.getPhone(),
                     adresId,
-                    salonId
-            );
+                    salonId);
 
             System.out.println(">>> KLIENCI insert completed");
 
@@ -96,9 +96,11 @@ public class KlienciDAO {
         }
     }
 
-    /* =========================
-       LOGOWANIE (SPRING SECURITY)
-       ========================= */
+    /*
+     * =========================
+     * LOGOWANIE (SPRING SECURITY)
+     * =========================
+     */
     public Optional<ClientAuthRow> findAuthByEmail(String email) {
         return jdbc.query("""
                 SELECT EMAIL, HASLO
@@ -112,16 +114,28 @@ public class KlienciDAO {
                     return Optional.of(
                             new ClientAuthRow(
                                     rs.getString("EMAIL"),
-                                    rs.getString("HASLO")
-                            )
-                    );
+                                    rs.getString("HASLO")));
                 },
-                email
-        );
+                email);
     }
 
-    /* =========================
-       DTO DO AUTORYZACJI
-       ========================= */
-    public record ClientAuthRow(String email, String passwordHash) {}
+    /*
+     * =========================
+     * DTO DO AUTORYZACJI
+     * =========================
+     */
+    public record ClientAuthRow(String email, String passwordHash) {
+    }
+
+    /**
+     * Finds client ID by email.
+     */
+    public Integer findIdByEmail(String email) {
+        String sql = "SELECT id_klienta FROM KLIENCI WHERE LOWER(email) = LOWER(?)";
+        try {
+            return jdbc.queryForObject(sql, Integer.class, email);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

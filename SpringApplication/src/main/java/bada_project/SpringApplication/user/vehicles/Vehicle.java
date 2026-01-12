@@ -36,6 +36,12 @@ public class Vehicle {
     private String miastoSalonu;
     private String ulicaSalonu;
 
+    // Dane Sprzedawcy (opiekuna oferty)
+    private String imieSprzedawcy;
+    private String nazwiskoSprzedawcy;
+    private String emailSprzedawcy;
+    private String telefonSprzedawcy;
+
     // Status (czy sprzedany)
     private boolean sprzedany;
 
@@ -43,7 +49,8 @@ public class Vehicle {
     private String zdjecieUrl;
 
     // Konstruktor
-    public Vehicle() {}
+    public Vehicle() {
+    }
 
     // Gettery i settery
     public Integer getIdPojazdu() {
@@ -206,12 +213,40 @@ public class Vehicle {
         this.sprzedany = sprzedany;
     }
 
-    public String getZdjecieUrl() {
-        return zdjecieUrl;
-    }
-
     public void setZdjecieUrl(String zdjecieUrl) {
         this.zdjecieUrl = zdjecieUrl;
+    }
+
+    public String getImieSprzedawcy() {
+        return imieSprzedawcy;
+    }
+
+    public void setImieSprzedawcy(String imieSprzedawcy) {
+        this.imieSprzedawcy = imieSprzedawcy;
+    }
+
+    public String getNazwiskoSprzedawcy() {
+        return nazwiskoSprzedawcy;
+    }
+
+    public void setNazwiskoSprzedawcy(String nazwiskoSprzedawcy) {
+        this.nazwiskoSprzedawcy = nazwiskoSprzedawcy;
+    }
+
+    public String getEmailSprzedawcy() {
+        return emailSprzedawcy;
+    }
+
+    public void setEmailSprzedawcy(String emailSprzedawcy) {
+        this.emailSprzedawcy = emailSprzedawcy;
+    }
+
+    public String getTelefonSprzedawcy() {
+        return telefonSprzedawcy;
+    }
+
+    public void setTelefonSprzedawcy(String telefonSprzedawcy) {
+        this.telefonSprzedawcy = telefonSprzedawcy;
     }
 
     // Helper methods
@@ -220,12 +255,14 @@ public class Vehicle {
     }
 
     public String getPriceFormatted() {
-        if (cenaKatalogowa == null) return "Brak ceny";
+        if (cenaKatalogowa == null)
+            return "Brak ceny";
         return String.format("%,.2f PLN", cenaKatalogowa);
     }
 
     public String getPojemnoscFormatted() {
-        if (pojemnoscSilnika == null) return "-";
+        if (pojemnoscSilnika == null)
+            return "-";
         return String.format("%.1f L", pojemnoscSilnika / 1000.0);
     }
 }

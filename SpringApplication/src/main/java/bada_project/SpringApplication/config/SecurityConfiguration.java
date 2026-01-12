@@ -15,68 +15,71 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-    private final UnifiedUserDetailsService unifiedUserDetailsService;
+        private final UnifiedUserDetailsService unifiedUserDetailsService;
 
-    public SecurityConfiguration(UnifiedUserDetailsService unifiedUserDetailsService) {
-        this.unifiedUserDetailsService = unifiedUserDetailsService;
-    }
+        public SecurityConfiguration(UnifiedUserDetailsService unifiedUserDetailsService) {
+                this.unifiedUserDetailsService = unifiedUserDetailsService;
+        }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder();
+        }
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                        // Public endpoints
-                        .requestMatchers("/", "/index", "/login", "/register").permitAll()
-                        .requestMatchers("/css/**", "/js/**", "/webjars/**", "/assets/**").permitAll()
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+                http
+                                .csrf(csrf -> csrf.disable())
+                                .authorizeHttpRequests(auth -> auth
+                                                // Public endpoints
+                                                .requestMatchers("/", "/index", "/login", "/register").permitAll()
+                                                .requestMatchers("/css/**", "/js/**", "/webjars/**", "/assets/**")
+                                                .permitAll()
 
-                        // Admin endpoints - only for employees with CZY_ADMIN = 1
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                                                // Admin endpoints - only for employees with CZY_ADMIN = 1
+                                                .requestMatchers("/admin/**").hasRole("ADMIN")
 
-                        // User endpoints - both clients and employees
-                        .requestMatchers("/user/**").hasRole("USER")
-                        .requestMatchers("/user/vehicles/**").hasRole("USER")
+                                                // Employee endpoints (Dashboard, Tasks)
+                                                .requestMatchers("/employee/**").hasRole("EMPLOYEE")
 
-                        // Main page for authenticated users
-                        .requestMatchers("/main").authenticated()
+                                                // User endpoints - both clients and employees
+                                                .requestMatchers("/user/**").hasRole("USER")
+                                                .requestMatchers("/user/vehicles/**").hasRole("USER")
 
-                        // Everything else requires authentication
-                        .anyRequest().authenticated()
-                )
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .usernameParameter("username")  // matches your form field
-                        .passwordParameter("password")  // matches your form field
-                        .defaultSuccessUrl("/main", true)
-                        .failureUrl("/login?error=true")
-                        .permitAll()
-                )
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/index")
-                        .permitAll()
-                );
-                /*.exceptionHandling(ex -> ex
-                        .accessDeniedPage("/access-denied")
-                );*/
+                                                // Main page for authenticated users
+                                                .requestMatchers("/main").authenticated()
 
-        return http.build();
-    }
+                                                // Everything else requires authentication
+                                                .anyRequest().authenticated())
+                                .formLogin(form -> form
+                                                .loginPage("/login")
+                                                .usernameParameter("username") // matches your form field
+                                                .passwordParameter("password") // matches your form field
+                                                .defaultSuccessUrl("/main", true)
+                                                .failureUrl("/login?error=true")
+                                                .permitAll())
+                                .logout(logout -> logout
+                                                .logoutUrl("/logout")
+                                                .logoutSuccessUrl("/index")
+                                                .permitAll());
+                /*
+                 * .exceptionHandling(ex -> ex
+                 * .accessDeniedPage("/access-denied")
+                 * );
+                 */
 
-    @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authManagerBuilder =
-                http.getSharedObject(AuthenticationManagerBuilder.class);
+                return http.build();
+        }
 
-        authManagerBuilder
-                .userDetailsService(unifiedUserDetailsService)
-                .passwordEncoder(passwordEncoder());
+        @Bean
+        public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+                AuthenticationManagerBuilder authManagerBuilder = http
+                                .getSharedObject(AuthenticationManagerBuilder.class);
 
-        return authManagerBuilder.build();
-    }
+                authManagerBuilder
+                                .userDetailsService(unifiedUserDetailsService)
+                                .passwordEncoder(passwordEncoder());
+
+                return authManagerBuilder.build();
+        }
 }

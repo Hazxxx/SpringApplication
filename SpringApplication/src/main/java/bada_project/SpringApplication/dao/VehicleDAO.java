@@ -88,7 +88,11 @@ public class VehicleDAO {
                     s.telefon as telefon_salonu,
                     a.miasto as miasto_salonu,
                     a.ulica as ulica_salonu,
-                    CASE WHEN sp.id_sprzedazy IS NULL THEN 0 ELSE 1 END as sprzedany
+                    CASE WHEN sp.id_sprzedazy IS NULL THEN 0 ELSE 1 END as sprzedany,
+                    prac.imie as imie_sprzedawcy,
+                    prac.nazwisko as nazwisko_sprzedawcy,
+                    prac.email as email_sprzedawcy,
+                    prac.telefon as telefon_sprzedawcy
                 FROM POJAZDY p
                 INNER JOIN MODELE m ON p.id_modelu = m.id_modelu
                 INNER JOIN MARKI mar ON m.id_marki = mar.id_marki
@@ -96,6 +100,7 @@ public class VehicleDAO {
                 LEFT JOIN SALONY_SAMOCHODOWE s ON o.id_salonu = s.id_salonu
                 LEFT JOIN ADRESY a ON s.id_adresu = a.id_adresu
                 LEFT JOIN SPRZEDAZE sp ON o.id_oferty = sp.id_oferty
+                LEFT JOIN PRACOWNICY prac ON o.id_pracownika = prac.id_pracownika
                 WHERE p.id_pojazdu = ?
                 """;
 
@@ -263,6 +268,18 @@ public class VehicleDAO {
 
             // Status
             v.setSprzedany(rs.getInt("sprzedany") == 1);
+
+            // Dane Sprzedawcy (mogą być nulle)
+            try {
+                v.setImieSprzedawcy(rs.getString("imie_sprzedawcy"));
+                v.setNazwiskoSprzedawcy(rs.getString("nazwisko_sprzedawcy"));
+                v.setEmailSprzedawcy(rs.getString("email_sprzedawcy"));
+                v.setTelefonSprzedawcy(rs.getString("telefon_sprzedawcy"));
+            } catch (SQLException e) {
+                // Kolumny mogą nie istnieć w innych zapytaniach używających tego mappera (np.
+                // findAll/search)
+                // Ignorujemy błąd braku kolumny
+            }
 
             return v;
         }

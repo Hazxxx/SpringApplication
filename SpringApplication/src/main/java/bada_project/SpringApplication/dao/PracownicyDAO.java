@@ -20,8 +20,8 @@ public class PracownicyDAO {
      */
     public Optional<EmployeeAuthRow> findAuthByEmail(String email) {
         return jdbc.query("""
-                SELECT 
-                    P.EMAIL, 
+                SELECT
+                    P.EMAIL,
                     P.HASLO,
                     P.IMIE,
                     P.NAZWISKO,
@@ -42,12 +42,9 @@ public class PracownicyDAO {
                                     rs.getString("IMIE"),
                                     rs.getString("NAZWISKO"),
                                     rs.getInt("CZY_ADMIN") == 1,
-                                    rs.getString("STANOWISKO")
-                            )
-                    );
+                                    rs.getString("STANOWISKO")));
                 },
-                email
-        );
+                email);
     }
 
     /**
@@ -57,8 +54,7 @@ public class PracownicyDAO {
         Integer cnt = jdbc.queryForObject(
                 "SELECT COUNT(*) FROM PRACOWNICY WHERE LOWER(EMAIL) = LOWER(?)",
                 Integer.class,
-                email
-        );
+                email);
         return cnt != null && cnt > 0;
     }
 
@@ -71,6 +67,20 @@ public class PracownicyDAO {
             String firstName,
             String lastName,
             boolean isAdmin,
-            String position
-    ) {}
+            String position) {
+    }
+
+    /**
+     * Find employee ID by email
+     */
+    public Integer findIdByEmail(String email) {
+        try {
+            return jdbc.queryForObject(
+                    "SELECT id_pracownika FROM PRACOWNICY WHERE LOWER(email) = LOWER(?)",
+                    Integer.class,
+                    email);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }
