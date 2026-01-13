@@ -1,0 +1,291 @@
+<!DOCTYPE HTML>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Admin - Edit Employee</title>
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.0.0-beta1/css/bootstrap.min.css}"/>
+
+    <style>
+        html, body { height: 100%; }
+
+        body {
+            margin: 0;
+            background: url('/assets/img/porscheview3.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+        }
+
+        /* ===== NAVBAR ===== */
+        .theme-nav {
+            background: rgba(139, 0, 0, 0.65);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* ===== OVERLAY ===== */
+        .page-overlay {
+            min-height: calc(100vh - 64px);
+            background: linear-gradient(
+                    90deg,
+                    rgba(0,0,0,0.75) 0%,
+                    rgba(0,0,0,0.45) 45%,
+                    rgba(0,0,0,0.18) 100%
+            );
+            padding: 40px 0;
+        }
+
+        /* ===== GLASS ===== */
+        .glass-card {
+            border-radius: 20px;
+            background: rgba(0,0,0,0.40);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.12);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.55);
+        }
+
+        .admin-badge {
+            background: #dc3545;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin-left: 8px;
+        }
+
+        .form-label {
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .form-control, .form-select {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(139, 0, 0, 0.8);
+            color: #fff;
+            box-shadow: 0 0 0 0.2rem rgba(139, 0, 0, 0.25);
+        }
+
+        .form-control::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+
+        .form-select option {
+            background: #2c2c2c;
+            color: #fff;
+        }
+
+        .section-title {
+            color: rgba(139, 0, 0, 1);
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid rgba(139, 0, 0, 0.3);
+        }
+
+        .admin-warning {
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid rgba(220, 53, 69, 0.5);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark theme-nav">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+            <img th:src="@{/assets/img/aando8.png}" style="height:26px;margin-right:10px;">
+            Alpha&Omega Motors
+            <span class="admin-badge">ADMIN</span>
+        </a>
+
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" th:href="@{/}">Home</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/user/dashboard}">User Panel</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/admin/dashboard}">Admin Dashboard</a></li>
+                <li class="nav-item">
+                    <span class="nav-link">
+                        Logged as <b sec:authentication="name"></b>
+                    </span>
+                </li>
+                <li class="nav-item">
+                    <form th:action="@{/logout}" method="post">
+                        <button class="btn btn-sm btn-outline-light">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="page-overlay">
+    <div class="container">
+
+        <!-- HEADER -->
+        <div class="glass-card p-4 mb-4">
+            <h2>✏️ Edit Employee</h2>
+            <p class="text-muted mb-0">
+                Modify employee information, position, and permissions
+            </p>
+        </div>
+
+        <!-- EDIT FORM -->
+        <div class="glass-card p-4">
+            <form th:action="@{/admin/employees/edit/{id}(id=${employee.idPracownika})}"
+                  th:object="${employee}"
+                  method="post">
+
+                <!-- PERSONAL INFORMATION -->
+                <h4 class="section-title">👤 Personal Information</h4>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="email" class="form-label">Email *</label>
+                        <input type="email"
+                               class="form-control"
+                               id="email"
+                               th:field="*{email}"
+                               required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="telefon" class="form-label">Phone *</label>
+                        <input type="text"
+                               class="form-control"
+                               id="telefon"
+                               th:field="*{telefon}"
+                               required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="imie" class="form-label">First Name *</label>
+                        <input type="text"
+                               class="form-control"
+                               id="imie"
+                               th:field="*{imie}"
+                               required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="nazwisko" class="form-label">Last Name *</label>
+                        <input type="text"
+                               class="form-control"
+                               id="nazwisko"
+                               th:field="*{nazwisko}"
+                               required>
+                    </div>
+                </div>
+
+                <!-- EMPLOYMENT DETAILS -->
+                <h4 class="section-title">💼 Employment Details</h4>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="idStanowiska" class="form-label">Position *</label>
+                        <select class="form-select"
+                                id="idStanowiska"
+                                th:field="*{idStanowiska}"
+                                required
+                                onchange="checkAdminPosition()">
+                            <option value="">-- Select Position --</option>
+                            <option th:each="position : ${positions}"
+                                    th:value="${position.id}"
+                                    th:text="${position.name + (position.isAdmin ? ' (ADMIN)' : '')}"
+                                    th:attr="data-is-admin=${position.isAdmin}">
+                            </option>
+                        </select>
+
+                        <div id="adminWarning" class="admin-warning" style="display: none;">
+                            <strong>⚠️ Warning:</strong> This position has admin privileges.
+                            The employee will have full system access.
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="idWynagrodzenia" class="form-label">Salary (ID) *</label>
+                        <input type="number"
+                               step="0.01"
+                               class="form-control"
+                               id="idWynagrodzenia"
+                               th:field="*{idWynagrodzenia}"
+                               required>
+                        <small class="text-muted">Reference to salary record ID</small>
+                    </div>
+                </div>
+
+                <!-- SALON ASSIGNMENT -->
+                <h4 class="section-title">🏢 Salon Assignment</h4>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="idSalonu" class="form-label">Assigned Salon *</label>
+                        <select class="form-select"
+                                id="idSalonu"
+                                th:field="*{idSalonu}"
+                                required>
+                            <option value="">-- Select Salon --</option>
+                            <option th:each="salon : ${salons}"
+                                    th:value="${salon.id}"
+                                    th:text="${salon.name}">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- CURRENT STATUS INFO -->
+                <div class="alert alert-info" th:if="${employee.czyAdmin}">
+                    <strong>ℹ️ Current Status:</strong> This employee currently has admin privileges.
+                </div>
+
+                <!-- ACTIONS -->
+                <div class="mt-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        💾 Save Changes
+                    </button>
+                    <a th:href="@{/admin/employees}" class="btn btn-secondary">
+                        ← Cancel
+                    </a>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script>
+    function checkAdminPosition() {
+        const positionSelect = document.getElementById('idStanowiska');
+        const selectedOption = positionSelect.options[positionSelect.selectedIndex];
+        const isAdmin = selectedOption.getAttribute('data-is-admin') === 'true';
+        const warning = document.getElementById('adminWarning');
+
+        if (isAdmin) {
+            warning.style.display = 'block';
+        } else {
+            warning.style.display = 'none';
+        }
+    }
+
+    // Check on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        checkAdminPosition();
+    });
+</script>
+</body>
+</html>

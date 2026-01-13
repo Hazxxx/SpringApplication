@@ -26,7 +26,7 @@ public class DashboardController {
             return "redirect:/index";
         }
     }
-
+/*
     // Panel administratora
     @GetMapping("/admin/dashboard")
     public String showAdminPage(Model model, Authentication authentication) {
@@ -34,7 +34,7 @@ public class DashboardController {
         model.addAttribute("roles", authentication.getAuthorities());
         return "admin/dashboard";
     }
-
+*/
     // Panel użytkownika
     @GetMapping("/user/dashboard")
     public String showUserPage(Model model, Authentication authentication) {

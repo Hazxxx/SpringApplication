@@ -1,0 +1,170 @@
+<!DOCTYPE HTML>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Admin – Maintenance Mode</title>
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.0.0-beta1/css/bootstrap.min.css}"/>
+
+    <style>
+        html, body { height: 100%; }
+
+        body {
+            margin: 0;
+            background: url('/assets/img/porscheview3.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+        }
+
+        /* ===== NAVBAR ===== */
+        .theme-nav {
+            background: rgba(139, 0, 0, 0.65);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* ===== OVERLAY ===== */
+        .page-overlay {
+            min-height: calc(100vh - 64px);
+            background: linear-gradient(
+                    90deg,
+                    rgba(0,0,0,0.75) 0%,
+                    rgba(0,0,0,0.45) 45%,
+                    rgba(0,0,0,0.18) 100%
+            );
+            padding: 40px 0;
+        }
+
+        /* ===== GLASS ===== */
+        .glass-card {
+            border-radius: 20px;
+            background: rgba(0,0,0,0.45);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.14);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.55);
+        }
+
+        .admin-badge {
+            background: #dc3545;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin-left: 8px;
+        }
+
+        .status-online {
+            color: #28a745;
+            font-weight: 700;
+        }
+
+        .status-offline {
+            color: #dc3545;
+            font-weight: 700;
+        }
+
+        .btn-ghost {
+            border: 1px solid rgba(255,255,255,0.35);
+            background: transparent;
+            color: #fff;
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255,255,255,0.12);
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark theme-nav">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+            <img th:src="@{/assets/img/aando8.png}" style="height:26px;margin-right:10px;">
+            Alpha&Omega Motors
+            <span class="admin-badge">ADMIN</span>
+        </a>
+
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/admin/dashboard}">Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <form th:action="@{/logout}" method="post">
+                    <button class="btn btn-sm btn-outline-light">Logout</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<!-- CONTENT -->
+<div class="page-overlay">
+    <div class="container">
+
+        <!-- HEADER -->
+        <div class="glass-card p-4 mb-4">
+            <h2 class="text-warning mb-1">🛠 Maintenance Mode</h2>
+            <p class="text-muted mb-0">
+                Global system availability switch.
+            </p>
+        </div>
+
+        <!-- STATUS -->
+        <div class="glass-card p-4 text-center">
+
+            <h5 class="mb-3">Current status</h5>
+
+            <p class="mb-4">
+                Status:
+                <span th:if="${maintenanceEnabled}" class="status-offline">
+                    OFFLINE (Maintenance ON)
+                </span>
+                <span th:if="${!maintenanceEnabled}" class="status-online">
+                    ONLINE
+                </span>
+            </p>
+
+            <!-- ACTIONS -->
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+
+                <!-- ENABLE -->
+                <form th:if="${!maintenanceEnabled}"
+                      th:action="@{/admin/settings/maintenance/enable}"
+                      method="post">
+                    <button class="btn btn-danger">
+                        🔴 Enable Maintenance
+                    </button>
+                </form>
+
+                <!-- DISABLE -->
+                <form th:if="${maintenanceEnabled}"
+                      th:action="@{/admin/settings/maintenance/disable}"
+                      method="post">
+                    <button class="btn btn-success">
+                        🟢 Disable Maintenance
+                    </button>
+                </form>
+
+            </div>
+
+            <p class="text-muted small mt-4">
+                When enabled, all users will be blocked except administrators.
+            </p>
+
+            <div class="mt-4">
+                <a class="btn btn-ghost" th:href="@{/admin/dashboard}">
+                    ← Back to Dashboard
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</body>
+</html>

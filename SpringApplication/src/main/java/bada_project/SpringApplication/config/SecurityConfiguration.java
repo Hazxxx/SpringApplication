@@ -1,6 +1,8 @@
 package bada_project.SpringApplication.config;
 
+import bada_project.SpringApplication.admin.SystemFlagsDAO;
 import bada_project.SpringApplication.auth.UnifiedUserDetailsService;
+import bada_project.SpringApplication.security.MaintenanceFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,73 +12,101 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
 
     private final UnifiedUserDetailsService unifiedUserDetailsService;
+    private final SystemFlagsDAO systemFlagsDAO;
 
-    public SecurityConfiguration(UnifiedUserDetailsService unifiedUserDetailsService) {
+    public SecurityConfiguration(
+            UnifiedUserDetailsService unifiedUserDetailsService,
+            SystemFlagsDAO systemFlagsDAO
+    ) {
         this.unifiedUserDetailsService = unifiedUserDetailsService;
+        this.systemFlagsDAO = systemFlagsDAO;
     }
 
+    /* ===== PASSWORD ENCODER ===== */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /* ===== MAINTENANCE FILTER ===== */
+    @Bean
+    public MaintenanceFilter maintenanceFilter() {
+        return new MaintenanceFilter(systemFlagsDAO);
+    }
+
+    /* ===== SECURITY FILTER CHAIN ===== */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         http
                 .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                        // Public endpoints
-                        .requestMatchers("/", "/index", "/login", "/register").permitAll()
-                        .requestMatchers("/css/**", "/js/**", "/webjars/**", "/assets/**").permitAll()
 
-                        // Admin endpoints - only for employees with CZY_ADMIN = 1
+                /* ===== AUTH RULES ===== */
+                .authorizeHttpRequests(auth -> auth
+                        // PUBLIC
+                        .requestMatchers(
+                                "/", "/index", "/login", "/register",
+                                "/maintenance",
+                                "/css/**", "/js/**", "/assets/**", "/webjars/**"
+                        ).permitAll()
+
+                        // ADMIN
                         .requestMatchers("/admin/**").hasRole("ADMIN")
 
-                        // User endpoints - both clients and employees
+                        // USER
                         .requestMatchers("/user/**").hasRole("USER")
-                        .requestMatchers("/user/vehicles/**").hasRole("USER")
 
-                        // Main page for authenticated users
+                        // MAIN REDIRECT
                         .requestMatchers("/main").authenticated()
 
-                        // Everything else requires authentication
+                        // EVERYTHING ELSE
                         .anyRequest().authenticated()
                 )
+
+                /* ===== LOGIN ===== */
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .usernameParameter("username")  // matches your form field
-                        .passwordParameter("password")  // matches your form field
+                        .usernameParameter("username")
+                        .passwordParameter("password")
                         .defaultSuccessUrl("/main", true)
                         .failureUrl("/login?error=true")
                         .permitAll()
                 )
+
+                /* ===== LOGOUT ===== */
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/index")
                         .permitAll()
+                )
+
+                /* ===== MAINTENANCE FILTER - AFTER AUTHENTICATION ===== */
+                .addFilterAfter(  // ← KLUCZOWA ZMIANA!
+                        maintenanceFilter(),
+                        UsernamePasswordAuthenticationFilter.class
                 );
-                /*.exceptionHandling(ex -> ex
-                        .accessDeniedPage("/access-denied")
-                );*/
 
         return http.build();
     }
 
+    /* ===== AUTH MANAGER ===== */
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authManagerBuilder =
+
+        AuthenticationManagerBuilder builder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
 
-        authManagerBuilder
+        builder
                 .userDetailsService(unifiedUserDetailsService)
                 .passwordEncoder(passwordEncoder());
 
-        return authManagerBuilder.build();
+        return builder.build();
     }
 }
