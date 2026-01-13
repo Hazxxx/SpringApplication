@@ -1,239 +1,255 @@
 <!DOCTYPE HTML>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>User Dashboard</title>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-  <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.0.0-beta1/css/bootstrap.min.css}"/>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title th:text="${vehicle.fullName}">Vehicle Details</title>
+
+  <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.0.0-beta1/css/bootstrap.min.css}" />
 
   <style>
-    html, body { height: 100%; }
+    html,
+    body {
+      height: 100%;
+    }
 
     body {
-        margin: 0;
-        background: url('/assets/img/porscheview3.jpg') no-repeat center center fixed;
-        background-size: cover;
-        color: #fff;
+      margin: 0;
+      background: url('/assets/img/porscheview3.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
     }
 
     /* NAVBAR */
     .theme-nav {
-        background: rgba(10, 12, 14, 0.55) !important;
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border-bottom: 1px solid rgba(255,255,255,0.10);
-        padding: 10px 0;
+      background: rgba(10, 12, 14, 0.55) !important;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+      padding: 10px 0;
     }
 
     .theme-nav .navbar-brand {
-        font-weight: 700;
-        letter-spacing: .4px;
-        color: rgba(255,255,255,.92) !important;
-    }
-
-    .theme-nav .navbar-brand img {
-        filter: drop-shadow(0 6px 16px rgba(0,0,0,.45));
+      font-weight: 700;
+      letter-spacing: .4px;
+      color: rgba(255, 255, 255, .92) !important;
     }
 
     .theme-nav .nav-link {
-        color: rgba(255,255,255,.78) !important;
-        padding: .45rem .75rem;
-        border-radius: 10px;
-        transition: background .2s ease, color .2s ease, transform .2s ease;
+      color: rgba(255, 255, 255, .78) !important;
+      padding: .45rem .75rem;
+      border-radius: 10px;
+      transition: background .2s ease;
     }
 
     .theme-nav .nav-link:hover {
-        color: rgba(255,255,255,.95) !important;
-        background: rgba(255,255,255,.10);
-        transform: translateY(-1px);
-    }
-
-    .theme-nav .nav-item.active .nav-link {
-        color: rgba(255,255,255,.95) !important;
-        background: rgba(255,255,255,.14);
-        border: 1px solid rgba(255,255,255,.12);
+      color: rgba(255, 255, 255, .95) !important;
+      background: rgba(255, 255, 255, .10);
     }
 
     /* PAGE OVERLAY */
     .page-overlay {
-        min-height: calc(100vh - 64px);
-        background: linear-gradient(
-                90deg,
-                rgba(0,0,0,0.75) 0%,
-                rgba(0,0,0,0.45) 45%,
-                rgba(0,0,0,0.18) 100%
-        );
-        padding: 44px 0;
+      min-height: calc(100vh - 64px);
+      background: linear-gradient(90deg,
+          rgba(0, 0, 0, 0.85) 0%,
+          rgba(0, 0, 0, 0.65) 100%);
+      padding: 44px 0;
     }
 
-    /* GLASS CARDS */
+    /* GLASS CARD */
     .glass-card {
-        border-radius: 18px;
-        background: rgba(0,0,0,0.35);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255,255,255,0.12);
-        box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+      border-radius: 18px;
+      background: rgba(40, 44, 52, 0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+      padding: 2rem;
+      margin-bottom: 2rem;
     }
 
-    .muted { color: rgba(255,255,255,0.80); }
-
-    .pill {
-        display: inline-block;
-        padding: 8px 12px;
-        border-radius: 999px;
-        background: rgba(255,255,255,0.10);
-        border: 1px solid rgba(255,255,255,0.14);
-        margin: 6px 8px 0 0;
+    .spec-label {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.9em;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
-    .btn-ghost {
-        border: 1px solid rgba(255,255,255,0.35);
-        background: transparent;
-        color: #fff;
-        padding: 10px 20px;
-        border-radius: 8px;
-        transition: all 0.3s ease;
+    .spec-value {
+      font-size: 1.1em;
+      font-weight: 500;
+      margin-bottom: 1rem;
     }
 
-    .btn-ghost:hover {
-        background: rgba(255,255,255,0.12);
-        color: #fff;
-        transform: translateY(-2px);
+    .price-tag {
+      font-size: 2.5em;
+      font-weight: 700;
+      color: #4fd1c5;
     }
 
-    .btn-primary-custom {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border: none;
-        color: white;
-        padding: 10px 20px;
-        border-radius: 8px;
-        transition: all 0.3s ease;
+    .btn-reserve {
+      background: linear-gradient(135deg, #4fd1c5 0%, #319795 100%);
+      border: none;
+      color: white;
+      font-size: 1.2em;
+      padding: 12px 30px;
+      border-radius: 12px;
+      width: 100%;
+      font-weight: 600;
+      transition: transform 0.2s;
     }
 
-    .btn-primary-custom:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    .btn-reserve:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(79, 209, 197, 0.3);
+    }
+
+    .seller-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
   </style>
 </head>
 
 <body>
 
-<!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark static-top theme-nav">
-  <div class="container">
-    <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
-      <img th:src="@{/assets/img/aando8.png}" alt="Logo" style="height:26px; margin-right:10px;">
-      Alpha&Omega Motors
-    </a>
-
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarResponsive">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item">
-          <a class="nav-link" th:href="@{/}">Home</a>
-        </li>
-
-        <li class="nav-item">
-          <a class="nav-link" th:href="@{/main}">Main</a>
-        </li>
-
-        <li class="nav-item active">
-          <a class="nav-link" href="#">Dashboard</a>
-        </li>
-
-        <li class="nav-item d-flex align-items-center">
-                    <span class="nav-link" style="color: rgba(255,255,255,.85);">
-                        Logged as:
-                        <b style="text-transform:capitalize" sec:authentication="name">Guest</b>
-                    </span>
-        </li>
-
-        <li class="nav-item">
-          <form method="post" th:action="@{/logout}" class="d-inline">
-            <button class="nav-link btn btn-link"
-                    style="color:rgba(255,255,255,.85); padding:.45rem .75rem; border-radius:10px;">
-              Logout
-            </button>
-          </form>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
-
-<!-- CONTENT -->
-<div class="page-overlay">
-  <div class="container">
-
-    <!-- HEADER -->
-    <div class="glass-card p-4 mb-4">
-      <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
-        <div>
-          <h2 class="mb-1">User Dashboard</h2>
-          <div class="muted">
-            Welcome <b style="text-transform:capitalize" sec:authentication="name">Guest</b>, here's your access overview.
-          </div>
-        </div>
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-dark static-top theme-nav">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+        Alpha&Omega Motors
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{/main}">Main</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{/user/vehicles}">Catalog</a>
+          </li>
+        </ul>
       </div>
     </div>
+  </nav>
 
-    <!-- QUICK ACTIONS -->
-    <div class="glass-card p-4 mb-4">
-      <h5 class="mb-3">Quick Actions</h5>
-      <div class="d-flex flex-wrap gap-2">
-        <a class="btn btn-primary-custom" th:href="@{/user/vehicles}">
-          Browse Vehicles
-        </a>
-        <a class="btn btn-ghost" th:href="@{/user/profile}">
-          My Profile
-        </a>
-        <a class="btn btn-ghost" href="#">
-          My Reservations
-        </a>
-        <a class="btn btn-ghost" href="#">
-          Settings
-        </a>
-        <a class="btn btn-ghost" th:href="@{/main}">
-          &larr; Back to Main
-        </a>
+  <!-- CONTENT -->
+  <div class="page-overlay">
+    <div class="container">
+
+      <!-- Breadcrumb / Back -->
+      <div class="mb-4">
+        <a th:href="@{/user/vehicles}" class="text-decoration-none text-light opacity-75">&larr; Back to Catalog</a>
       </div>
-    </div>
 
-    <!-- INFO SECTION -->
-    <div class="glass-card p-4">
-      <h5 class="mb-3">What can you do?</h5>
       <div class="row">
-        <div class="col-md-4 mb-3">
-          <div style="background: rgba(255,255,255,0.08); padding: 20px; border-radius: 12px;">
-            <h6>Vehicle Catalog</h6>
-            <p class="muted mb-0">Browse available vehicles, filter by your preferences</p>
+        <!-- Left Column: Image & Specs -->
+        <div class="col-lg-8">
+          <div class="glass-card">
+            <h2 class="mb-4" th:text="${vehicle.fullName}">Porsche 911</h2>
+
+            <!-- Main Image Placeholder -->
+            <div
+              style="background: rgba(0,0,0,0.3); height: 300px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 2rem;">
+              <span class="text-muted">Vehicle Image</span>
+            </div>
+
+            <h4 class="mb-3">Specifications</h4>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="spec-label">Engine</div>
+                <div class="spec-value" th:text="|${vehicle.pojemnoscSilnika} cm3, ${vehicle.mocSilnika} KM|">3000 cm3
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="spec-label">Fuel Type</div>
+                <div class="spec-value" th:text="${vehicle.typPaliwa}">Petrol</div>
+              </div>
+              <div class="col-md-6">
+                <div class="spec-label">Body Type</div>
+                <div class="spec-value" th:text="${vehicle.typNadwozia}">Coupe</div>
+              </div>
+              <div class="col-md-6">
+                <div class="spec-label">Model Year</div>
+                <div class="spec-value" th:text="${vehicle.rocznikModelowy}">2024</div>
+              </div>
+              <div class="col-md-6">
+                <div class="spec-label">Color</div>
+                <div class="spec-value" th:text="${vehicle.kolor}">Red</div>
+              </div>
+              <div class="col-md-6">
+                <div class="spec-label">VIN</div>
+                <div class="spec-value" th:text="${vehicle.vin}">XYZ123...</div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="col-md-4 mb-3">
-          <div style="background: rgba(255,255,255,0.08); padding: 20px; border-radius: 12px;">
-            <h6>Reservations</h6>
-            <p class="muted mb-0">Book a test drive or schedule a showroom visit</p>
-          </div>
-        </div>
-        <div class="col-md-4 mb-3">
-          <div style="background: rgba(255,255,255,0.08); padding: 20px; border-radius: 12px;">
-            <h6>Profile</h6>
-            <p class="muted mb-0">Manage your personal information and address</p>
+
+        <!-- Right Column: Offer & Seller -->
+        <div class="col-lg-4">
+          <div class="glass-card">
+            <div class="spec-label">Catalog Price</div>
+            <div class="price-tag mb-4" th:text="${vehicle.priceFormatted}">500 000 PLN</div>
+
+            <hr style="border-color: rgba(255,255,255,0.1)" />
+
+            <div class="mb-3">
+              <div class="spec-label">Showroom</div>
+              <div class="fw-bold" th:text="${vehicle.nazwaSalonu}">Salon Warszawa</div>
+              <div class="small opacity-75" th:text="|${vehicle.miastoSalonu}, ${vehicle.ulicaSalonu}|">Warszawa, Ulica
+                1</div>
+            </div>
+
+            <!-- Seller Info -->
+            <div class="seller-card" th:if="${vehicle.imieSprzedawcy != null}">
+              <h5 class="mb-3" style="color: #a0aec0;">Your Sales Advisor</h5>
+              <div class="d-flex align-items-center mb-2">
+                <div
+                  style="width: 40px; height: 40px; background: #4a5568; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                  <span th:text="${#strings.substring(vehicle.imieSprzedawcy,0,1)}">J</span>
+                </div>
+                <div>
+                  <div class="fw-bold" th:text="|${vehicle.imieSprzedawcy} ${vehicle.nazwiskoSprzedawcy}|">Jan Kowalski
+                  </div>
+                  <div class="small opacity-75">Sales Specialist</div>
+                </div>
+              </div>
+              <div class="small opacity-75">
+                <div th:if="${vehicle.emailSprzedawcy}" th:text="|Email: ${vehicle.emailSprzedawcy}|">email@bada.pl
+                </div>
+                <div th:if="${vehicle.telefonSprzedawcy}" th:text="|Tel: ${vehicle.telefonSprzedawcy}|">123 456 789
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Button -->
+            <form th:action="@{/user/vehicles/{id}/reserve(id=${vehicle.idPojazdu})}" method="post" class="mt-4">
+              <button type="submit" class="btn btn-reserve" th:disabled="${vehicle.sprzedany}">
+                <span th:text="${vehicle.sprzedany ? 'Sold / Reserved' : 'Reserve Now'}">Reserve Now</span>
+              </button>
+            </form>
+
+            <div th:if="${successMessage}" class="alert alert-success mt-3" role="alert" th:text="${successMessage}">
+              Reservation successful!
+            </div>
+            <div th:if="${errorMessage}" class="alert alert-danger mt-3" role="alert" th:text="${errorMessage}">
+              Error.
+            </div>
+
           </div>
         </div>
       </div>
+
     </div>
-
   </div>
-</div>
 
-<script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+  <script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
 </body>
+
 </html>

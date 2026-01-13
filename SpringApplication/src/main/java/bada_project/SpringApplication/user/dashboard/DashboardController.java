@@ -15,11 +15,16 @@ public class DashboardController {
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
 
+        boolean isEmployee = authentication.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals("ROLE_EMPLOYEE"));
+
         boolean isUser = authentication.getAuthorities().stream()
                 .anyMatch(auth -> auth.getAuthority().equals("ROLE_USER"));
 
         if (isAdmin) {
             return "redirect:/admin/dashboard";
+        } else if (isEmployee) {
+            return "redirect:/employee/dashboard";
         } else if (isUser) {
             return "redirect:/user/dashboard";
         } else {

@@ -269,6 +269,10 @@
                 Found vehicles: <span th:text="${vehicles.size()}">0</span>
             </h5>
 
+            <div th:if="${error}" class="alert alert-danger" role="alert">
+                <span th:text="${error}">Error message</span>
+            </div>
+
             <div th:if="${vehicles.isEmpty()}" class="text-center py-5">
                 <p class="muted">No vehicles available matching your criteria</p>
             </div>

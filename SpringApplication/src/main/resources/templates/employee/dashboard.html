@@ -1,0 +1,236 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Employee Dashboard</title>
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.0.0-beta1/css/bootstrap.min.css}" />
+
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+            background: url('/assets/img/porscheview3.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+        }
+
+        /* NAVBAR */
+        .theme-nav {
+            background: rgba(10, 12, 14, 0.55) !important;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+            padding: 10px 0;
+        }
+
+        .theme-nav .navbar-brand {
+            font-weight: 700;
+            letter-spacing: .4px;
+            color: rgba(255, 255, 255, .92) !important;
+        }
+
+        .theme-nav .nav-link {
+            color: rgba(255, 255, 255, .78) !important;
+            padding: .45rem .75rem;
+            border-radius: 10px;
+            transition: background .2s ease;
+        }
+
+        .theme-nav .nav-link:hover {
+            background: rgba(255, 255, 255, .10);
+            color: #fff !important;
+        }
+
+        /* PAGE OVERLAY */
+        .page-overlay {
+            min-height: calc(100vh - 64px);
+            background: linear-gradient(90deg,
+                    rgba(0, 0, 0, 0.85) 0%,
+                    rgba(0, 0, 0, 0.65) 100%);
+            padding: 44px 0;
+        }
+
+        /* GLASS CARD */
+        .glass-card {
+            border-radius: 18px;
+            background: rgba(40, 44, 52, 0.55);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        table {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        th {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+        }
+
+        td {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+            vertical-align: middle;
+        }
+
+        .btn-action {
+            padding: 5px 10px;
+            font-size: 0.85em;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn-approve {
+            background: #4fd1c5;
+            color: #fff;
+        }
+
+        .btn-reject {
+            background: #e53e3e;
+            color: #fff;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-1px);
+            opacity: 0.9;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .status-OCZEKUJACA {
+            background: rgba(236, 201, 75, 0.2);
+            color: #ecc94b;
+            border: 1px solid rgba(236, 201, 75, 0.3);
+        }
+
+        .status-ZATWIERDZONA {
+            background: rgba(72, 187, 120, 0.2);
+            color: #48bb78;
+            border: 1px solid rgba(72, 187, 120, 0.3);
+        }
+
+        .status-ODRZUCONA {
+            background: rgba(245, 101, 101, 0.2);
+            color: #f56565;
+            border: 1px solid rgba(245, 101, 101, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark static-top theme-nav">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+                Alpha&Omega Motors
+            </a>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <span class="nav-link">
+                            Logged as: <b th:text="${#authentication.name}">Employee</b>
+                        </span>
+                    </li>
+                    <li class="nav-item">
+                        <form th:action="@{/logout}" method="post">
+                            <button class="nav-link btn btn-link" style="padding: .45rem .75rem;">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTENT -->
+    <div class="page-overlay">
+        <div class="container">
+
+            <div class="glass-card">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="mb-0">Employee Dashboard</h2>
+                </div>
+
+                <div th:if="${successMessage}" class="alert alert-success" role="alert" th:text="${successMessage}">
+                </div>
+                <div th:if="${errorMessage}" class="alert alert-danger" role="alert" th:text="${errorMessage}"></div>
+
+                <h4 class="mb-3">Assigned Reservations</h4>
+
+                <div class="table-responsive">
+                    <table class="table table-borderless table-dark text-white" style="--bs-table-bg: transparent;">
+                        <thead>
+                            <tr>
+                                <th class="text-white">ID</th>
+                                <th class="text-white">Date</th>
+                                <th class="text-white">Vehicle</th>
+                                <th class="text-white">Client</th>
+                                <th class="text-white">Status</th>
+                                <th class="text-white">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="r : ${reservations}">
+                                <td class="text-white" th:text="${r.idRezerwacji}">1</td>
+                                <td class="text-white" th:text="${#dates.format(r.dataRezerwacji, 'yyyy-MM-dd HH:mm')}">
+                                    2023-01-01</td>
+                                <td>
+                                    <a th:href="@{/user/vehicles/{id}(id=${r.idOferty})}"
+                                        class="text-decoration-none text-light" th:text="${r.nazwaPojazdu}">Porsche
+                                        911</a>
+                                </td>
+                                <td>
+                                    <div th:text="${r.daneKlienta}" class="fw-bold">Jan Kowalski</div>
+                                    <div class="small opacity-75" th:text="${r.emailKlienta}">jan@test.pl</div>
+                                    <div class="small opacity-75" th:text="${r.telefonKlienta}">123456789</div>
+                                </td>
+                                <td>
+                                    <span th:class="|status-badge status-${r.status}|"
+                                        th:text="${r.status}">OCZEKUJACA</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-2" th:if="${r.status == 'OCZEKUJACA'}">
+                                        <form th:action="@{/employee/reservations/{id}/approve(id=${r.idRezerwacji})}"
+                                            method="post">
+                                            <button class="btn-action btn-approve" title="Approve">✓</button>
+                                        </form>
+                                        <form th:action="@{/employee/reservations/{id}/reject(id=${r.idRezerwacji})}"
+                                            method="post">
+                                            <button class="btn-action btn-reject" title="Reject">✕</button>
+                                        </form>
+                                    </div>
+                                    <span th:if="${r.status != 'OCZEKUJACA'}" class="text-muted small">Processed</span>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(reservations)}">
+                                <td colspan="6" class="text-center py-4 text-muted">No reservations found.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+</body>
+
+</html>

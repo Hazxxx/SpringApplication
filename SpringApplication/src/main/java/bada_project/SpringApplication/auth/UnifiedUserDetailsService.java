@@ -46,19 +46,19 @@ public class UnifiedUserDetailsService implements UserDetailsService {
             // Build authorities based on admin status
             List<SimpleGrantedAuthority> authorities = new ArrayList<>();
             authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+            authorities.add(new SimpleGrantedAuthority("ROLE_EMPLOYEE")); // Employees get this role
 
             if (employee.isAdmin()) {
                 authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-                System.out.println(">>> GRANTED: ROLE_USER, ROLE_ADMIN");
+                System.out.println(">>> GRANTED: ROLE_USER, ROLE_EMPLOYEE, ROLE_ADMIN");
             } else {
-                System.out.println(">>> GRANTED: ROLE_USER");
+                System.out.println(">>> GRANTED: ROLE_USER, ROLE_EMPLOYEE");
             }
 
             return new User(
                     employee.email(),
                     employee.passwordHash(),
-                    authorities
-            );
+                    authorities);
         }
 
         // If not found as employee, try as client
@@ -73,8 +73,7 @@ public class UnifiedUserDetailsService implements UserDetailsService {
             return new User(
                     client.email(),
                     client.passwordHash(),
-                    List.of(new SimpleGrantedAuthority("ROLE_USER"))
-            );
+                    List.of(new SimpleGrantedAuthority("ROLE_USER")));
         }
 
         // Not found in either table
