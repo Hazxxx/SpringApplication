@@ -1,7 +1,3 @@
-<!-- ============================================================================
-     PLIK 5: templates/admin/database/index.html
-     Główna strona Database Management
-     ============================================================================ -->
 <!DOCTYPE HTML>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
@@ -51,6 +47,7 @@
             transition: all 0.3s ease;
             cursor: pointer;
             text-align: center;
+            height: 100%;
         }
         .table-card:hover {
             background: rgba(255,255,255,0.12);
@@ -91,6 +88,7 @@
 
 <div class="page-overlay">
     <div class="container">
+
         <div class="glass-card p-4 mb-4">
             <h2>🗄️ Database Management</h2>
             <p class="text-muted mb-0">Manage reference tables and organizational data</p>
@@ -100,367 +98,156 @@
             <h5 class="mb-4">Available Tables</h5>
 
             <div class="row g-4">
+
+                <!-- Marki -->
                 <div class="col-md-4">
                     <a th:href="@{/admin/database/marki}" class="text-decoration-none text-white">
                         <div class="table-card">
                             <div class="table-icon">🏷️</div>
                             <h5>Marki</h5>
-                            <p class="text-muted mb-0">Car brands</p>
+                            <p class="text-muted mb-2">Car brands</p>
                             <small class="text-info" th:text="${totalMarki} + ' records'">0 records</small>
                         </div>
                     </a>
                 </div>
 
+                <!-- Modele -->
+                <div class="col-md-4">
+                    <a th:href="@{/admin/database/modele}" class="text-decoration-none text-white">
+                        <div class="table-card">
+                            <div class="table-icon">🚗</div>
+                            <h5>Modele</h5>
+                            <p class="text-muted mb-2">Car models</p>
+                            <small class="text-info" th:text="${totalModele} + ' records'">0 records</small>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Pojazdy -->
+                <div class="col-md-4">
+                    <a th:href="@{/admin/database/pojazdy}" class="text-decoration-none text-white">
+                        <div class="table-card">
+                            <div class="table-icon">🚙</div>
+                            <h5>Pojazdy</h5>
+                            <p class="text-muted mb-2">Vehicles</p>
+                            <small class="text-info" th:text="${totalPojazdy} + ' records'">0 records</small>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Oferty -->
+                <div class="col-md-4">
+                    <a th:href="@{/admin/database/oferty}" class="text-decoration-none text-white">
+                        <div class="table-card">
+                            <div class="table-icon">💰</div>
+                            <h5>Oferty</h5>
+                            <p class="text-muted mb-2">Offers</p>
+                            <small class="text-info" th:text="${totalOferty} + ' records'">0 records</small>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Salony -->
+                <div class="col-md-4">
+                    <a th:href="@{/admin/database/salony}" class="text-decoration-none text-white">
+                        <div class="table-card">
+                            <div class="table-icon">🏪</div>
+                            <h5>Salony</h5>
+                            <p class="text-muted mb-2">Salon locations</p>
+                            <small class="text-info" th:text="${totalSalony} + ' records'">0 records</small>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Stanowiska -->
+                <div class="col-md-4">
+                    <a th:href="@{/admin/database/stanowiska}" class="text-decoration-none text-white">
+                        <div class="table-card">
+                            <div class="table-icon">💼</div>
+                            <h5>Stanowiska</h5>
+                            <p class="text-muted mb-2">Job positions</p>
+                            <small class="text-info" th:text="${totalStanowiska} + ' records'">0 records</small>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Wynagrodzenia -->
+                <div class="col-md-4">
+                    <a th:href="@{/admin/database/wynagrodzenia}" class="text-decoration-none text-white">
+                        <div class="table-card">
+                            <div class="table-icon">💳</div>
+                            <h5>Wynagrodzenia</h5>
+                            <p class="text-muted mb-2">Salaries</p>
+                            <small class="text-info" th:text="${totalWynagrodzenia} + ' records'">0 records</small>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Sprzedawcy -->
+                <div class="col-md-4">
+                    <a th:href="@{/admin/database/sprzedawcy}" class="text-decoration-none text-white">
+                        <div class="table-card">
+                            <div class="table-icon">🧑‍💼</div>
+                            <h5>Sprzedawcy</h5>
+                            <p class="text-muted mb-2">Sellers</p>
+                            <small class="text-info" th:text="${totalSprzedawcy} + ' records'">0 records</small>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Firmy partnerskie -->
+                <div class="col-md-4">
+                    <a th:href="@{/admin/database/firmy-partnerskie}" class="text-decoration-none text-white">
+                        <div class="table-card">
+                            <div class="table-icon">🤝</div>
+                            <h5>Firmy partnerskie</h5>
+                            <p class="text-muted mb-2">Partner companies</p>
+                            <small class="text-info" th:text="${totalFirmy} + ' records'">0 records</small>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Adresy -->
+                <div class="col-md-4">
+                    <a th:href="@{/admin/database/adresy}" class="text-decoration-none text-white">
+                        <div class="table-card">
+                            <div class="table-icon">📍</div>
+                            <h5>Adresy</h5>
+                            <p class="text-muted mb-2">Addresses</p>
+                            <small class="text-info" th:text="${totalAdresy} + ' records'">0 records</small>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Sprzedaże -->
+                <div class="col-md-4">
+                    <a th:href="@{/admin/database/sprzedaze}" class="text-decoration-none text-white">
+                        <div class="table-card">
+                            <div class="table-icon">🧾</div>
+                            <h5>Sprzedaże</h5>
+                            <p class="text-muted mb-2">Sales</p>
+                            <small class="text-info" th:text="${totalSprzedaze} + ' records'">0 records</small>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Note about Klienci and Pracownicy -->
                 <div class="col-md-4">
                     <div class="table-card opacity-50">
-                        <div class="table-icon">🚗</div>
-                        <h5>Modele</h5>
-                        <p class="text-muted mb-0">Car models</p>
-                        <small class="text-warning">Coming soon</small>
+                        <div class="table-icon">👥</div>
+                        <h5>Klienci & Pracownicy</h5>
+                        <p class="text-muted mb-2">Managed separately</p>
+                        <small class="text-warning">See Clients & Employees sections</small>
                     </div>
                 </div>
 
-                <div class="col-md-4">
-                    <div class="table-card opacity-50">
-                        <div class="table-icon">🏪</div>
-                        <h5>Salony</h5>
-                        <p class="text-muted mb-0">Salon locations</p>
-                        <small class="text-warning">Coming soon</small>
-                    </div>
-                </div>
             </div>
 
             <div class="mt-4">
                 <a class="btn btn-secondary" th:href="@{/admin/dashboard}">← Back to Dashboard</a>
             </div>
         </div>
-    </div>
-</div>
 
-<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
-</body>
-</html>
-
-
-<!-- ============================================================================
-     PLIK 6: templates/admin/database/marki/list.html
-     Lista marek z opcjami CRUD
-     ============================================================================ -->
-<!DOCTYPE HTML>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>Admin - Marki</title>
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.0.0-beta1/css/bootstrap.min.css}"/>
-    <style>
-        html, body { height: 100%; }
-        body {
-            margin: 0;
-            background: url('/assets/img/porscheview3.jpg') no-repeat center center fixed;
-            background-size: cover;
-            color: #fff;
-        }
-        .theme-nav {
-            background: rgba(139, 0, 0, 0.65);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        .page-overlay {
-            min-height: calc(100vh - 64px);
-            background: linear-gradient(90deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.45) 45%, rgba(0,0,0,0.18) 100%);
-            padding: 40px 0;
-        }
-        .glass-card {
-            border-radius: 20px;
-            background: rgba(0,0,0,0.40);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.12);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.55);
-        }
-        .admin-badge {
-            background: #dc3545;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            margin-left: 8px;
-        }
-        .table-dark {
-            background: rgba(0,0,0,0.3);
-        }
-        .table-dark th {
-            border-color: rgba(255,255,255,0.1);
-        }
-        .table-dark td {
-            border-color: rgba(255,255,255,0.1);
-        }
-        .table-dark tbody tr:hover {
-            background: rgba(255,255,255,0.1);
-        }
-        .breadcrumb {
-            background: transparent;
-            margin-bottom: 0;
-        }
-        .breadcrumb-item a {
-            text-decoration: none;
-        }
-    </style>
-</head>
-<body>
-
-<nav class="navbar navbar-expand-lg navbar-dark theme-nav">
-    <div class="container">
-        <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
-            <img th:src="@{/assets/img/aando8.png}" style="height:26px;margin-right:10px;">
-            Alpha&Omega Motors
-            <span class="admin-badge">ADMIN</span>
-        </a>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" th:href="@{/}">Home</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/admin/dashboard}">Dashboard</a></li>
-                <li class="nav-item">
-                    <span class="nav-link">Logged as <b sec:authentication="name"></b></span>
-                </li>
-                <li class="nav-item">
-                    <form th:action="@{/logout}" method="post" style="display:inline;">
-                        <button class="btn btn-sm btn-outline-light">Logout</button>
-                    </form>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-
-<div class="page-overlay">
-    <div class="container">
-
-        <nav aria-label="breadcrumb" class="mb-3">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}" class="text-white">Admin</a></li>
-                <li class="breadcrumb-item"><a th:href="@{/admin/database}" class="text-white">Database</a></li>
-                <li class="breadcrumb-item active text-light">Marki</li>
-            </ol>
-        </nav>
-
-        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
-            <span th:text="${success}"></span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
-            <span th:text="${error}"></span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-
-        <div class="glass-card p-4 mb-4">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <h2>🏷️ Marki (Car Brands)</h2>
-                    <p class="text-muted mb-0">Manage car brands in the system</p>
-                </div>
-                <a th:href="@{/admin/database/marki/new}" class="btn btn-success">
-                    ➕ Add New Brand
-                </a>
-            </div>
-        </div>
-
-        <div class="glass-card p-4">
-            <table class="table table-dark table-hover">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Brand Name</th>
-                    <th>Models Count</th>
-                    <th class="text-end">Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:if="${marki.isEmpty()}">
-                    <td colspan="4" class="text-center text-muted">
-                        No brands found. Add your first brand!
-                    </td>
-                </tr>
-                <tr th:each="marka : ${marki}">
-                    <td th:text="${marka.idMarki}">1</td>
-                    <td th:text="${marka.nazwa}">Porsche</td>
-                    <td>
-                        <span class="badge bg-info" th:text="${marka.liczbaModeli}">5</span>
-                    </td>
-                    <td class="text-end">
-                        <a th:href="@{/admin/database/marki/{id}/edit(id=${marka.idMarki})}"
-                           class="btn btn-sm btn-warning">
-                            ✏️ Edit
-                        </a>
-                        <form th:action="@{/admin/database/marki/{id}/delete(id=${marka.idMarki})}"
-                              method="post"
-                              style="display:inline;"
-                              th:onsubmit="|return confirm('Are you sure you want to delete ${marka.nazwa}?');|">
-                            <button type="submit" class="btn btn-sm btn-danger">
-                                🗑️ Delete
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-
-            <div class="mt-4">
-                <a class="btn btn-secondary" th:href="@{/admin/database}">← Back to Database</a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
-</body>
-</html>
-
-
-<!-- ============================================================================
-     PLIK 7: templates/admin/database/marki/form.html
-     Formularz dodawania/edycji marki
-     ============================================================================ -->
-<!DOCTYPE HTML>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title th:text="${isEdit ? 'Edit Brand' : 'Add New Brand'}">Add Brand</title>
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.0.0-beta1/css/bootstrap.min.css}"/>
-    <style>
-        html, body { height: 100%; }
-        body {
-            margin: 0;
-            background: url('/assets/img/porscheview3.jpg') no-repeat center center fixed;
-            background-size: cover;
-            color: #fff;
-        }
-        .theme-nav {
-            background: rgba(139, 0, 0, 0.65);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        .page-overlay {
-            min-height: calc(100vh - 64px);
-            background: linear-gradient(90deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.45) 45%, rgba(0,0,0,0.18) 100%);
-            padding: 40px 0;
-        }
-        .glass-card {
-            border-radius: 20px;
-            background: rgba(0,0,0,0.40);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.12);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.55);
-        }
-        .admin-badge {
-            background: #dc3545;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            margin-left: 8px;
-        }
-        .form-control {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: #fff;
-        }
-        .form-control:focus {
-            background: rgba(255,255,255,0.15);
-            border-color: #dc3545;
-            color: #fff;
-        }
-        .form-control::placeholder {
-            color: rgba(255,255,255,0.5);
-        }
-        .form-label {
-            color: #fff;
-            font-weight: 500;
-        }
-        .breadcrumb {
-            background: transparent;
-            margin-bottom: 0;
-        }
-        .breadcrumb-item a {
-            text-decoration: none;
-        }
-    </style>
-</head>
-<body>
-
-<nav class="navbar navbar-expand-lg navbar-dark theme-nav">
-    <div class="container">
-        <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
-            <img th:src="@{/assets/img/aando8.png}" style="height:26px;margin-right:10px;">
-            Alpha&Omega Motors
-            <span class="admin-badge">ADMIN</span>
-        </a>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" th:href="@{/}">Home</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/admin/dashboard}">Dashboard</a></li>
-                <li class="nav-item">
-                    <span class="nav-link">Logged as <b sec:authentication="name"></b></span>
-                </li>
-                <li class="nav-item">
-                    <form th:action="@{/logout}" method="post" style="display:inline;">
-                        <button class="btn btn-sm btn-outline-light">Logout</button>
-                    </form>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-
-<div class="page-overlay">
-    <div class="container">
-
-        <nav aria-label="breadcrumb" class="mb-3">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}" class="text-white">Admin</a></li>
-                <li class="breadcrumb-item"><a th:href="@{/admin/database}" class="text-white">Database</a></li>
-                <li class="breadcrumb-item"><a th:href="@{/admin/database/marki}" class="text-white">Marki</a></li>
-                <li class="breadcrumb-item active text-light" th:text="${isEdit ? 'Edit' : 'New'}">New</li>
-            </ol>
-        </nav>
-
-        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
-            <span th:text="${error}"></span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-
-        <div class="glass-card p-4">
-            <h2 class="mb-4" th:text="${isEdit ? '✏️ Edit Brand' : '➕ Add New Brand'}">Add Brand</h2>
-
-            <form th:action="${isEdit ? '/admin/database/marki/' + marka.idMarki : '/admin/database/marki'}"
-                  method="post"
-                  th:object="${marka}">
-
-                <div class="mb-3">
-                    <label for="nazwa" class="form-label">Brand Name <span class="text-danger">*</span></label>
-                    <input type="text"
-                           class="form-control"
-                           id="nazwa"
-                           th:field="*{nazwa}"
-                           placeholder="Enter brand name (e.g., Porsche, BMW, Mercedes)"
-                           required
-                           maxlength="30">
-                    <div class="form-text text-light">Max 30 characters</div>
-                </div>
-
-                <div class="d-flex gap-2">
-                    <button type="submit" class="btn btn-success">
-                        💾 <span th:text="${isEdit ? 'Update' : 'Save'}">Save</span>
-                    </button>
-                    <a th:href="@{/admin/database/marki}" class="btn btn-secondary">
-                        ❌ Cancel
-                    </a>
-                </div>
-            </form>
-        </div>
     </div>
 </div>
 

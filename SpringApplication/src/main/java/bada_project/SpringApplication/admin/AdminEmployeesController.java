@@ -61,8 +61,10 @@ public class AdminEmployeesController {
 
             auditService.log(
                     auth.getName(),
-                    "Updated employee: " + employee.getEmail()
+                    "UPDATE_EMPLOYEE",
+                    "Updated employee with email: " + employee.getEmail()
             );
+
 
             redirectAttributes.addFlashAttribute("success", "Employee updated successfully");
             return "redirect:/admin/employees";
@@ -93,8 +95,10 @@ public class AdminEmployeesController {
 
             auditService.log(
                     auth.getName(),
-                    "Deleted employee: " + employee.getEmail()
+                    "DELETE_EMPLOYEE",
+                    "Deleted employee with email: " + employee.getEmail()
             );
+
 
             redirectAttributes.addFlashAttribute("success", "Employee deleted successfully");
 

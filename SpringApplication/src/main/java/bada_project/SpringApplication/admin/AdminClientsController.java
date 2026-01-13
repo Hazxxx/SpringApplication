@@ -60,8 +60,10 @@ public class AdminClientsController {
 
             auditService.log(
                     auth.getName(),
-                    "Updated client: " + client.getEmail()
+                    "UPDATE_CLIENT",
+                    "Updated client with email: " + client.getEmail()
             );
+
 
             redirectAttributes.addFlashAttribute("success", "Client updated successfully");
             return "redirect:/admin/clients";
@@ -92,8 +94,10 @@ public class AdminClientsController {
 
             auditService.log(
                     auth.getName(),
-                    "Deleted client: " + client.getEmail()
+                    "DELETE_CLIENT",
+                    "Deleted client with ID=" + id + ", email=" + client.getEmail()
             );
+
 
             redirectAttributes.addFlashAttribute("success", "Client deleted successfully");
 

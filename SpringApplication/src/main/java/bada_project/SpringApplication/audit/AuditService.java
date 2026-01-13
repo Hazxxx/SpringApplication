@@ -1,17 +1,21 @@
 package bada_project.SpringApplication.audit;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
+@RequiredArgsConstructor
 public class AuditService {
 
-    private final AuditLogDAO dao;
+    private final AuditLogDAO auditLogDAO;
 
-    public AuditService(AuditLogDAO dao) {
-        this.dao = dao;
+    public List<AuditLog> findAll() {
+        return auditLogDAO.findAll();
     }
 
-    public void log(String email, String action) {
-        dao.insert(email, action);
+    public void log(String username, String action, String details) {
+        auditLogDAO.insert(username, action, details);
     }
 }

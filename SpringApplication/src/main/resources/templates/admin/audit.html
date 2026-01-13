@@ -149,26 +149,22 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>2026-01-12 18:30</td>
-                        <td>admin@alphaomega.pl</td>
-                        <td><span class="badge bg-success">Logged in</span></td>
-                        <td>IP: 192.168.1.1</td>
+                    <tr th:if="${logs.isEmpty()}">
+                        <td colspan="4" class="text-center text-muted">
+                            No audit logs found
+                        </td>
                     </tr>
-                    <tr>
-                        <td>2026-01-12 18:15</td>
-                        <td>employee@alphaomega.pl</td>
-                        <td><span class="badge bg-info">Updated client</span></td>
-                        <td>Client ID: 5</td>
+
+                    <tr th:each="log : ${logs}">
+                        <td th:text="${#temporals.format(log.timestamp, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                        <td th:text="${log.username}"></td>
+                        <td>
+                            <span class="badge bg-secondary" th:text="${log.action}"></span>
+                        </td>
+                        <td th:text="${log.details}"></td>
                     </tr>
-                    <tr>
-                        <td>2026-01-12 17:45</td>
-                        <td>admin@alphaomega.pl</td>
-                        <td><span class="badge bg-warning">Changed role</span></td>
-                        <td>Employee ID: 3</td>
-                    </tr>
-                    <!-- Dodatkowe wiersze można dodać tutaj przez Thymeleaf -->
                     </tbody>
+
                 </table>
             </div>
 

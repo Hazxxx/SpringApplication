@@ -25,9 +25,4 @@ public class AdminController {
     public String structure() {
         return "admin/structure";
     }
-
-    @GetMapping("/audit")
-    public String audit() {
-        return "admin/audit";
-    }
 }
