@@ -112,7 +112,7 @@
     <div class="container">
 
         <div class="glass-card p-4 mb-4">
-            <h2 class="mb-1">👤 My Profile</h2>
+            <h2 class="mb-1">My Profile</h2>
             <div class="muted">
                 Update your personal data and home address.
             </div>
@@ -150,7 +150,7 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label">Email (must match login if you use username==email)</label>
+                        <label class="form-label">Email (your login)</label>
                         <input class="form-control"
                                th:field="*{email}"
                                th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''">
@@ -158,8 +158,7 @@
                     </div>
 
                     <div class="col-12 mt-4">
-                        <h5 class="mb-2">🏠 Home address</h5>
-                        <div class="muted">Saved in table ADRESY.</div>
+                        <h5 class="mb-2">Home address</h5>
                     </div>
 
                     <div class="col-md-4">
