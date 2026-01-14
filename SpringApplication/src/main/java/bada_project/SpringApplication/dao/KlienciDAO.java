@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -27,6 +28,23 @@ public class KlienciDAO {
                 Integer.class,
                 email);
         return cnt != null && cnt > 0;
+    }
+
+    public List<Klient> findAll() {
+        String sql = """
+            SELECT id_klienta, imie, nazwisko, email
+            FROM KLIENCI
+            ORDER BY id_klienta
+        """;
+
+        return jdbc.query(sql, (rs, rowNum) ->
+                new Klient(
+                        rs.getLong("id_klienta"),
+                        rs.getString("imie"),
+                        rs.getString("nazwisko"),
+                        rs.getString("email")
+                )
+        );
     }
 
     /*
@@ -118,6 +136,8 @@ public class KlienciDAO {
                 },
                 email);
     }
+
+
 
     /*
      * =========================

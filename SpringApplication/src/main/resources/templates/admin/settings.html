@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>Admin – Maintenance Mode</title>
+    <title>Admin – System Settings</title>
 
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.0.0-beta1/css/bootstrap.min.css}"/>
 
@@ -74,6 +74,39 @@
         .btn-ghost:hover {
             background: rgba(255,255,255,0.12);
         }
+
+        .section-divider {
+            border-top: 1px solid rgba(255,255,255,0.15);
+            margin: 2rem 0;
+        }
+
+        .warning-box {
+            background: rgba(220, 53, 69, 0.15);
+            border: 1px solid rgba(220, 53, 69, 0.4);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .alert {
+            border-radius: 12px;
+            backdrop-filter: blur(8px);
+        }
+
+        .modal-content {
+            background: rgba(20, 20, 20, 0.95);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+        }
+
+        .modal-header {
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .modal-footer {
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
     </style>
 </head>
 
@@ -107,16 +140,26 @@
 
         <!-- HEADER -->
         <div class="glass-card p-4 mb-4">
-            <h2 class="text-warning mb-1">🛠 Maintenance Mode</h2>
+            <h2 class="text-warning mb-1">⚙️ System Settings</h2>
             <p class="text-muted mb-0">
-                Global system availability switch.
+                Manage system-wide configurations and database operations.
             </p>
         </div>
 
-        <!-- STATUS -->
-        <div class="glass-card p-4 text-center">
+        <!-- ALERTS -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Success!</strong> <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
 
-            <h5 class="mb-3">Current status</h5>
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error!</strong> <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- MAINTENANCE MODE -->
+        <div class="glass-card p-4 mb-4">
+            <h5 class="mb-3">🛠️ Maintenance Mode</h5>
 
             <p class="mb-4">
                 Status:
@@ -128,10 +171,7 @@
                 </span>
             </p>
 
-            <!-- ACTIONS -->
-            <div class="d-flex justify-content-center gap-3 flex-wrap">
-
-                <!-- ENABLE -->
+            <div class="d-flex gap-3 flex-wrap">
                 <form th:if="${!maintenanceEnabled}"
                       th:action="@{/admin/settings/maintenance/enable}"
                       method="post">
@@ -140,7 +180,6 @@
                     </button>
                 </form>
 
-                <!-- DISABLE -->
                 <form th:if="${maintenanceEnabled}"
                       th:action="@{/admin/settings/maintenance/disable}"
                       method="post">
@@ -148,23 +187,104 @@
                         🟢 Disable Maintenance
                     </button>
                 </form>
-
             </div>
 
-            <p class="text-muted small mt-4">
+            <p class="text-muted small mt-3">
                 When enabled, all users will be blocked except administrators.
             </p>
+        </div>
 
-            <div class="mt-4">
-                <a class="btn btn-ghost" th:href="@{/admin/dashboard}">
-                    ← Back to Dashboard
+        <!-- DATABASE OPERATIONS -->
+        <div class="glass-card p-4">
+            <h5 class="mb-3">💾 Database Operations</h5>
+
+            <!-- BACKUP -->
+            <div class="mb-4">
+                <h6 class="text-info mb-2">Download Database Backup</h6>
+                <p class="text-muted small mb-3">
+                    Create and download a complete SQL backup of the database. This includes all tables and data.
+                </p>
+                <a th:href="@{/admin/settings/database/backup}"
+                   class="btn btn-info">
+                    📥 Download Backup
                 </a>
             </div>
+
+            <div class="section-divider"></div>
+
+            <!-- CLEAR DATABASE -->
+            <div>
+                <h6 class="text-danger mb-2">⚠️ Clear Database</h6>
+                <div class="warning-box">
+                    <p class="mb-2"><strong>⚠️ CRITICAL WARNING</strong></p>
+                    <p class="small mb-0">
+                        This operation will <strong>permanently delete ALL data</strong> from the database.
+                        This action <strong>CANNOT be undone</strong> and may rupture the integrity of the system.
+                        Make sure you have a recent backup before proceeding.
+                    </p>
+                </div>
+                <button type="button"
+                        class="btn btn-danger"
+                        data-bs-toggle="modal"
+                        data-bs-target="#clearDatabaseModal">
+                    🗑️ Clear Database
+                </button>
+            </div>
+        </div>
+
+        <!-- BACK BUTTON -->
+        <div class="text-center mt-4">
+            <a class="btn btn-ghost" th:href="@{/admin/dashboard}">
+                ← Back to Dashboard
+            </a>
         </div>
 
     </div>
 </div>
 
-<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<!-- CONFIRMATION MODAL -->
+<div class="modal fade" id="clearDatabaseModal" tabindex="-1" aria-labelledby="clearDatabaseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger" id="clearDatabaseModalLabel">
+                    ⚠️ Confirm Database Deletion
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Are you absolutely sure?</strong></p>
+                <p class="mb-3">
+                    This will permanently delete <strong>ALL DATA</strong> from the database, including:
+                </p>
+                <ul class="mb-3">
+                    <li>All vehicle brands and models</li>
+                    <li>All salons and partner companies</li>
+                    <li>All employees and positions</li>
+                    <li>All vehicles and transactions</li>
+                    <li>All service records</li>
+                </ul>
+                <p class="text-danger">
+                    <strong>This action CANNOT be undone!</strong>
+                </p>
+                <p class="small text-muted">
+                    Please ensure you have downloaded a recent backup before proceeding.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Cancel
+                </button>
+                <form th:action="@{/admin/settings/database/clear}" method="post">
+                    <button type="submit" class="btn btn-danger">
+                        Yes, Delete Everything
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>

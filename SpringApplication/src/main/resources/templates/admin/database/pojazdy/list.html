@@ -1,0 +1,176 @@
+<!DOCTYPE HTML>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Admin - Pojazdy</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.0.0-beta1/css/bootstrap.min.css}"/>
+    <style>
+        html, body { height: 100%; }
+        body {
+            margin: 0;
+            background: url('/assets/img/porscheview3.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+        }
+        .theme-nav {
+            background: rgba(139, 0, 0, 0.65);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .page-overlay {
+            min-height: calc(100vh - 64px);
+            background: linear-gradient(90deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.45) 45%, rgba(0,0,0,0.18) 100%);
+            padding: 40px 0;
+        }
+        .glass-card {
+            border-radius: 20px;
+            background: rgba(0,0,0,0.40);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.12);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.55);
+        }
+        .admin-badge {
+            background: #dc3545;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin-left: 8px;
+        }
+        .table-dark {
+            background: rgba(0,0,0,0.3);
+        }
+        .table-dark th, .table-dark td {
+            border-color: rgba(255,255,255,0.1);
+        }
+        .table-dark tbody tr:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .breadcrumb {
+            background: transparent;
+            margin-bottom: 0;
+        }
+        .breadcrumb-item a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark theme-nav">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+            <img th:src="@{/assets/img/aando8.png}" style="height:26px;margin-right:10px;">
+            Alpha&Omega Motors
+            <span class="admin-badge">ADMIN</span>
+        </a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" th:href="@{/}">Home</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/admin/dashboard}">Dashboard</a></li>
+                <li class="nav-item">
+                    <span class="nav-link">Logged as <b sec:authentication="name"></b></span>
+                </li>
+                <li class="nav-item">
+                    <form th:action="@{/logout}" method="post" style="display:inline;">
+                        <button class="btn btn-sm btn-outline-light">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="page-overlay">
+    <div class="container">
+
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}" class="text-white">Admin</a></li>
+                <li class="breadcrumb-item"><a th:href="@{/admin/database}" class="text-white">Database</a></li>
+                <li class="breadcrumb-item active text-light">Pojazdy</li>
+            </ol>
+        </nav>
+
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div class="glass-card p-4 mb-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2>🚗 Pojazdy (Vehicles)</h2>
+                    <p class="text-muted mb-0">Manage vehicle inventory in the system</p>
+                </div>
+                <a th:href="@{/admin/database/pojazdy/new}" class="btn btn-success">
+                    ➕ Add New Vehicle
+                </a>
+            </div>
+        </div>
+
+        <div class="glass-card p-4">
+            <table class="table table-dark table-hover">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>VIN</th>
+                    <th>Brand/Model</th>
+                    <th>Year</th>
+                    <th>Color</th>
+                    <th>Body Type</th>
+                    <th>Offers</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${pojazdy.isEmpty()}">
+                    <td colspan="8" class="text-center text-muted">
+                        No vehicles found. Add your first vehicle!
+                    </td>
+                </tr>
+                <tr th:each="pojazd : ${pojazdy}">
+                    <td th:text="${pojazd.idPojazdu}">1</td>
+                    <td><code th:text="${pojazd.vin}" class="text-warning">VIN123456789</code></td>
+                    <td th:text="${pojazd.nazwaMarki}">BMW</td>
+                    <td th:text="${pojazd.rocznikModelowy}">2023</td>
+                    <td th:text="${pojazd.kolor}">Black</td>
+                    <td th:text="${pojazd.typNadwozia}">Sedan</td>
+                    <td>
+                        <span class="badge bg-info" th:text="${pojazd.liczbaOfert}">2</span>
+                    </td>
+                    <td class="text-end">
+                        <a th:href="@{/admin/database/pojazdy/{id}/edit(id=${pojazd.idPojazdu})}"
+                           class="btn btn-sm btn-warning">
+                            ✏️ Edit
+                        </a>
+                        <form th:action="@{/admin/database/pojazdy/{id}/delete(id=${pojazd.idPojazdu})}"
+                              method="post"
+                              style="display:inline;"
+                              data-name="[[${pojazd.vin}]]"
+                              onsubmit="return confirm('Are you sure you want to delete vehicle ' + this.getAttribute('data-name') + '?');">
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                🗑️ Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="mt-4">
+                <a class="btn btn-secondary" th:href="@{/admin/structure}">← Back to Database</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE HTML>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title th:text="${isEdit ? 'Edit Salary' : 'Add New Salary'}">Add Salary</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.0.0-beta1/css/bootstrap.min.css}"/>
+    <style>
+        html, body { height: 100%; }
+        body {
+            margin: 0;
+            background: url('/assets/img/porscheview3.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+        }
+        .theme-nav {
+            background: rgba(139, 0, 0, 0.65);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .page-overlay {
+            min-height: calc(100vh - 64px);
+            background: linear-gradient(90deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.45) 45%, rgba(0,0,0,0.18) 100%);
+            padding: 40px 0;
+        }
+        .glass-card {
+            border-radius: 20px;
+            background: rgba(0,0,0,0.40);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.12);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.55);
+        }
+        .admin-badge {
+            background: #dc3545;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin-left: 8px;
+        }
+        .form-control, .form-select {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+        }
+        .form-control:focus, .form-select:focus {
+            background: rgba(255,255,255,0.15);
+            border-color: #dc3545;
+            color: #fff;
+        }
+        .form-control::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+        .form-select option {
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .form-label {
+            color: #fff;
+            font-weight: 500;
+        }
+        .breadcrumb {
+            background: transparent;
+            margin-bottom: 0;
+        }
+        .breadcrumb-item a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark theme-nav">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+            <img th:src="@{/assets/img/aando8.png}" style="height:26px;margin-right:10px;">
+            Alpha&Omega Motors
+            <span class="admin-badge">ADMIN</span>
+        </a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" th:href="@{/}">Home</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/admin/dashboard}">Dashboard</a></li>
+                <li class="nav-item">
+                    <span class="nav-link">Logged as <b sec:authentication="name"></b></span>
+                </li>
+                <li class="nav-item">
+                    <form th:action="@{/logout}" method="post" style="display:inline;">
+                        <button class="btn btn-sm btn-outline-light">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="page-overlay">
+    <div class="container">
+
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}" class="text-white">Admin</a></li>
+                <li class="breadcrumb-item"><a th:href="@{/admin/database}" class="text-white">Database</a></li>
+                <li class="breadcrumb-item"><a th:href="@{/admin/database/wynagrodzenia}" class="text-white">Salaries</a></li>
+                <li class="breadcrumb-item active text-light" th:text="${isEdit ? 'Edit' : 'New'}">New</li>
+            </ol>
+        </nav>
+
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div class="glass-card p-4">
+            <h2 class="mb-4" th:text="${isEdit ? '✏️ Edit Salary Contract' : '➕ Add New Salary Contract'}">Add Salary</h2>
+
+            <form th:action="${isEdit ? '/admin/database/wynagrodzenia/' + wynagrodzenie.idWynagrodzenia : '/admin/database/wynagrodzenia'}"
+                  method="post"
+                  th:object="${wynagrodzenie}">
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="kwota" class="form-label">Amount <span class="text-danger">*</span></label>
+                        <input type="number" step="0.01" class="form-control" id="kwota"
+                               th:field="*{kwota}"
+                               placeholder="e.g., 5000.00"
+                               required min="0">
+                        <small class="text-muted">Enter the monthly salary amount</small>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="waluta" class="form-label">Currency <span class="text-danger">*</span></label>
+                        <select class="form-select" id="waluta" th:field="*{waluta}" required>
+                            <option value="">Select currency...</option>
+                            <option value="PLN">PLN (Polish Zloty)</option>
+                            <option value="EUR">EUR (Euro)</option>
+                            <option value="USD">USD (US Dollar)</option>
+                            <option value="GBP">GBP (British Pound)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label for="dataKontraktu" class="form-label">Contract Date <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" id="dataKontraktu"
+                               th:field="*{dataKontraktu}"
+                               required>
+                        <small class="text-muted">The date when this salary contract was established</small>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-success">
+                        💾 <span th:text="${isEdit ? 'Update' : 'Save'}">Save</span>
+                    </button>
+                    <a th:href="@{/admin/database/wynagrodzenia}" class="btn btn-secondary">
+                        ❌ Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</body>
+</html>

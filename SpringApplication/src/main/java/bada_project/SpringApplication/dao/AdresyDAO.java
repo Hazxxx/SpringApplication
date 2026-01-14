@@ -4,7 +4,7 @@ import bada_project.SpringApplication.auth.RegisterForm;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-@Repository
+@Repository("adresyDAO")
 public class AdresyDAO {
 
     private final JdbcTemplate jdbc;
