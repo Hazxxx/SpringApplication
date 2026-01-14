@@ -230,7 +230,7 @@
 
             <!-- Seller Info -->
             <div class="seller-card" th:if="${vehicle.imieSprzedawcy != null}">
-              <h5 class="mb-3" style="color: #a0aec0;">Your Sales Advisor</h5>
+              <h5 class="mb-3" style="color: #a0aec0;">Vehicle Sales Advisor</h5>
               <div class="d-flex align-items-center mb-2">
                 <div
                   style="width: 40px; height: 40px; background: #4a5568; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
@@ -239,7 +239,6 @@
                 <div>
                   <div class="fw-bold" th:text="|${vehicle.imieSprzedawcy} ${vehicle.nazwiskoSprzedawcy}|">Jan Kowalski
                   </div>
-                  <div class="small opacity-75">Sales Specialist</div>
                 </div>
               </div>
               <div class="small opacity-75">
