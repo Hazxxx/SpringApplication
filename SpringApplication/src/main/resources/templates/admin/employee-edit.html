@@ -162,7 +162,7 @@
 
         <!-- HEADER -->
         <div class="glass-card p-4 mb-4">
-            <h2>✏️ Edit Employee</h2>
+            <h2>Edit Employee</h2>
             <p class="text-muted mb-0">
                 Modify employee information, position, and permissions
             </p>
@@ -175,7 +175,7 @@
                   method="post">
 
                 <!-- PERSONAL INFORMATION -->
-                <h4 class="section-title">👤 Personal Information</h4>
+                <h4 class="section-title">Personal Information</h4>
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
@@ -216,7 +216,7 @@
                 </div>
 
                 <!-- EMPLOYMENT DETAILS -->
-                <h4 class="section-title">💼 Employment Details</h4>
+                <h4 class="section-title">Employment Details</h4>
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
@@ -235,7 +235,7 @@
                         </select>
 
                         <div id="adminWarning" class="admin-warning" style="display: none;">
-                            <strong>⚠️ Warning:</strong> This position has admin privileges.
+                            <strong>Warning:</strong> This position has admin privileges.
                             The employee will have full system access.
                         </div>
                     </div>
@@ -253,7 +253,7 @@
                 </div>
 
                 <!-- SALON ASSIGNMENT -->
-                <h4 class="section-title">🏢 Salon Assignment</h4>
+                <h4 class="section-title">Salon Assignment</h4>
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
@@ -273,13 +273,13 @@
 
                 <!-- CURRENT STATUS INFO -->
                 <div class="alert alert-info" th:if="${employee.czyAdmin}">
-                    <strong>ℹ️ Current Status:</strong> This employee currently has admin privileges.
+                    <strong>Current Status:</strong> This employee currently has admin privileges.
                 </div>
 
                 <!-- ACTIONS -->
                 <div class="mt-4 d-flex gap-2">
                     <button type="submit" class="btn btn-primary">
-                        💾 Save Changes
+                        Save Changes
                     </button>
                     <a th:href="@{/admin/employees}" class="btn btn-secondary">
                         ← Cancel

@@ -131,11 +131,11 @@
         <div class="glass-card p-4 mb-4">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h2>💼 Stanowiska (Job Positions)</h2>
+                    <h2>Stanowiska (Job Positions)</h2>
                     <p class="text-muted mb-0">Manage employee positions in the system</p>
                 </div>
                 <a th:href="@{/admin/database/stanowiska/new}" class="btn btn-success">
-                    ➕ Add New Position
+                    Add New Position
                 </a>
             </div>
         </div>
@@ -171,7 +171,7 @@
                     <td class="text-end">
                         <a th:href="@{/admin/database/stanowiska/{id}/edit(id=${stanowisko.idStanowiska})}"
                            class="btn btn-sm btn-warning">
-                            ✏️ Edit
+                            Edit
                         </a>
                         <form th:action="@{/admin/database/stanowiska/{id}/delete(id=${stanowisko.idStanowiska})}"
                               method="post"
@@ -179,7 +179,7 @@
                               data-name="[[${stanowisko.nazwa}]]"
                               onsubmit="return confirmDelete(this);">
                             <button type="submit" class="btn btn-sm btn-danger">
-                                🗑️ Delete
+                                Delete
                             </button>
                         </form>
 

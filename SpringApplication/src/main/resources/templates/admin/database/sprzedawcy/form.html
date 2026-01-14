@@ -143,7 +143,7 @@
         </div>
 
         <div class="glass-card p-4">
-            <h2 class="mb-4" th:text="${isEdit ? '✏️ Edit Employee' : '➕ Add New Employee'}">Add Employee</h2>
+            <h2 class="mb-4" th:text="${isEdit ? 'Edit Employee' : 'Add New Employee'}">Add Employee</h2>
 
             <form th:action="${isEdit ? '/admin/database/sprzedawcy/' + sprzedawca.idPracownika : '/admin/database/sprzedawcy'}"
                   method="post"
@@ -197,7 +197,7 @@
 
                 <!-- Contact Information -->
                 <div class="section-divider">
-                    <h5>📞 Contact Information</h5>
+                    <h5>Contact Information</h5>
                 </div>
 
                 <div class="row">
@@ -220,7 +220,7 @@
 
                 <!-- Address -->
                 <div class="section-divider">
-                    <h5>📍 Address</h5>
+                    <h5>Address</h5>
                 </div>
 
                 <div class="row">
@@ -277,7 +277,7 @@
 
                 <!-- Employment Information -->
                 <div class="section-divider">
-                    <h5>💼 Employment Information</h5>
+                    <h5>Employment Information</h5>
                 </div>
 
                 <div class="row">
@@ -314,10 +314,10 @@
 
                 <div class="d-flex gap-2 mt-4">
                     <button type="submit" class="btn btn-success">
-                        💾 <span th:text="${isEdit ? 'Update' : 'Save'}">Save</span>
+                        <span th:text="${isEdit ? 'Update' : 'Save'}">Save</span>
                     </button>
                     <a th:href="@{/admin/database/sprzedawcy}" class="btn btn-secondary">
-                        ❌ Cancel
+                        Cancel
                     </a>
                 </div>
             </form>

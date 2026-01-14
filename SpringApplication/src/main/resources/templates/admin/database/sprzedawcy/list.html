@@ -131,11 +131,11 @@
         <div class="glass-card p-4 mb-4">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h2>👔 Sprzedawcy (Salespeople)</h2>
+                    <h2>Sprzedawcy (Salespeople)</h2>
                     <p class="text-muted mb-0">Manage sales staff and employees</p>
                 </div>
                 <a th:href="@{/admin/database/sprzedawcy/new}" class="btn btn-success">
-                    ➕ Add New Salesperson
+                    Add New Salesperson
                 </a>
             </div>
         </div>
@@ -177,7 +177,7 @@
                     <td class="text-end">
                         <a th:href="@{/admin/database/sprzedawcy/{id}/edit(id=${sprzedawca.idPracownika})}"
                            class="btn btn-sm btn-warning">
-                            ✏️ Edit
+                            Edit
                         </a>
                         <form th:action="@{/admin/database/sprzedawcy/{id}/delete(id=${sprzedawca.idPracownika})}"
                               method="post"
@@ -185,7 +185,7 @@
                               data-name="[[${sprzedawca.imie + ' ' + sprzedawca.nazwisko}]]"
                               onsubmit="return confirm('Are you sure you want to delete employee ' + this.getAttribute('data-name') + '?');">
                             <button type="submit" class="btn btn-sm btn-danger">
-                                🗑️ Delete
+                                Delete
                             </button>
                         </form>
                     </td>

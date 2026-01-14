@@ -138,7 +138,7 @@
         </div>
 
         <div class="glass-card p-4">
-            <h2 class="mb-4" th:text="${isEdit ? '✏️ Edit Model' : '➕ Add New Model'}">Add Model</h2>
+            <h2 class="mb-4" th:text="${isEdit ? 'Edit Model' : 'Add New Model'}">Add Model</h2>
 
             <form th:action="${isEdit ? '/admin/database/modele/' + model.idModelu : '/admin/database/modele'}"
                   method="post"
@@ -220,10 +220,10 @@
 
                 <div class="d-flex gap-2 mt-3">
                     <button type="submit" class="btn btn-success">
-                        💾 <span th:text="${isEdit ? 'Update' : 'Save'}">Save</span>
+                        <span th:text="${isEdit ? 'Update' : 'Save'}">Save</span>
                     </button>
                     <a th:href="@{/admin/database/modele}" class="btn btn-secondary">
-                        ❌ Cancel
+                        Cancel
                     </a>
                 </div>
             </form>

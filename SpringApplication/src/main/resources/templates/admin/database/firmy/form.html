@@ -139,7 +139,7 @@
         </div>
 
         <div class="glass-card p-4">
-            <h2 class="mb-4" th:text="${isEdit ? '✏️ Edit Company' : '➕ Add New Company'}">Add Company</h2>
+            <h2 class="mb-4" th:text="${isEdit ? 'Edit Company' : 'Add New Company'}">Add Company</h2>
 
             <form th:action="${isEdit ? '/admin/database/firmy-partnerskie/' + firma.idFirmyPartnerskiej : '/admin/database/firmy-partnerskie'}"
                   method="post"
@@ -177,7 +177,7 @@
 
                 <!-- Address Section -->
                 <div class="section-divider">
-                    <h5>📍 Headquarters Address</h5>
+                    <h5>Headquarters Address</h5>
                 </div>
 
                 <div class="row">
@@ -234,10 +234,10 @@
 
                 <div class="d-flex gap-2 mt-4">
                     <button type="submit" class="btn btn-success">
-                        💾 <span th:text="${isEdit ? 'Update' : 'Save'}">Save</span>
+                        <span th:text="${isEdit ? 'Update' : 'Save'}">Save</span>
                     </button>
                     <a th:href="@{/admin/database/firmy-partnerskie}" class="btn btn-secondary">
-                        ❌ Cancel
+                        Cancel
                     </a>
                 </div>
             </form>
