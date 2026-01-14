@@ -251,7 +251,7 @@ public class Vehicle {
 
     // Helper methods
     public String getFullName() {
-        return nazwaMarki + " (Model ID: " + idModelu + ")";
+        return nazwaMarki;
     }
 
     public String getPriceFormatted() {

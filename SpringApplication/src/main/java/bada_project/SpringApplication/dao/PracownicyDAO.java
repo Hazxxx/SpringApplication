@@ -47,6 +47,20 @@ public class PracownicyDAO {
                 email);
     }
 
+    public int countEmployees() {
+        return jdbc.queryForObject(
+                "SELECT COUNT(*) FROM PRACOWNICY",
+                Integer.class
+        );
+    }
+
+    public int countAdmins() {
+        return jdbc.queryForObject(
+                "SELECT COUNT(*) FROM PRACOWNICY WHERE is_admin = 1",
+                Integer.class
+        );
+    }
+
     /**
      * Check if employee email exists
      */
