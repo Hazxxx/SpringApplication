@@ -2,6 +2,7 @@ package bada_project.SpringApplication.user.employee;
 
 import bada_project.SpringApplication.dao.PracownicyDAO;
 import bada_project.SpringApplication.dao.ReservationDAO;
+import bada_project.SpringApplication.dao.VehicleDAO;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,10 +22,12 @@ public class EmployeeController {
 
     private final PracownicyDAO pracownicyDAO;
     private final ReservationDAO reservationDAO;
+    private final VehicleDAO vehicleDAO;
 
-    public EmployeeController(PracownicyDAO pracownicyDAO, ReservationDAO reservationDAO) {
+    public EmployeeController(PracownicyDAO pracownicyDAO, ReservationDAO reservationDAO, VehicleDAO vehicleDAO) {
         this.pracownicyDAO = pracownicyDAO;
         this.reservationDAO = reservationDAO;
+        this.vehicleDAO = vehicleDAO;
     }
 
     @GetMapping("/dashboard")
@@ -39,6 +42,9 @@ public class EmployeeController {
 
         var reservations = reservationDAO.findAllByEmployeeId(employeeId);
         model.addAttribute("reservations", reservations);
+
+        var assignedVehicles = vehicleDAO.findAssignedToEmployee(employeeId);
+        model.addAttribute("assignedVehicles", assignedVehicles);
 
         return "employee/dashboard";
     }

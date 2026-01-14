@@ -31,15 +31,17 @@ public class DashboardController {
             return "redirect:/index";
         }
     }
-/*
-    // Panel administratora
-    @GetMapping("/admin/dashboard")
-    public String showAdminPage(Model model, Authentication authentication) {
-        model.addAttribute("username", authentication.getName());
-        model.addAttribute("roles", authentication.getAuthorities());
-        return "admin/dashboard";
-    }
-*/
+
+    /*
+     * // Panel administratora
+     * 
+     * @GetMapping("/admin/dashboard")
+     * public String showAdminPage(Model model, Authentication authentication) {
+     * model.addAttribute("username", authentication.getName());
+     * model.addAttribute("roles", authentication.getAuthorities());
+     * return "admin/dashboard";
+     * }
+     */
     // Panel użytkownika
     @GetMapping("/user/dashboard")
     public String showUserPage(Model model, Authentication authentication) {

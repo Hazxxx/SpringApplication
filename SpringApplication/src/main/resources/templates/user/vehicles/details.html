@@ -131,7 +131,7 @@
           <li class="nav-item">
             <a class="nav-link" th:href="@{/main}">Main</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" sec:authorize="!hasRole('EMPLOYEE')">
             <a class="nav-link" th:href="@{/user/vehicles}">Catalog</a>
           </li>
         </ul>
@@ -144,7 +144,7 @@
     <div class="container">
 
       <!-- Breadcrumb / Back -->
-      <div class="mb-4">
+      <div class="mb-4" sec:authorize="!hasRole('EMPLOYEE')">
         <a th:href="@{/user/vehicles}" class="text-decoration-none text-light opacity-75">&larr; Back to Catalog</a>
       </div>
 
@@ -155,8 +155,7 @@
             <h2 class="mb-4" th:text="${vehicle.fullName}">Porsche 911</h2>
 
             <!-- Main Image Placeholder -->
-            <div
-                    style="
+            <div style="
     position: relative;
     width: 100%;
     height: 320px;
@@ -164,21 +163,15 @@
     border-radius: 12px;
     background: #111;
     margin-bottom: 2rem;
-  "
-            >
-              <img
-                      th:src="@{/assets/vehicles/{img}.jpg(
+  ">
+              <img th:src="@{/assets/vehicles/{img}.jpg(
       img=${#strings.toLowerCase(vehicle.nazwaMarki)}
-    )}"
-                      alt="Vehicle image"
-                      style="
+    )}" alt="Vehicle image" style="
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
-    "
-                      onerror="this.onerror=null;this.src='/assets/vehicles/placeholder.jpg';"
-              />
+    " onerror="this.onerror=null;this.src='/assets/vehicles/placeholder.jpg';" />
             </div>
 
 
@@ -250,7 +243,8 @@
             </div>
 
             <!-- Action Button -->
-            <form th:action="@{/user/vehicles/{id}/reserve(id=${vehicle.idPojazdu})}" method="post" class="mt-4">
+            <form sec:authorize="!hasRole('EMPLOYEE')"
+              th:action="@{/user/vehicles/{id}/reserve(id=${vehicle.idPojazdu})}" method="post" class="mt-4">
               <button type="submit" class="btn btn-reserve" th:disabled="${vehicle.sprzedany}">
                 <span th:text="${vehicle.sprzedany ? 'Sold / Reserved' : 'Reserve Now'}">Reserve Now</span>
               </button>

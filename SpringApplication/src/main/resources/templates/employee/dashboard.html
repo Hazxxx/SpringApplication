@@ -162,69 +162,146 @@
     <div class="page-overlay">
         <div class="container">
 
-            <div class="glass-card">
-                <div class="d-flex justify-content-between align-items-center mb-4">
+            <!-- HEADER -->
+            <div class="glass-card mb-4">
+                <div class="d-flex justify-content-between align-items-center">
                     <h2 class="mb-0">Employee Dashboard</h2>
+                    <div th:text="${#authentication.name}" class="badge bg-info text-dark">Employee</div>
                 </div>
 
-                <div th:if="${successMessage}" class="alert alert-success" role="alert" th:text="${successMessage}">
+                <div th:if="${successMessage}" class="alert alert-success mt-3" role="alert"
+                    th:text="${successMessage}">
                 </div>
-                <div th:if="${errorMessage}" class="alert alert-danger" role="alert" th:text="${errorMessage}"></div>
+                <div th:if="${errorMessage}" class="alert alert-danger mt-3" role="alert" th:text="${errorMessage}">
+                </div>
+            </div>
 
-                <h4 class="mb-3">Assigned Reservations</h4>
+            <!-- SPLIT VIEW CONTAINER -->
+            <div class="row">
+                <!-- TOP/LEFT SECTION: Assigned Reservations -->
+                <div class="col-12 mb-4">
+                    <div class="glass-card h-100">
+                        <h4 class="mb-3 border-bottom pb-2">Assigned Reservations</h4>
 
-                <div class="table-responsive">
-                    <table class="table table-borderless table-dark text-white" style="--bs-table-bg: transparent;">
-                        <thead>
-                            <tr>
-                                <th class="text-white">ID</th>
-                                <th class="text-white">Date</th>
-                                <th class="text-white">Vehicle</th>
-                                <th class="text-white">Client</th>
-                                <th class="text-white">Status</th>
-                                <th class="text-white">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="r : ${reservations}">
-                                <td class="text-white" th:text="${r.idRezerwacji}">1</td>
-                                <td class="text-white" th:text="${#dates.format(r.dataRezerwacji, 'yyyy-MM-dd HH:mm')}">
-                                    2023-01-01</td>
-                                <td>
-                                    <a th:href="@{/user/vehicles/{id}(id=${r.idOferty})}"
-                                        class="text-decoration-none text-light" th:text="${r.nazwaPojazdu}">Porsche
-                                        911</a>
-                                </td>
-                                <td>
-                                    <div th:text="${r.daneKlienta}" class="fw-bold">Jan Kowalski</div>
-                                    <div class="small opacity-75" th:text="${r.emailKlienta}">jan@test.pl</div>
-                                    <div class="small opacity-75" th:text="${r.telefonKlienta}">123456789</div>
-                                </td>
-                                <td>
-                                    <span th:class="|status-badge status-${r.status}|"
-                                        th:text="${r.status}">OCZEKUJACA</span>
-                                </td>
-                                <td>
-                                    <div class="d-flex gap-2" th:if="${r.status == 'OCZEKUJACA'}">
-                                        <form th:action="@{/employee/reservations/{id}/approve(id=${r.idRezerwacji})}"
-                                            method="post">
-                                            <button class="btn-action btn-approve" title="Approve">✓</button>
-                                        </form>
-                                        <form th:action="@{/employee/reservations/{id}/reject(id=${r.idRezerwacji})}"
-                                            method="post">
-                                            <button class="btn-action btn-reject" title="Reject">✕</button>
-                                        </form>
-                                    </div>
-                                    <span th:if="${r.status != 'OCZEKUJACA'}" class="text-muted small">Processed</span>
-                                </td>
-                            </tr>
-                            <tr th:if="${#lists.isEmpty(reservations)}">
-                                <td colspan="6" class="text-center py-4 text-muted">No reservations found.</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                        <div style="height: 40vh; overflow-y: auto; padding-right: 5px;">
+                            <div class="table-responsive">
+                                <table class="table table-borderless table-dark text-white"
+                                    style="--bs-table-bg: transparent;">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-white">ID</th>
+                                            <th class="text-white">Date</th>
+                                            <th class="text-white">Vehicle</th>
+                                            <th class="text-white">Client</th>
+                                            <th class="text-white">Status</th>
+                                            <th class="text-white">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="r : ${reservations}">
+                                            <td class="text-white" th:text="${r.idRezerwacji}">1</td>
+                                            <td class="text-white"
+                                                th:text="${#dates.format(r.dataRezerwacji, 'yyyy-MM-dd HH:mm')}">
+                                                2023-01-01</td>
+                                            <td>
+                                                <!-- Link to details, keeping user context (back button handled in details) -->
+                                                <a th:href="@{/user/vehicles/{id}(id=${r.idOferty})}"
+                                                    class="text-decoration-none text-light fw-bold"
+                                                    th:text="${r.nazwaPojazdu}">Porsche
+                                                    911</a>
+                                            </td>
+                                            <td>
+                                                <div th:text="${r.daneKlienta}" class="fw-bold">Jan Kowalski</div>
+                                                <div class="small opacity-75" th:text="${r.emailKlienta}">jan@test.pl
+                                                </div>
+                                                <div class="small opacity-75" th:text="${r.telefonKlienta}">123456789
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span th:class="|status-badge status-${r.status}|"
+                                                    th:text="${r.status}">OCZEKUJACA</span>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex gap-2" th:if="${r.status == 'OCZEKUJACA'}">
+                                                    <form
+                                                        th:action="@{/employee/reservations/{id}/approve(id=${r.idRezerwacji})}"
+                                                        method="post">
+                                                        <button class="btn-action btn-approve"
+                                                            title="Approve">✓</button>
+                                                    </form>
+                                                    <form
+                                                        th:action="@{/employee/reservations/{id}/reject(id=${r.idRezerwacji})}"
+                                                        method="post">
+                                                        <button class="btn-action btn-reject" title="Reject">✕</button>
+                                                    </form>
+                                                </div>
+                                                <span th:if="${r.status != 'OCZEKUJACA'}"
+                                                    class="text-muted small">Processed</span>
+                                            </td>
+                                        </tr>
+                                        <tr th:if="${#lists.isEmpty(reservations)}">
+                                            <td colspan="6" class="text-center py-4 text-muted">No reservations found.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
+                <!-- BOTTOM/RIGHT SECTION: Assigned Vehicles -->
+                <div class="col-12">
+                    <div class="glass-card h-100">
+                        <h4 class="mb-3 border-bottom pb-2">Assigned Vehicles (My Catalog)</h4>
+
+                        <div style="height: 40vh; overflow-y: auto; padding-right: 5px;">
+                            <div class="table-responsive">
+                                <table class="table table-borderless table-dark text-white"
+                                    style="--bs-table-bg: transparent;">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-white">ID</th>
+                                            <th class="text-white">Image</th>
+                                            <th class="text-white">Model</th>
+                                            <th class="text-white">Price</th>
+                                            <th class="text-white">Status</th>
+                                            <th class="text-white">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="v : ${assignedVehicles}">
+                                            <td class="text-white" th:text="${v.idPojazdu}">1</td>
+                                            <td>
+                                                <img th:src="@{/assets/vehicles/{img}.jpg(img=${#strings.toLowerCase(v.nazwaMarki)})}"
+                                                    style="width: 50px; height: 35px; object-fit: cover; border-radius: 4px;"
+                                                    onerror="this.onerror=null;this.src='/assets/vehicles/placeholder.jpg';" />
+                                            </td>
+                                            <td>
+                                                <div th:text="${v.fullName}" class="fw-bold">Porsche 911</div>
+                                                <div class="small opacity-75" th:text="${v.vin}">VIN...</div>
+                                            </td>
+                                            <td class="text-white" th:text="${v.priceFormatted}">500 000 PLN</td>
+                                            <td>
+                                                <span th:if="${v.sprzedany}" class="badge bg-danger">SOLD</span>
+                                                <span th:unless="${v.sprzedany}"
+                                                    class="badge bg-success">AVAILABLE</span>
+                                            </td>
+                                            <td>
+                                                <a th:href="@{/user/vehicles/{id}(id=${v.idPojazdu})}"
+                                                    class="btn btn-sm btn-outline-light">Details</a>
+                                            </td>
+                                        </tr>
+                                        <tr th:if="${#lists.isEmpty(assignedVehicles)}">
+                                            <td colspan="6" class="text-center py-4 text-muted">No vehicles assigned to
+                                                you.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>
