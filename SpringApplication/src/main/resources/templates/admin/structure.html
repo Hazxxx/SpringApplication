@@ -58,6 +58,31 @@
             font-size: 48px;
             margin-bottom: 16px;
         }
+        /* === LOGOUT FIX === */
+        .logout-form {
+            margin: 0;
+        }
+
+        .logout-link {
+            background: transparent;
+            border: none;
+            padding: .45rem .75rem;
+            color: rgba(255,255,255,.78);
+            border-radius: 10px;
+            transition: background .2s ease, color .2s ease;
+        }
+
+        .logout-link:hover {
+            background: rgba(255,255,255,.10);
+            color: rgba(255,255,255,.95);
+        }
+
+        .logout-link:focus,
+        .logout-link:active {
+            outline: none;
+            box-shadow: none;
+        }
+
     </style>
 </head>
 <body>
@@ -77,8 +102,8 @@
                     <span class="nav-link">Logged as <b sec:authentication="name"></b></span>
                 </li>
                 <li class="nav-item">
-                    <form th:action="@{/logout}" method="post" style="display:inline;">
-                        <button class="btn btn-sm btn-outline-light">Logout</button>
+                    <form th:action="@{/logout}" method="post" class="logout-form">
+                        <button type="submit" class="nav-link logout-link">Logout</button>
                     </form>
                 </li>
             </ul>
@@ -106,7 +131,6 @@
                             <div class="table-icon">🏷️</div>
                             <h5>Marki</h5>
                             <p class="text-muted mb-2">Car brands</p>
-                            <small class="text-info" th:text="${totalMarki} + ' records'">0 records</small>
                         </div>
                     </a>
                 </div>
@@ -118,7 +142,6 @@
                             <div class="table-icon">🚗</div>
                             <h5>Modele</h5>
                             <p class="text-muted mb-2">Car models</p>
-                            <small class="text-info" th:text="${totalModele} + ' records'">0 records</small>
                         </div>
                     </a>
                 </div>
@@ -130,7 +153,6 @@
                             <div class="table-icon">🚙</div>
                             <h5>Pojazdy</h5>
                             <p class="text-muted mb-2">Vehicles</p>
-                            <small class="text-info" th:text="${totalPojazdy} + ' records'">0 records</small>
                         </div>
                     </a>
                 </div>
@@ -142,7 +164,6 @@
                             <div class="table-icon">💰</div>
                             <h5>Oferty</h5>
                             <p class="text-muted mb-2">Offers</p>
-                            <small class="text-info" th:text="${totalOferty} + ' records'">0 records</small>
                         </div>
                     </a>
                 </div>
@@ -154,7 +175,6 @@
                             <div class="table-icon">🏪</div>
                             <h5>Salony</h5>
                             <p class="text-muted mb-2">Salon locations</p>
-                            <small class="text-info" th:text="${totalSalony} + ' records'">0 records</small>
                         </div>
                     </a>
                 </div>
@@ -166,7 +186,7 @@
                             <div class="table-icon">💼</div>
                             <h5>Stanowiska</h5>
                             <p class="text-muted mb-2">Job positions</p>
-                            <small class="text-info" th:text="${totalStanowiska} + ' records'">0 records</small>
+
                         </div>
                     </a>
                 </div>
@@ -178,7 +198,7 @@
                             <div class="table-icon">💳</div>
                             <h5>Wynagrodzenia</h5>
                             <p class="text-muted mb-2">Salaries</p>
-                            <small class="text-info" th:text="${totalWynagrodzenia} + ' records'">0 records</small>
+
                         </div>
                     </a>
                 </div>
@@ -190,7 +210,7 @@
                             <div class="table-icon">🧑‍💼</div>
                             <h5>Sprzedawcy</h5>
                             <p class="text-muted mb-2">Sellers</p>
-                            <small class="text-info" th:text="${totalSprzedawcy} + ' records'">0 records</small>
+
                         </div>
                     </a>
                 </div>
@@ -202,7 +222,7 @@
                             <div class="table-icon">🤝</div>
                             <h5>Firmy partnerskie</h5>
                             <p class="text-muted mb-2">Partner companies</p>
-                            <small class="text-info" th:text="${totalFirmy} + ' records'">0 records</small>
+
                         </div>
                     </a>
                 </div>
@@ -214,7 +234,7 @@
                             <div class="table-icon">📍</div>
                             <h5>Adresy</h5>
                             <p class="text-muted mb-2">Addresses</p>
-                            <small class="text-info" th:text="${totalAdresy} + ' records'">0 records</small>
+
                         </div>
                     </a>
                 </div>
@@ -226,7 +246,7 @@
                             <div class="table-icon">🧾</div>
                             <h5>Sprzedaże</h5>
                             <p class="text-muted mb-2">Sales</p>
-                            <small class="text-info" th:text="${totalSprzedaze} + ' records'">0 records</small>
+
                         </div>
                     </a>
                 </div>

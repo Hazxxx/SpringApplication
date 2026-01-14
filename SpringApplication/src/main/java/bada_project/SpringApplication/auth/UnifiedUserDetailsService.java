@@ -31,10 +31,23 @@ public class UnifiedUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        System.out.println(">>> LOGIN ATTEMPT: " + email);
+        // ===== SANITYZACJA WEJŚCIA =====
+        if (email == null) {
+            throw new UsernameNotFoundException("Email is null");
+        }
 
-        // First, try to find as employee
-        var employeeOpt = pracownicyDAO.findAuthByEmail(email.toLowerCase());
+        String login = email.trim().toLowerCase();
+
+        // twarda walidacja formatu – zanim poleci do DB
+        if (!login.matches("^[a-z0-9@._+-]{5,100}$")) {
+            System.out.println(">>> INVALID LOGIN FORMAT: " + login);
+            throw new UsernameNotFoundException("Invalid login format");
+        }
+
+        System.out.println(">>> LOGIN ATTEMPT: " + login);
+
+        // ===== 1. PRACOWNIK =====
+        var employeeOpt = pracownicyDAO.findAuthByEmail(login);
         if (employeeOpt.isPresent()) {
             var employee = employeeOpt.get();
 
@@ -43,10 +56,9 @@ public class UnifiedUserDetailsService implements UserDetailsService {
             System.out.println(">>> Is Admin: " + employee.isAdmin());
             System.out.println(">>> PASSWORD HASH: " + employee.passwordHash());
 
-            // Build authorities based on admin status
             List<SimpleGrantedAuthority> authorities = new ArrayList<>();
             authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-            authorities.add(new SimpleGrantedAuthority("ROLE_EMPLOYEE")); // Employees get this role
+            authorities.add(new SimpleGrantedAuthority("ROLE_EMPLOYEE"));
 
             if (employee.isAdmin()) {
                 authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
@@ -58,26 +70,29 @@ public class UnifiedUserDetailsService implements UserDetailsService {
             return new User(
                     employee.email(),
                     employee.passwordHash(),
-                    authorities);
+                    authorities
+            );
         }
 
-        // If not found as employee, try as client
-        var clientOpt = klienciDAO.findAuthByEmail(email.toLowerCase());
+        // ===== 2. KLIENT =====
+        var clientOpt = klienciDAO.findAuthByEmail(login);
         if (clientOpt.isPresent()) {
             var client = clientOpt.get();
 
             System.out.println(">>> CLIENT FOUND: " + client.email());
-            System.out.println(">>> PASSWORD HASH: " + client.passwordHash().substring(0, 20) + "...");
+            System.out.println(">>> PASSWORD HASH: " +
+                    client.passwordHash().substring(0, Math.min(20, client.passwordHash().length())) + "...");
             System.out.println(">>> GRANTED: ROLE_USER");
 
             return new User(
                     client.email(),
                     client.passwordHash(),
-                    List.of(new SimpleGrantedAuthority("ROLE_USER")));
+                    List.of(new SimpleGrantedAuthority("ROLE_USER"))
+            );
         }
 
-        // Not found in either table
-        System.out.println(">>> USER NOT FOUND: " + email);
-        throw new UsernameNotFoundException("User not found: " + email);
+        // ===== BRAK USERA =====
+        System.out.println(">>> USER NOT FOUND: " + login);
+        throw new UsernameNotFoundException("User not found: " + login);
     }
 }

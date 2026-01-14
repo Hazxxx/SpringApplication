@@ -144,14 +144,14 @@
                     <a class="nav-link" th:href="@{/main}">Main</a>
                 </li>
 
-                <li class="nav-item active">
+                <li class="nav-item">
                     <a class="nav-link" href="#">Dashboard</a>
                 </li>
 
                 <li class="nav-item d-flex align-items-center">
                     <span class="nav-link" style="color: rgba(255,255,255,.85);">
                         Logged as:
-                        <b style="text-transform:capitalize" sec:authentication="name">Guest</b>
+                        <b sec:authentication="name">guest</b>
                     </span>
                 </li>
 
@@ -178,7 +178,7 @@
                 <div>
                     <h2 class="mb-1">👤 User Dashboard</h2>
                     <div class="muted">
-                        Welcome <b style="text-transform:capitalize" sec:authentication="name">Guest</b>, here's your access overview.
+                        Welcome <b sec:authentication="name">guest</b>, here's your access overview.
                     </div>
                 </div>
             </div>
@@ -193,12 +193,6 @@
                 </a>
                 <a class="btn btn-ghost" th:href="@{/user/profile}">
                      My Profile
-                </a>
-                <a class="btn btn-ghost" href="#">
-                    My reservations
-                </a>
-                <a class="btn btn-ghost" href="#">
-                    Settings
                 </a>
             </div>
         </div>

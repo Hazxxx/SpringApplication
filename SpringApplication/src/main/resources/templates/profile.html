@@ -91,13 +91,16 @@
                 <li class="nav-item">
                     <span class="nav-link" style="color: rgba(255,255,255,.85);">
                         Logged as:
-                        <b style="text-transform:capitalize" sec:authentication="name">User</b>
+                        <b sec:authentication="name">User</b>
                     </span>
                 </li>
 
                 <li class="nav-item ms-2">
                     <form method="post" th:action="@{/logout}">
-                        <button class="btn btn-sm btn-danger">Logout</button>
+                        <button class="nav-link btn btn-link"
+                                style="color:rgba(255,255,255,.85); padding:.45rem .75rem; border-radius:10px;">
+                            Logout
+                        </button>
                     </form>
                 </li>
             </ul>

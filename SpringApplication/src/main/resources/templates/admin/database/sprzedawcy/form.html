@@ -72,6 +72,31 @@
         .breadcrumb-item a {
             text-decoration: none;
         }
+        /* === LOGOUT FIX === */
+        .logout-form {
+            margin: 0;
+        }
+
+        .logout-link {
+            background: transparent;
+            border: none;
+            padding: .45rem .75rem;
+            color: rgba(255,255,255,.78);
+            border-radius: 10px;
+            transition: background .2s ease, color .2s ease;
+        }
+
+        .logout-link:hover {
+            background: rgba(255,255,255,.10);
+            color: rgba(255,255,255,.95);
+        }
+
+        .logout-link:focus,
+        .logout-link:active {
+            outline: none;
+            box-shadow: none;
+        }
+
     </style>
 </head>
 <body>
@@ -91,8 +116,8 @@
                     <span class="nav-link">Logged as <b sec:authentication="name"></b></span>
                 </li>
                 <li class="nav-item">
-                    <form th:action="@{/logout}" method="post" style="display:inline;">
-                        <button class="btn btn-sm btn-outline-light">Logout</button>
+                    <form th:action="@{/logout}" method="post" class="logout-form">
+                        <button type="submit" class="nav-link logout-link">Logout</button>
                     </form>
                 </li>
             </ul>

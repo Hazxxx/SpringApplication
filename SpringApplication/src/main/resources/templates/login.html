@@ -190,7 +190,7 @@
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/main}">Main</a>
                 </li>
-                <li class="nav-item active">
+                <li class="nav-item">
                     <a class="nav-link" href="#">Login</a>
                 </li>
             </ul>
@@ -215,13 +215,21 @@
                 <div class="mb-3">
                     <label for="login" class="form-label">Login</label>
                     <input id="login" type="text" class="form-control"
-                           placeholder="Enter login" autocomplete="off" name="username"/>
+                           placeholder="Enter login"
+                           autocomplete="off"
+                           name="username"
+                           pattern="^[a-zA-Z0-9._-]{3,40}$"
+                           title="3–40 chars, letters, numbers, . _ - only"
+                           required/>
                 </div>
 
                 <div class="mb-2">
                     <label for="password" class="form-label">Password</label>
                     <input id="password" type="password" class="form-control"
-                           placeholder="Enter your password" autocomplete="off" name="password"/>
+                           placeholder="Enter your password"
+                           name="password"
+                           minlength="8"
+                           required/>
                 </div>
 
                 <div th:if="${param.error}" class="error-box">

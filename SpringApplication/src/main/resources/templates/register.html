@@ -95,7 +95,7 @@
         <div class="glass-card mx-auto">
 
             <h2 class="mb-2">Create account</h2>
-            <div class="text-white-50 mb-3">Register as a client (KLIENCI + ADRESY).</div>
+            <div class="text-white-50 mb-3">Register as a client.</div>
 
             <!-- SUCCESS -->
             <div th:if="${param.success}" class="msg mb-3">
@@ -123,16 +123,35 @@
 
                     <div class="col-md-6">
                         <label class="form-label">Email</label>
-                        <input class="form-control" type="email" th:field="*{email}" required>
+                        <input class="form-control"
+                               type="email"
+                               th:field="*{email}"
+                               maxlength="100"
+                               required>
+
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Phone</label>
-                        <input class="form-control" type="text" th:field="*{phone}" required>
+                        <input class="form-control"
+                               type="tel"
+                               th:field="*{phone}"
+                               placeholder="+48123456789"
+                               pattern="^\+[1-9]\d{7,14}$"
+                               title="Phone must be in international format, e.g. +48123456789"
+                               required>
+
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">Password</label>
-                        <input class="form-control" type="password" th:field="*{password}" required>
+                        <input class="form-control"
+                               type="password"
+                               th:field="*{password}"
+                               minlength="8"
+                               pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}$"
+                               title="Min 8 chars, 1 uppercase, 1 lowercase, 1 digit"
+                               required>
+
                     </div>
 
                     <div class="col-12"><hr class="border-light opacity-25"></div>
@@ -152,7 +171,13 @@
 
                     <div class="col-md-4">
                         <label class="form-label">Postal code</label>
-                        <input class="form-control" type="text" th:field="*{postalCode}" required>
+                        <input class="form-control"
+                               type="text"
+                               th:field="*{postalCode}"
+                               pattern="^\d{2}-\d{3}$"
+                               placeholder="00-000"
+                               required>
+
                     </div>
                     <div class="col-md-8">
                         <label class="form-label">City</label>
