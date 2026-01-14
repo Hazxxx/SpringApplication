@@ -173,11 +173,21 @@
                         <form th:action="@{/admin/database/marki/{id}/delete(id=${marka.idMarki})}"
                               method="post"
                               style="display:inline;"
-                              th:onsubmit="|return confirm('Are you sure you want to delete ${marka.nazwa}?');|">
+                              onsubmit="return confirmDelete(this);"
+                              th:data-name="${marka.nazwa}">
                             <button type="submit" class="btn btn-sm btn-danger">
                                 🗑️ Delete
                             </button>
                         </form>
+                        <script>
+                            function confirmDelete(form) {
+                                const name = form.dataset.name;
+                                return confirm(
+                                    "Are you sure you want to delete this brand?"
+                                );
+                            }
+                        </script>
+
                     </td>
                 </tr>
                 </tbody>

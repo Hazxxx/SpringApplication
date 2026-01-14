@@ -248,12 +248,13 @@
                         Make sure you have a recent backup before proceeding.
                     </p>
                 </div>
-                <button type="button"
-                        class="btn btn-danger"
-                        data-bs-toggle="modal"
-                        data-bs-target="#clearDatabaseModal">
-                    🗑️ Clear Database
-                </button>
+                <form th:action="@{/admin/clear-database}" method="post"
+                      onsubmit="return confirmClearDatabase();">
+                    <button type="submit" class="btn btn-danger">
+                        🗑 Clear Database
+                    </button>
+                </form>
+
             </div>
         </div>
 

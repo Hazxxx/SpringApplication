@@ -47,6 +47,14 @@ public class KlienciDAO {
         );
     }
 
+
+    public int countClients() {
+        return jdbc.queryForObject(
+                "SELECT COUNT(*) FROM KLIENCI",
+                Integer.class
+        );
+    }
+
     /*
      * =========================
      * REJESTRACJA (ADRES + KLIENT)
