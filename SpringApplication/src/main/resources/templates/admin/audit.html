@@ -19,14 +19,12 @@
             color: #fff;
         }
 
-        /* ===== NAVBAR ===== */
         .theme-nav {
             background: rgba(139, 0, 0, 0.65);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* ===== OVERLAY ===== */
         .page-overlay {
             min-height: calc(100vh - 64px);
             background: linear-gradient(
@@ -38,33 +36,12 @@
             padding: 40px 0;
         }
 
-        /* ===== GLASS ===== */
         .glass-card {
             border-radius: 20px;
             background: rgba(0,0,0,0.40);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255,255,255,0.12);
             box-shadow: 0 20px 60px rgba(0,0,0,0.55);
-        }
-
-        .stat-card {
-            padding: 24px;
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 32px;
-            font-weight: 700;
-        }
-
-        .btn-ghost {
-            border: 1px solid rgba(255,255,255,0.35);
-            background: transparent;
-            color: #fff;
-        }
-
-        .btn-ghost:hover {
-            background: rgba(255,255,255,0.12);
         }
 
         .admin-badge {
@@ -75,7 +52,6 @@
             margin-left: 8px;
         }
 
-        /* ===== TABLE STYLING ===== */
         .table-dark {
             color: #fff;
         }
@@ -91,16 +67,19 @@
         .table-dark tbody tr:hover {
             background: rgba(255,255,255,0.08);
         }
+
+        .alert {
+            border-radius: 12px;
+        }
     </style>
 </head>
 
 <body>
 
-<!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg navbar-dark theme-nav">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
-            <img th:src="@{/assets/img/aando8.png}" style="height:26px;margin-right:10px;">
+            <img th:src="@{/assets/img/aando8.png}" style="height:26px;margin-right:10px;" alt="Logo">
             Alpha&Omega Motors
             <span class="admin-badge">ADMIN</span>
         </a>
@@ -128,15 +107,25 @@
 <div class="page-overlay">
     <div class="container">
 
-        <!-- HEADER -->
+        <!-- Error Alert -->
+        <div th:if="${error}" class="alert alert-danger mb-4" role="alert">
+            <strong>Error:</strong> <span th:text="${error}"></span>
+        </div>
+
+        <!-- Header -->
         <div class="glass-card p-4 mb-4">
             <h2>📋 Audit Logs</h2>
             <p class="text-muted mb-0">
-                System activity, logins, admin actions and critical events.
+                System activity, logins, admin actions and critical events from the last 48 hours.
             </p>
+            <div class="mt-2">
+                <small class="text-warning">
+                    ⚠️ Logs older than 48 hours are automatically deleted
+                </small>
+            </div>
         </div>
 
-        <!-- AUDIT LOGS TABLE -->
+        <!-- Audit Logs Table -->
         <div class="glass-card p-4">
             <div class="table-responsive">
                 <table class="table table-dark table-hover align-middle mb-0">
@@ -149,9 +138,9 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:if="${logs.isEmpty()}">
-                        <td colspan="4" class="text-center text-muted">
-                            No audit logs found
+                    <tr th:if="${logs == null or logs.isEmpty()}">
+                        <td colspan="4" class="text-center text-muted py-4">
+                            No audit logs found in the last 48 hours
                         </td>
                     </tr>
 
@@ -164,7 +153,6 @@
                         <td th:text="${log.details}"></td>
                     </tr>
                     </tbody>
-
                 </table>
             </div>
 
