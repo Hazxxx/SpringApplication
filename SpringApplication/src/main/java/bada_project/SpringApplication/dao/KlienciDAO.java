@@ -117,7 +117,6 @@ public class KlienciDAO {
 
         } catch (Exception e) {
             System.err.println(">>> ERROR in insertClient: " + e.getMessage());
-            e.printStackTrace();
             throw new RuntimeException("Failed to insert client: " + e.getMessage(), e);
         }
     }

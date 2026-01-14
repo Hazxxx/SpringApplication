@@ -56,7 +56,7 @@ public class VehicleController {
 
         } catch (Exception e) {
             System.err.println("ERROR in showCatalog: " + e.getMessage());
-            e.printStackTrace();
+
 
             // Nawet przy błędzie, pokaż stronę z pustymi danymi
             model.addAttribute("vehicles", Collections.emptyList());
@@ -106,7 +106,7 @@ public class VehicleController {
 
         } catch (Exception e) {
             System.err.println("ERROR in searchVehicles: " + e.getMessage());
-            e.printStackTrace();
+
 
             model.addAttribute("vehicles", Collections.emptyList());
             model.addAttribute("filter", filter);
@@ -137,7 +137,7 @@ public class VehicleController {
 
         } catch (Exception e) {
             System.err.println("ERROR in showVehicleDetails: " + e.getMessage());
-            e.printStackTrace();
+
             model.addAttribute("error", "Error loading vehicle details: " + e.getMessage());
             return "redirect:/user/vehicles";
         }
@@ -181,7 +181,7 @@ public class VehicleController {
             return "redirect:/user/vehicles/" + idOferty;
 
         } catch (Exception e) {
-            e.printStackTrace();
+
             redirectAttributes.addFlashAttribute("errorMessage", "Reservation failed: " + e.getMessage());
             return "redirect:/user/vehicles/" + idOferty;
         }

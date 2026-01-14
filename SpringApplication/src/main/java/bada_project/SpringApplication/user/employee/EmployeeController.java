@@ -55,7 +55,6 @@ public class EmployeeController {
             reservationDAO.approve(id);
             redirectAttributes.addFlashAttribute("successMessage", "Reservation approved and Sale recorded.");
         } catch (Exception e) {
-            e.printStackTrace();
             redirectAttributes.addFlashAttribute("errorMessage", "Error approving reservation: " + e.getMessage());
         }
         return "redirect:/employee/dashboard";
