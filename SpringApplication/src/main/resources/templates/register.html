@@ -81,10 +81,9 @@
         </a>
 
         <div class="collapse navbar-collapse">
-            <ul class="navbar-nav ms-auto">
+            <ul class="navbar-nav ms-3">
                 <li class="nav-item"><a class="nav-link" th:href="@{/}">Home</a></li>
                 <li class="nav-item"><a class="nav-link" th:href="@{/login}">Login</a></li>
-                <li class="nav-item"><a class="nav-link active" href="#">Register</a></li>
             </ul>
         </div>
     </div>
@@ -114,11 +113,22 @@
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label class="form-label">First name</label>
-                        <input class="form-control" type="text" th:field="*{firstName}" required>
+                        <input class="form-control"
+                               type="text"
+                               th:field="*{firstName}"
+                               pattern="^[A-Za-zÀ-ÿąćęłńóśżźĄĆĘŁŃÓŚŻŹ\- ]{2,50}$"
+                               title="Only letters allowed. No digits or special characters."
+                               required>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Last name</label>
-                        <input class="form-control" type="text" th:field="*{lastName}" required>
+                        <input class="form-control"
+                               type="text"
+                               th:field="*{lastName}"
+                               pattern="^[A-Za-zÀ-ÿąćęłńóśżźĄĆĘŁŃÓŚŻŹ\- ]{2,50}$"
+                               title="Only letters allowed. No digits or special characters."
+                               required>
+
                     </div>
 
                     <div class="col-md-6">
@@ -162,11 +172,23 @@
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">House no.</label>
-                        <input class="form-control" type="text" th:field="*{houseNumber}" required>
+                        <input class="form-control"
+                               type="text"
+                               th:field="*{houseNumber}"
+                               pattern="^[0-9]{1,5}$"
+                               title="House number must be a number"
+                               required>
+
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Apartment no.</label>
-                        <input class="form-control" type="text" th:field="*{apartmentNumber}" placeholder="Optional">
+                        <input class="form-control"
+                               type="text"
+                               th:field="*{apartmentNumber}"
+                               pattern="^[0-9]{0,5}$"
+                               title="Apartment number must be a number"
+                               placeholder="Optional">
+
                     </div>
 
                     <div class="col-md-4">
