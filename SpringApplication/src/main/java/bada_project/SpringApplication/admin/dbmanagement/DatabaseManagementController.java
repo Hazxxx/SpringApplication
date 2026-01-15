@@ -702,18 +702,73 @@ public class DatabaseManagementController {
     }
 
     @PostMapping("/sprzedaze")
-    public String sprzedazeCreate(@ModelAttribute Sprzedaze sprzedaz, RedirectAttributes redirectAttributes) {
+    public String sprzedazeCreate(@ModelAttribute Sprzedaze sprzedaz,
+                                  RedirectAttributes redirectAttributes,
+                                  Model model) {
         try {
+            // Validation
+            if (sprzedaz.getIdPracownika() == null) {
+                model.addAttribute("error", "Pracownik jest wymagany");
+                model.addAttribute("sprzedaz", sprzedaz);
+                model.addAttribute("pracownicy", sprzedawcyDAO.findAll());
+                model.addAttribute("klienci", klienciDAO.findAll());
+                model.addAttribute("oferty", ofertyDAO.findAll());
+                model.addAttribute("isEdit", false);
+                return "admin/database/sprzedaze/form";
+            }
+            if (sprzedaz.getIdKlienta() == null) {
+                model.addAttribute("error", "Klient jest wymagany");
+                model.addAttribute("sprzedaz", sprzedaz);
+                model.addAttribute("pracownicy", sprzedawcyDAO.findAll());
+                model.addAttribute("klienci", klienciDAO.findAll());
+                model.addAttribute("oferty", ofertyDAO.findAll());
+                model.addAttribute("isEdit", false);
+                return "admin/database/sprzedaze/form";
+            }
+            if (sprzedaz.getIdOferty() == null) {
+                model.addAttribute("error", "Oferta jest wymagana");
+                model.addAttribute("sprzedaz", sprzedaz);
+                model.addAttribute("pracownicy", sprzedawcyDAO.findAll());
+                model.addAttribute("klienci", klienciDAO.findAll());
+                model.addAttribute("oferty", ofertyDAO.findAll());
+                model.addAttribute("isEdit", false);
+                return "admin/database/sprzedaze/form";
+            }
+            if (sprzedaz.getKwotaSprzedazy() == null || sprzedaz.getKwotaSprzedazy().compareTo(java.math.BigDecimal.ZERO) <= 0) {
+                model.addAttribute("error", "Kwota sprzedaży musi być większa niż 0");
+                model.addAttribute("sprzedaz", sprzedaz);
+                model.addAttribute("pracownicy", sprzedawcyDAO.findAll());
+                model.addAttribute("klienci", klienciDAO.findAll());
+                model.addAttribute("oferty", ofertyDAO.findAll());
+                model.addAttribute("isEdit", false);
+                return "admin/database/sprzedaze/form";
+            }
+            if (sprzedaz.getDataSprzedazy() == null) {
+                model.addAttribute("error", "Data sprzedaży jest wymagana");
+                model.addAttribute("sprzedaz", sprzedaz);
+                model.addAttribute("pracownicy", sprzedawcyDAO.findAll());
+                model.addAttribute("klienci", klienciDAO.findAll());
+                model.addAttribute("oferty", ofertyDAO.findAll());
+                model.addAttribute("isEdit", false);
+                return "admin/database/sprzedaze/form";
+            }
+
             sprzedazeDAO.insert(sprzedaz);
             redirectAttributes.addFlashAttribute("success", "Sprzedaż została dodana pomyślnie");
             return "redirect:/admin/database/sprzedaze";
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Błąd podczas dodawania sprzedaży: " + e.getMessage());
-            return "redirect:/admin/database/sprzedaze/new";
+            e.printStackTrace(); // For debugging
+            model.addAttribute("error", "Błąd podczas dodawania sprzedaży: " + e.getMessage());
+            model.addAttribute("sprzedaz", sprzedaz);
+            model.addAttribute("pracownicy", sprzedawcyDAO.findAll());
+            model.addAttribute("klienci", klienciDAO.findAll());
+            model.addAttribute("oferty", ofertyDAO.findAll());
+            model.addAttribute("isEdit", false);
+            return "admin/database/sprzedaze/form";
         }
     }
 
-    @GetMapping("/sprzedaze/{id}/edit")
+    @GetMapping("/sprzedaze/{id}")
     public String sprzedazeEdit(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
         Optional<Sprzedaze> sprzedazOpt = sprzedazeDAO.findById(id);
         if (sprzedazOpt.isEmpty()) {
@@ -729,15 +784,72 @@ public class DatabaseManagementController {
     }
 
     @PostMapping("/sprzedaze/{id}")
-    public String sprzedazeUpdate(@PathVariable Long id, @ModelAttribute Sprzedaze sprzedaz, RedirectAttributes redirectAttributes) {
+    public String sprzedazeUpdate(@PathVariable Long id,
+                                  @ModelAttribute Sprzedaze sprzedaz,
+                                  RedirectAttributes redirectAttributes,
+                                  Model model) {
         try {
             sprzedaz.setIdSprzedazy(id);
+
+            // Validation
+            if (sprzedaz.getIdPracownika() == null) {
+                model.addAttribute("error", "Pracownik jest wymagany");
+                model.addAttribute("sprzedaz", sprzedaz);
+                model.addAttribute("pracownicy", sprzedawcyDAO.findAll());
+                model.addAttribute("klienci", klienciDAO.findAll());
+                model.addAttribute("oferty", ofertyDAO.findAll());
+                model.addAttribute("isEdit", true);
+                return "admin/database/sprzedaze/form";
+            }
+            if (sprzedaz.getIdKlienta() == null) {
+                model.addAttribute("error", "Klient jest wymagany");
+                model.addAttribute("sprzedaz", sprzedaz);
+                model.addAttribute("pracownicy", sprzedawcyDAO.findAll());
+                model.addAttribute("klienci", klienciDAO.findAll());
+                model.addAttribute("oferty", ofertyDAO.findAll());
+                model.addAttribute("isEdit", true);
+                return "admin/database/sprzedaze/form";
+            }
+            if (sprzedaz.getIdOferty() == null) {
+                model.addAttribute("error", "Oferta jest wymagana");
+                model.addAttribute("sprzedaz", sprzedaz);
+                model.addAttribute("pracownicy", sprzedawcyDAO.findAll());
+                model.addAttribute("klienci", klienciDAO.findAll());
+                model.addAttribute("oferty", ofertyDAO.findAll());
+                model.addAttribute("isEdit", true);
+                return "admin/database/sprzedaze/form";
+            }
+            if (sprzedaz.getKwotaSprzedazy() == null || sprzedaz.getKwotaSprzedazy().compareTo(java.math.BigDecimal.ZERO) <= 0) {
+                model.addAttribute("error", "Kwota sprzedaży musi być większa niż 0");
+                model.addAttribute("sprzedaz", sprzedaz);
+                model.addAttribute("pracownicy", sprzedawcyDAO.findAll());
+                model.addAttribute("klienci", klienciDAO.findAll());
+                model.addAttribute("oferty", ofertyDAO.findAll());
+                model.addAttribute("isEdit", true);
+                return "admin/database/sprzedaze/form";
+            }
+            if (sprzedaz.getDataSprzedazy() == null) {
+                model.addAttribute("error", "Data sprzedaży jest wymagana");
+                model.addAttribute("sprzedaz", sprzedaz);
+                model.addAttribute("pracownicy", sprzedawcyDAO.findAll());
+                model.addAttribute("klienci", klienciDAO.findAll());
+                model.addAttribute("oferty", ofertyDAO.findAll());
+                model.addAttribute("isEdit", true);
+                return "admin/database/sprzedaze/form";
+            }
+
             sprzedazeDAO.update(sprzedaz);
             redirectAttributes.addFlashAttribute("success", "Sprzedaż została zaktualizowana pomyślnie");
             return "redirect:/admin/database/sprzedaze";
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Błąd podczas aktualizacji sprzedaży: " + e.getMessage());
-            return "redirect:/admin/database/sprzedaze/" + id + "/edit";
+            e.printStackTrace(); // For debugging
+            model.addAttribute("error", "Błąd podczas aktualizacji sprzedaży: " + e.getMessage());
+            model.addAttribute("sprzedaz", sprzedaz);
+            model.addAttribute("pracownicy", sprzedawcyDAO.findAll());
+            model.addAttribute("klienci", klienciDAO.findAll());
+            model.addAttribute("oferty", ofertyDAO.findAll());
+            model.addAttribute("isEdit", true);
+            return "admin/database/sprzedaze/form";
         }
     }
 
@@ -753,70 +865,5 @@ public class DatabaseManagementController {
             redirectAttributes.addFlashAttribute("error", "Błąd podczas usuwania sprzedaży: " + e.getMessage());
         }
         return "redirect:/admin/database/sprzedaze";
-    }
-
-    // ===== WYNAGRODZENIA =====
-    @GetMapping("/wynagrodzenia")
-    public String wynagrodzeniaList(Model model) {
-        model.addAttribute("wynagrodzenia", wynagrodzeniaDAO.findAll());
-        return "admin/database/wynagrodzenia/list";
-    }
-
-    @GetMapping("/wynagrodzenia/new")
-    public String wynagrodzeniaNew(Model model) {
-        model.addAttribute("wynagrodzenie", new Wynagrodzenia());
-        model.addAttribute("isEdit", false);
-        return "admin/database/wynagrodzenia/form";
-    }
-
-    @PostMapping("/wynagrodzenia")
-    public String wynagrodzeniaCreate(@ModelAttribute Wynagrodzenia wynagrodzenie, RedirectAttributes redirectAttributes) {
-        try {
-            wynagrodzeniaDAO.insert(wynagrodzenie);
-            redirectAttributes.addFlashAttribute("success", "Wynagrodzenie zostało dodane pomyślnie");
-            return "redirect:/admin/database/wynagrodzenia";
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Błąd podczas dodawania wynagrodzenia: " + e.getMessage());
-            return "redirect:/admin/database/wynagrodzenia/new";
-        }
-    }
-
-    @GetMapping("/wynagrodzenia/{id}/edit")
-    public String wynagrodzeniaEdit(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
-        Optional<Wynagrodzenia> wynagrodzenieOpt = wynagrodzeniaDAO.findById(id);
-        if (wynagrodzenieOpt.isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "Wynagrodzenie nie zostało znalezione");
-            return "redirect:/admin/database/wynagrodzenia";
-        }
-        model.addAttribute("wynagrodzenie", wynagrodzenieOpt.get());
-        model.addAttribute("isEdit", true);
-        return "admin/database/wynagrodzenia/form";
-    }
-
-    @PostMapping("/wynagrodzenia/{id}")
-    public String wynagrodzeniaUpdate(@PathVariable Long id, @ModelAttribute Wynagrodzenia wynagrodzenie, RedirectAttributes redirectAttributes) {
-        try {
-            wynagrodzenie.setIdWynagrodzenia(id);
-            wynagrodzeniaDAO.update(wynagrodzenie);
-            redirectAttributes.addFlashAttribute("success", "Wynagrodzenie zostało zaktualizowane pomyślnie");
-            return "redirect:/admin/database/wynagrodzenia";
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Błąd podczas aktualizacji wynagrodzenia: " + e.getMessage());
-            return "redirect:/admin/database/wynagrodzenia/" + id + "/edit";
-        }
-    }
-
-    @PostMapping("/wynagrodzenia/{id}/delete")
-    public String wynagrodzeniaDelete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        try {
-            wynagrodzeniaDAO.delete(id);
-            redirectAttributes.addFlashAttribute("success", "Wynagrodzenie zostało usunięte pomyślnie");
-        } catch (DataIntegrityViolationException e) {
-            redirectAttributes.addFlashAttribute("error",
-                    "Nie można usunąć wynagrodzenia. Istnieją przypisani pracownicy.");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Błąd podczas usuwania wynagrodzenia: " + e.getMessage());
-        }
-        return "redirect:/admin/database/wynagrodzenia";
     }
 }

@@ -1,24 +1,38 @@
 package bada_project.SpringApplication.admin.dbmanagement.models;
 
+import jakarta.validation.constraints.*;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
 public class Sprzedaze {
     private Long idSprzedazy;
+
+    @NotNull(message = "Employee is required")
     private Long idPracownika;
+
+    @NotNull(message = "Customer is required")
     private Long idKlienta;
+
+    @NotNull(message = "Offer is required")
     private Long idOferty;
+
+    @NotNull(message = "Sale amount is required")
+    @DecimalMin(value = "0.01", message = "Sale amount must be greater than 0")
     private BigDecimal kwotaSprzedazy;
+
+    @NotNull(message = "Sale date is required")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dataSprzedazy;
 
-    // For display
+    // For display only
     private String imiePracownika;
     private String nazwiskoPracownika;
     private String imieKlienta;
     private String nazwiskoKlienta;
     private String vinPojazdu;
     private String nazwaMarki;
-    private String nazwaModelu;
     private BigDecimal cenaKatalogowa;
 
     public Sprzedaze() {}
@@ -59,9 +73,6 @@ public class Sprzedaze {
 
     public String getNazwaMarki() { return nazwaMarki; }
     public void setNazwaMarki(String nazwaMarki) { this.nazwaMarki = nazwaMarki; }
-
-    public String getNazwaModelu() { return nazwaModelu; }
-    public void setNazwaModelu(String nazwaModelu) { this.nazwaModelu = nazwaModelu; }
 
     public BigDecimal getCenaKatalogowa() { return cenaKatalogowa; }
     public void setCenaKatalogowa(BigDecimal cenaKatalogowa) { this.cenaKatalogowa = cenaKatalogowa; }

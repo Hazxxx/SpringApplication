@@ -19,69 +19,87 @@ public class StanowiskaDAO {
 
     public List<Stanowisko> findAll() {
         String sql = """
-            SELECT 
-                s.id_stanowiska,
-                s.nazwa,
-                s.czy_admin,
-                COUNT(p.id_pracownika) as liczba_pracownikow
+            SELECT s.id_stanowiska,
+                   s.nazwa,
+                   s.minimalne_doswiadczenie_lata,
+                   s.czy_kierownicze,
+                   s.czy_admin,
+                   COUNT(p.id_pracownika) liczba_pracownikow
             FROM STANOWISKA s
-            LEFT JOIN PRACOWNICY p ON s.id_stanowiska = p.id_stanowiska
-            GROUP BY s.id_stanowiska, s.nazwa, s.czy_admin
+            LEFT JOIN PRACOWNICY p ON p.id_stanowiska = s.id_stanowiska
+            GROUP BY s.id_stanowiska, s.nazwa,
+                     s.minimalne_doswiadczenie_lata,
+                     s.czy_kierownicze, s.czy_admin
             ORDER BY s.nazwa
-            """;
-        return jdbc.query(sql, stanowiskoRowMapper());
+        """;
+        return jdbc.query(sql, mapper());
     }
 
     public Optional<Stanowisko> findById(Long id) {
         String sql = """
-            SELECT 
-                s.id_stanowiska,
-                s.nazwa,
-                s.czy_admin,
-                COUNT(p.id_pracownika) as liczba_pracownikow
+            SELECT s.id_stanowiska,
+                   s.nazwa,
+                   s.minimalne_doswiadczenie_lata,
+                   s.czy_kierownicze,
+                   s.czy_admin,
+                   0 liczba_pracownikow
             FROM STANOWISKA s
-            LEFT JOIN PRACOWNICY p ON s.id_stanowiska = p.id_stanowiska
             WHERE s.id_stanowiska = ?
-            GROUP BY s.id_stanowiska, s.nazwa, s.czy_admin
-            """;
-        List<Stanowisko> results = jdbc.query(sql, stanowiskoRowMapper(), id);
-        return results.isEmpty() ? Optional.empty() : Optional.of(results.get(0));
+        """;
+        return jdbc.query(sql, mapper(), id).stream().findFirst();
     }
 
-    public void insert(Stanowisko stanowisko) {
-        String sql = "INSERT INTO STANOWISKA (nazwa, czy_admin) VALUES (?, ?)";
+    public void insert(Stanowisko s) {
+        String sql = """
+            INSERT INTO STANOWISKA
+            (nazwa, minimalne_doswiadczenie_lata, czy_kierownicze, czy_admin)
+            VALUES (?, ?, ?, ?)
+        """;
+
         jdbc.update(sql,
-                stanowisko.getNazwa(),
-                stanowisko.getCzyAdmin() ? 1 : 0);
+                s.getNazwa(),
+                s.getMinimalneDoswiadczenieLata(),
+                s.getCzyKierownicze() ? 1 : 0,
+                s.getCzyAdmin() ? 1 : 0
+        );
     }
 
-    public void update(Stanowisko stanowisko) {
-        String sql = "UPDATE STANOWISKA SET nazwa = ?, czy_admin = ? WHERE id_stanowiska = ?";
+    public void update(Stanowisko s) {
+        String sql = """
+            UPDATE STANOWISKA
+            SET nazwa = ?,
+                minimalne_doswiadczenie_lata = ?,
+                czy_kierownicze = ?,
+                czy_admin = ?
+            WHERE id_stanowiska = ?
+        """;
+
         jdbc.update(sql,
-                stanowisko.getNazwa(),
-                stanowisko.getCzyAdmin() ? 1 : 0,
-                stanowisko.getIdStanowiska());
+                s.getNazwa(),
+                s.getMinimalneDoswiadczenieLata(),
+                s.getCzyKierownicze() ? 1 : 0,
+                s.getCzyAdmin() ? 1 : 0,
+                s.getIdStanowiska()
+        );
     }
 
     public void delete(Long id) {
-        String sql = "DELETE FROM STANOWISKA WHERE id_stanowiska = ?";
-        jdbc.update(sql, id);
+        jdbc.update("DELETE FROM STANOWISKA WHERE id_stanowiska = ?", id);
     }
 
-    public int countTotal() {
-        String sql = "SELECT COUNT(*) FROM STANOWISKA";
-        Integer count = jdbc.queryForObject(sql, Integer.class);
-        return count != null ? count : 0;
-    }
-
-    private RowMapper<Stanowisko> stanowiskoRowMapper() {
+    private RowMapper<Stanowisko> mapper() {
         return (rs, rowNum) -> {
             Stanowisko s = new Stanowisko();
             s.setIdStanowiska(rs.getLong("id_stanowiska"));
             s.setNazwa(rs.getString("nazwa"));
+            s.setMinimalneDoswiadczenieLata(
+                    rs.getInt("minimalne_doswiadczenie_lata")
+            );
+            s.setCzyKierownicze(rs.getInt("czy_kierownicze") == 1);
             s.setCzyAdmin(rs.getInt("czy_admin") == 1);
             s.setLiczbaPracownikow(rs.getInt("liczba_pracownikow"));
             return s;
         };
     }
+
 }

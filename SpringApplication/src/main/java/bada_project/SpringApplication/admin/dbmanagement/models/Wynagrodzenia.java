@@ -1,5 +1,8 @@
 package bada_project.SpringApplication.admin.dbmanagement.models;
 
+import jakarta.validation.constraints.NotNull;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -7,7 +10,10 @@ public class Wynagrodzenia {
     private Long idWynagrodzenia;
     private BigDecimal kwota;
     private String waluta;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @NotNull
     private Date dataKontraktu;
+
 
     public Wynagrodzenia() {}
 

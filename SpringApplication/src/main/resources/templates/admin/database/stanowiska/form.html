@@ -141,39 +141,41 @@
                   th:object="${stanowisko}">
 
                 <div class="mb-3">
-                    <label for="nazwa" class="form-label">Position Name <span class="text-danger">*</span></label>
-                    <input type="text"
-                           class="form-control"
-                           id="nazwa"
+                    <label class="form-label">Position name *</label>
+                    <input type="text" class="form-control"
                            th:field="*{nazwa}"
-                           placeholder="Enter position name (e.g., Sales Manager, Service Technician)"
-                           required
-                           maxlength="50">
-                    <div class="form-text text-light">Max 50 characters</div>
+                           required maxlength="50">
                 </div>
 
-                <div class="mb-4">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="czyAdmin"
-                               th:field="*{czyAdmin}">
-                        <label class="form-check-label" for="czyAdmin">
-                            Grant Admin Rights
-                        </label>
-                        <div class="form-text text-light">
-                            Employees with this position will have administrative access to the system
-                        </div>
-                    </div>
+                <div class="mb-3">
+                    <label class="form-label">Minimum experience (years) *</label>
+                    <input type="number" class="form-control"
+                           th:field="*{minimalneDoswiadczenieLata}"
+                           min="0" required>
                 </div>
 
-                <div class="d-flex gap-2">
-                    <button type="submit" class="btn btn-success">
-                        <span th:text="${isEdit ? 'Update' : 'Save'}">Save</span>
-                    </button>
-                    <a th:href="@{/admin/database/stanowiska}" class="btn btn-secondary">
-                        Cancel
-                    </a>
+                <div class="form-check mb-2">
+                    <input class="form-check-input"
+                           type="checkbox"
+                           th:field="*{czyKierownicze}">
+                    <label class="form-check-label">
+                        Managerial position
+                    </label>
                 </div>
+
+                <div class="form-check mb-4">
+                    <input class="form-check-input"
+                           type="checkbox"
+                           th:field="*{czyAdmin}">
+                    <label class="form-check-label">
+                        Admin rights
+                    </label>
+                </div>
+
+                <button class="btn btn-success" type="submit">Save</button>
+                <a th:href="@{/admin/database/stanowiska}" class="btn btn-secondary">Cancel</a>
             </form>
+
         </div>
     </div>
 </div>
