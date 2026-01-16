@@ -93,20 +93,138 @@
             backdrop-filter: blur(8px);
         }
 
-        .modal-content {
-            background: rgba(20, 20, 20, 0.95);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255,255,255,0.2);
+        /* === CUSTOM MODAL OVERLAY === */
+        .custom-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .custom-modal-overlay.show {
+            display: flex;
+        }
+
+        .custom-modal {
+            background: rgba(20, 20, 25, 0.98);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 18px;
+            color: #fff;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.75);
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .custom-modal-header {
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .custom-modal-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0;
+            font-size: 1.25rem;
+        }
+
+        .custom-modal-title::before {
+            content: "⚠️";
+            font-size: 1.5rem;
+        }
+
+        .custom-modal-close {
+            background: transparent;
+            border: none;
+            color: rgba(255,255,255,0.6);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .custom-modal-close:hover {
+            background: rgba(255,255,255,0.1);
             color: #fff;
         }
 
-        .modal-header {
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+        .custom-modal-body {
+            padding: 1.5rem;
         }
 
-        .modal-footer {
-            border-top: 1px solid rgba(255,255,255,0.1);
+        .custom-modal-body ul {
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 1rem 1rem 1rem 2rem;
+            border-left: 3px solid #dc3545;
+            margin: 1rem 0;
         }
+
+        .custom-modal-body ul li {
+            margin-bottom: 0.5rem;
+            color: rgba(255,255,255,0.85);
+        }
+
+        .custom-modal-footer {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 1.5rem;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        /* === DANGER BUTTON PULSE === */
+        .btn-danger-confirm {
+            background: #dc3545;
+            border: none;
+            animation: pulse-danger 2s infinite;
+        }
+
+        @keyframes pulse-danger {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 0 8px rgba(220, 53, 69, 0);
+            }
+        }
+
+        .btn-danger-confirm:hover {
+            background: #bb2d3b;
+            transform: scale(1.02);
+        }
+
         /* === LOGOUT FIX === */
         .logout-form {
             margin: 0;
@@ -231,7 +349,7 @@
                 </p>
                 <a th:href="@{/admin/settings/database/backup}"
                    class="btn btn-info">
-                    📥 Download Backup
+                    Download Backup
                 </a>
             </div>
 
@@ -248,13 +366,9 @@
                         Make sure you have a recent backup before proceeding.
                     </p>
                 </div>
-                <form th:action="@{/admin/clear-database}" method="post"
-                      onsubmit="return confirmClearDatabase();">
-                    <button type="submit" class="btn btn-danger">
-                        Clear Database
-                    </button>
-                </form>
-
+                <button type="button" class="btn btn-danger" onclick="showClearModal()">
+                    Clear Database
+                </button>
             </div>
         </div>
 
@@ -269,48 +383,74 @@
 </div>
 
 <!-- CONFIRMATION MODAL -->
-<div class="modal fade" id="clearDatabaseModal" tabindex="-1" aria-labelledby="clearDatabaseModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title text-danger" id="clearDatabaseModalLabel">
-                    Confirm Database Deletion
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p><strong>Are you absolutely sure?</strong></p>
-                <p class="mb-3">
-                    This will permanently delete <strong>ALL DATA</strong> from the database, including:
-                </p>
-                <ul class="mb-3">
-                    <li>All vehicle brands and models</li>
-                    <li>All salons and partner companies</li>
-                    <li>All employees and positions</li>
-                    <li>All vehicles and transactions</li>
-                    <li>All service records</li>
-                </ul>
-                <p class="text-danger">
-                    <strong>This action CANNOT be undone!</strong>
-                </p>
-                <p class="small text-muted">
-                    Please ensure you have downloaded a recent backup before proceeding.
-                </p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    Cancel
+<div class="custom-modal-overlay" id="clearDatabaseModal">
+    <div class="custom-modal">
+        <div class="custom-modal-header">
+            <h5 class="custom-modal-title text-danger">
+                Confirm Database Deletion
+            </h5>
+            <button type="button" class="custom-modal-close" onclick="closeModal()">
+                ×
+            </button>
+        </div>
+        <div class="custom-modal-body">
+            <p><strong>Are you absolutely sure you want to proceed?</strong></p>
+            <p class="mb-3">
+                This will <strong>permanently delete ALL DATA</strong> from the database, including:
+            </p>
+            <ul class="mb-3">
+                <li>All vehicle brands and models</li>
+                <li>All salons and partner companies</li>
+                <li>All employees and user accounts</li>
+                <li>All vehicles, offers, and reservations</li>
+                <li>All sales records and transactions</li>
+                <li>All service history and maintenance logs</li>
+            </ul>
+            <p class="text-danger fw-bold mb-2">
+                THIS ACTION CANNOT BE UNDONE!
+            </p>
+            <p class="small text-muted mb-0">
+                Please ensure you have downloaded a recent backup before proceeding. The system may require reinitialization after this operation.
+            </p>
+        </div>
+        <div class="custom-modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeModal()">
+                Cancel
+            </button>
+            <form id="clearDatabaseForm" th:action="@{/admin/settings/database/clear}" method="post" class="d-inline">
+                <button type="submit" class="btn btn-danger btn-danger-confirm">
+                    Yes, Delete Everything
                 </button>
-                <form th:action="@{/admin/settings/database/clear}" method="post">
-                    <button type="submit" class="btn btn-danger">
-                        Yes, Delete Everything
-                    </button>
-                </form>
-            </div>
+            </form>
         </div>
     </div>
 </div>
 
 <script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script>
+    function showClearModal() {
+        document.getElementById('clearDatabaseModal').classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        document.getElementById('clearDatabaseModal').classList.remove('show');
+        document.body.style.overflow = 'auto';
+    }
+
+    // Close modal on ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeModal();
+        }
+    });
+
+    // Close modal on backdrop click
+    document.getElementById('clearDatabaseModal')?.addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeModal();
+        }
+    });
+</script>
 </body>
 </html>

@@ -20,18 +20,13 @@ public class VehicleDAO {
         this.jdbc = jdbc;
     }
 
-    /**
-     * Pobierz wszystkie dostępne pojazdy (nie sprzedane)
-     */
-    /**
-     * Pobierz wszystkie dostępne pojazdy (nie sprzedane i mające ofertę)
-     */
     public List<Vehicle> findAllAvailable() {
         String sql = """
                 SELECT
                     p.id_pojazdu,
                     p.kolor,
                     p.vin,
+                    p.zdjecie_url,
                     p.id_modelu,
                     m.pojemnosc_silnika,
                     m.moc_silnika,
@@ -40,15 +35,15 @@ public class VehicleDAO {
                     m.typ_nadwozia,
                     m.masa_wlasna,
                     m.id_marki,
-                    mar.nazwa as nazwa_marki,
+                    mar.nazwa AS nazwa_marki,
                     o.id_oferty,
                     o.cena_katalogowa,
                     o.id_salonu,
-                    s.nazwa as nazwa_salonu,
-                    s.telefon as telefon_salonu,
-                    a.miasto as miasto_salonu,
-                    a.ulica as ulica_salonu,
-                    CASE WHEN sp.id_sprzedazy IS NULL THEN 0 ELSE 1 END as sprzedany
+                    s.nazwa AS nazwa_salonu,
+                    s.telefon AS telefon_salonu,
+                    a.miasto AS miasto_salonu,
+                    a.ulica AS ulica_salonu,
+                    CASE WHEN sp.id_sprzedazy IS NULL THEN 0 ELSE 1 END AS sprzedany
                 FROM POJAZDY p
                 INNER JOIN MODELE m ON p.id_modelu = m.id_modelu
                 INNER JOIN MARKI mar ON m.id_marki = mar.id_marki
@@ -64,14 +59,91 @@ public class VehicleDAO {
     }
 
     /**
-     * Pobierz pojazd po ID
+     * Pobierz wszystkie unikalne marki (do filtrów)
      */
+    public List<String> findAllMarki() {
+        String sql = """
+        SELECT DISTINCT mar.nazwa
+        FROM MARKI mar
+        INNER JOIN MODELE m ON mar.id_marki = m.id_marki
+        INNER JOIN POJAZDY p ON p.id_modelu = m.id_modelu
+        ORDER BY mar.nazwa
+        """;
+
+        return jdbc.queryForList(sql, String.class);
+    }
+
+    /**
+     * Pobierz wszystkie unikalne typy nadwozia (do filtrów)
+     */
+    public List<String> findAllTypyNadwozia() {
+        String sql = """
+        SELECT DISTINCT m.typ_nadwozia
+        FROM MODELE m
+        INNER JOIN POJAZDY p ON p.id_modelu = m.id_modelu
+        WHERE m.typ_nadwozia IS NOT NULL
+        ORDER BY m.typ_nadwozia
+        """;
+
+        return jdbc.queryForList(sql, String.class);
+    }
+
+    /**
+     * Pobierz ID pracownika przypisanego do oferty
+     */
+    public Integer getEmployeeIdForOffer(Integer idOferty) {
+        String sql = """
+        SELECT id_pracownika
+        FROM OFERTY
+        WHERE id_oferty = ?
+        """;
+
+        return jdbc.query(sql, rs -> {
+            if (rs.next()) {
+                int id = rs.getInt("id_pracownika");
+                return rs.wasNull() ? null : id;
+            }
+            return null;
+        }, idOferty);
+    }
+
+    /**
+     * Przypisz pracownika do oferty
+     */
+    public void assignEmployeeToOffer(Integer idOferty, Integer idPracownika) {
+        String sql = """
+        UPDATE OFERTY
+        SET id_pracownika = ?
+        WHERE id_oferty = ?
+        """;
+
+        jdbc.update(sql, idPracownika, idOferty);
+    }
+
+
+    /**
+     * Pobierz wszystkie unikalne typy paliwa (do filtrów)
+     */
+    public List<String> findAllTypyPaliwa() {
+        String sql = """
+        SELECT DISTINCT m.typ_paliwa
+        FROM MODELE m
+        INNER JOIN POJAZDY p ON p.id_modelu = m.id_modelu
+        WHERE m.typ_paliwa IS NOT NULL
+        ORDER BY m.typ_paliwa
+        """;
+
+        return jdbc.queryForList(sql, String.class);
+    }
+
+
     public Vehicle findById(Integer idPojazdu) {
         String sql = """
                 SELECT
                     p.id_pojazdu,
                     p.kolor,
                     p.vin,
+                    p.zdjecie_url,
                     p.id_modelu,
                     m.pojemnosc_silnika,
                     m.moc_silnika,
@@ -80,19 +152,19 @@ public class VehicleDAO {
                     m.typ_nadwozia,
                     m.masa_wlasna,
                     m.id_marki,
-                    mar.nazwa as nazwa_marki,
+                    mar.nazwa AS nazwa_marki,
                     o.id_oferty,
                     o.cena_katalogowa,
                     o.id_salonu,
-                    s.nazwa as nazwa_salonu,
-                    s.telefon as telefon_salonu,
-                    a.miasto as miasto_salonu,
-                    a.ulica as ulica_salonu,
-                    CASE WHEN sp.id_sprzedazy IS NULL THEN 0 ELSE 1 END as sprzedany,
-                    prac.imie as imie_sprzedawcy,
-                    prac.nazwisko as nazwisko_sprzedawcy,
-                    prac.email as email_sprzedawcy,
-                    prac.telefon as telefon_sprzedawcy
+                    s.nazwa AS nazwa_salonu,
+                    s.telefon AS telefon_salonu,
+                    a.miasto AS miasto_salonu,
+                    a.ulica AS ulica_salonu,
+                    CASE WHEN sp.id_sprzedazy IS NULL THEN 0 ELSE 1 END AS sprzedany,
+                    prac.imie AS imie_sprzedawcy,
+                    prac.nazwisko AS nazwisko_sprzedawcy,
+                    prac.email AS email_sprzedawcy,
+                    prac.telefon AS telefon_sprzedawcy
                 FROM POJAZDY p
                 INNER JOIN MODELE m ON p.id_modelu = m.id_modelu
                 INNER JOIN MARKI mar ON m.id_marki = mar.id_marki
@@ -108,15 +180,13 @@ public class VehicleDAO {
         return results.isEmpty() ? null : results.get(0);
     }
 
-    /**
-     * Pobierz pojazdy przypisane do pracownika
-     */
     public List<Vehicle> findAssignedToEmployee(Integer employeeId) {
         String sql = """
                 SELECT
                     p.id_pojazdu,
                     p.kolor,
                     p.vin,
+                    p.zdjecie_url,
                     p.id_modelu,
                     m.pojemnosc_silnika,
                     m.moc_silnika,
@@ -125,19 +195,19 @@ public class VehicleDAO {
                     m.typ_nadwozia,
                     m.masa_wlasna,
                     m.id_marki,
-                    mar.nazwa as nazwa_marki,
+                    mar.nazwa AS nazwa_marki,
                     o.id_oferty,
                     o.cena_katalogowa,
                     o.id_salonu,
-                    s.nazwa as nazwa_salonu,
-                    s.telefon as telefon_salonu,
-                    a.miasto as miasto_salonu,
-                    a.ulica as ulica_salonu,
-                    CASE WHEN sp.id_sprzedazy IS NULL THEN 0 ELSE 1 END as sprzedany,
-                    prac.imie as imie_sprzedawcy,
-                    prac.nazwisko as nazwisko_sprzedawcy,
-                    prac.email as email_sprzedawcy,
-                    prac.telefon as telefon_sprzedawcy
+                    s.nazwa AS nazwa_salonu,
+                    s.telefon AS telefon_salonu,
+                    a.miasto AS miasto_salonu,
+                    a.ulica AS ulica_salonu,
+                    CASE WHEN sp.id_sprzedazy IS NULL THEN 0 ELSE 1 END AS sprzedany,
+                    prac.imie AS imie_sprzedawcy,
+                    prac.nazwisko AS nazwisko_sprzedawcy,
+                    prac.email AS email_sprzedawcy,
+                    prac.telefon AS telefon_sprzedawcy
                 FROM POJAZDY p
                 INNER JOIN MODELE m ON p.id_modelu = m.id_modelu
                 INNER JOIN MARKI mar ON m.id_marki = mar.id_marki
@@ -149,18 +219,17 @@ public class VehicleDAO {
                 WHERE o.id_pracownika = ?
                 ORDER BY o.id_oferty DESC
                 """;
+
         return jdbc.query(sql, new VehicleRowMapper(), employeeId);
     }
 
-    /**
-     * Wyszukaj pojazdy z filtrami
-     */
     public List<Vehicle> search(VehicleSearchFilter filter) {
         StringBuilder sql = new StringBuilder("""
                 SELECT
                     p.id_pojazdu,
                     p.kolor,
                     p.vin,
+                    p.zdjecie_url,
                     p.id_modelu,
                     m.pojemnosc_silnika,
                     m.moc_silnika,
@@ -169,76 +238,67 @@ public class VehicleDAO {
                     m.typ_nadwozia,
                     m.masa_wlasna,
                     m.id_marki,
-                    mar.nazwa as nazwa_marki,
+                    mar.nazwa AS nazwa_marki,
                     o.id_oferty,
                     o.cena_katalogowa,
                     o.id_salonu,
-                    s.nazwa as nazwa_salonu,
-                    s.telefon as telefon_salonu,
-                    a.miasto as miasto_salonu,
-                    a.ulica as ulica_salonu,
-                    CASE WHEN sp.id_sprzedazy IS NULL THEN 0 ELSE 1 END as sprzedany
-                    FROM POJAZDY p
-                    INNER JOIN MODELE m ON p.id_modelu = m.id_modelu
-                    INNER JOIN MARKI mar ON m.id_marki = mar.id_marki
-                    INNER JOIN OFERTY o ON p.id_pojazdu = o.id_pojazdu
-                    INNER JOIN SALONY_SAMOCHODOWE s ON o.id_salonu = s.id_salonu
-                    INNER JOIN ADRESY a ON s.id_adresu = a.id_adresu
-                    LEFT JOIN SPRZEDAZE sp ON o.id_oferty = sp.id_oferty
-                    WHERE sp.id_sprzedazy IS NULL
+                    s.nazwa AS nazwa_salonu,
+                    s.telefon AS telefon_salonu,
+                    a.miasto AS miasto_salonu,
+                    a.ulica AS ulica_salonu,
+                    CASE WHEN sp.id_sprzedazy IS NULL THEN 0 ELSE 1 END AS sprzedany
+                FROM POJAZDY p
+                INNER JOIN MODELE m ON p.id_modelu = m.id_modelu
+                INNER JOIN MARKI mar ON m.id_marki = mar.id_marki
+                INNER JOIN OFERTY o ON p.id_pojazdu = o.id_pojazdu
+                INNER JOIN SALONY_SAMOCHODOWE s ON o.id_salonu = s.id_salonu
+                INNER JOIN ADRESY a ON s.id_adresu = a.id_adresu
+                LEFT JOIN SPRZEDAZE sp ON o.id_oferty = sp.id_oferty
+                WHERE sp.id_sprzedazy IS NULL
                 """);
 
         List<Object> params = new ArrayList<>();
 
-        // Filtr marki
         if (filter.getNazwaMarki() != null && !filter.getNazwaMarki().isEmpty()) {
             sql.append(" AND LOWER(mar.nazwa) LIKE LOWER(?)");
             params.add("%" + filter.getNazwaMarki() + "%");
         }
 
-        // Filtr typu nadwozia
         if (filter.getTypNadwozia() != null && !filter.getTypNadwozia().isEmpty()) {
             sql.append(" AND m.typ_nadwozia = ?");
             params.add(filter.getTypNadwozia());
         }
 
-        // Filtr typu paliwa
         if (filter.getTypPaliwa() != null && !filter.getTypPaliwa().isEmpty()) {
             sql.append(" AND m.typ_paliwa = ?");
             params.add(filter.getTypPaliwa());
         }
 
-        // Filtr ceny od
         if (filter.getCenaOd() != null) {
             sql.append(" AND o.cena_katalogowa >= ?");
             params.add(filter.getCenaOd());
         }
 
-        // Filtr ceny do
         if (filter.getCenaDo() != null) {
             sql.append(" AND o.cena_katalogowa <= ?");
             params.add(filter.getCenaDo());
         }
 
-        // Filtr roku od
         if (filter.getRocznikOd() != null) {
             sql.append(" AND m.rocznik_modelowy >= ?");
             params.add(filter.getRocznikOd());
         }
 
-        // Filtr roku do
         if (filter.getRocznikDo() != null) {
             sql.append(" AND m.rocznik_modelowy <= ?");
             params.add(filter.getRocznikDo());
         }
 
-        // Filtr koloru
         if (filter.getKolor() != null && !filter.getKolor().isEmpty()) {
             sql.append(" AND LOWER(p.kolor) LIKE LOWER(?)");
             params.add("%" + filter.getKolor() + "%");
         }
 
-        // Filtr salonu
         if (filter.getIdSalonu() != null) {
             sql.append(" AND o.id_salonu = ?");
             params.add(filter.getIdSalonu());
@@ -249,44 +309,16 @@ public class VehicleDAO {
         return jdbc.query(sql.toString(), new VehicleRowMapper(), params.toArray());
     }
 
-    /**
-     * Pobierz unikalne marki - do filtrów
-     */
-    public List<String> findAllMarki() {
-        String sql = "SELECT DISTINCT nazwa FROM MARKI ORDER BY nazwa";
-        return jdbc.queryForList(sql, String.class);
-    }
-
-    /**
-     * Pobierz unikalne typy nadwozia - do filtrów
-     */
-    public List<String> findAllTypyNadwozia() {
-        String sql = "SELECT DISTINCT typ_nadwozia FROM MODELE WHERE typ_nadwozia IS NOT NULL ORDER BY typ_nadwozia";
-        return jdbc.queryForList(sql, String.class);
-    }
-
-    /**
-     * Pobierz unikalne typy paliwa - do filtrów
-     */
-    public List<String> findAllTypyPaliwa() {
-        String sql = "SELECT DISTINCT typ_paliwa FROM MODELE WHERE typ_paliwa IS NOT NULL ORDER BY typ_paliwa";
-        return jdbc.queryForList(sql, String.class);
-    }
-
-    /**
-     * RowMapper dla Vehicle - mapuje ResultSet na obiekt Vehicle
-     */
     private static class VehicleRowMapper implements RowMapper<Vehicle> {
         @Override
         public Vehicle mapRow(ResultSet rs, int rowNum) throws SQLException {
             Vehicle v = new Vehicle();
 
-            // Z POJAZDY
             v.setIdPojazdu(rs.getInt("id_pojazdu"));
             v.setKolor(rs.getString("kolor"));
             v.setVin(rs.getString("vin"));
+            v.setZdjecieUrl(rs.getString("zdjecie_url"));
 
-            // Z MODELE
             v.setIdModelu(rs.getInt("id_modelu"));
             v.setPojemnoscSilnika(rs.getInt("pojemnosc_silnika"));
             v.setMocSilnika(rs.getInt("moc_silnika"));
@@ -295,35 +327,26 @@ public class VehicleDAO {
             v.setTypNadwozia(rs.getString("typ_nadwozia"));
             v.setMasaWlasna(rs.getInt("masa_wlasna"));
 
-            // Z MARKI
             v.setIdMarki(rs.getInt("id_marki"));
             v.setNazwaMarki(rs.getString("nazwa_marki"));
 
-            // Z OFERTY
             v.setIdOferty(rs.getInt("id_oferty"));
             v.setCenaKatalogowa(rs.getBigDecimal("cena_katalogowa"));
             v.setIdSalonu(rs.getInt("id_salonu"));
 
-            // Z SALONY i ADRESY
             v.setNazwaSalonu(rs.getString("nazwa_salonu"));
             v.setTelefonSalonu(rs.getString("telefon_salonu"));
             v.setMiastoSalonu(rs.getString("miasto_salonu"));
             v.setUlicaSalonu(rs.getString("ulica_salonu"));
 
-            // Status
             v.setSprzedany(rs.getInt("sprzedany") == 1);
 
-            // Dane Sprzedawcy (mogą być nulle)
             try {
                 v.setImieSprzedawcy(rs.getString("imie_sprzedawcy"));
                 v.setNazwiskoSprzedawcy(rs.getString("nazwisko_sprzedawcy"));
                 v.setEmailSprzedawcy(rs.getString("email_sprzedawcy"));
                 v.setTelefonSprzedawcy(rs.getString("telefon_sprzedawcy"));
-            } catch (SQLException e) {
-                // Kolumny mogą nie istnieć w innych zapytaniach używających tego mappera (np.
-                // findAll/search)
-                // Ignorujemy błąd braku kolumny
-            }
+            } catch (SQLException ignored) {}
 
             return v;
         }

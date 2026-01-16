@@ -1,6 +1,7 @@
 package bada_project.SpringApplication.user.vehicles;
 
 import bada_project.SpringApplication.dao.KlienciDAO;
+import bada_project.SpringApplication.dao.PracownicyDAO;
 import bada_project.SpringApplication.dao.ReservationDAO;
 import bada_project.SpringApplication.dao.VehicleDAO;
 import org.springframework.security.core.Authentication;
@@ -20,12 +21,16 @@ public class VehicleController {
     private final VehicleDAO vehicleDAO;
     private final ReservationDAO reservationDAO;
     private final KlienciDAO klienciDAO;
+    private final PracownicyDAO pracownicyDAO;
 
-    public VehicleController(VehicleDAO vehicleDAO, ReservationDAO reservationDAO, KlienciDAO klienciDAO) {
+    public VehicleController(VehicleDAO vehicleDAO, ReservationDAO reservationDAO, KlienciDAO klienciDAO, PracownicyDAO pracownicyDAO) {
         this.vehicleDAO = vehicleDAO;
         this.reservationDAO = reservationDAO;
         this.klienciDAO = klienciDAO;
+        this.pracownicyDAO = pracownicyDAO;
     }
+
+
 
     /**
      * Strona katalogu pojazdów
@@ -144,7 +149,7 @@ public class VehicleController {
     }
 
     @PostMapping("/{id}/reserve")
-    public String reserveVehicle(@PathVariable("id") Integer idOferty, RedirectAttributes redirectAttributes) {
+    public String reserveVehicle(@PathVariable("id") Integer idPojazdu, RedirectAttributes redirectAttributes) {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             String email = auth.getName();
@@ -152,38 +157,57 @@ public class VehicleController {
             Integer idKlienta = klienciDAO.findIdByEmail(email);
             if (idKlienta == null) {
                 redirectAttributes.addFlashAttribute("errorMessage", "Could not identify user client profile.");
-                return "redirect:/user/vehicles/" + idOferty;
+                return "redirect:/user/vehicles/" + idPojazdu;
             }
 
-            // Check if vehicle exists
-            Vehicle v = vehicleDAO.findById(idOferty);
+            // Pobierz pojazd używając idPojazdu
+            Vehicle v = vehicleDAO.findById(idPojazdu);
             if (v == null) {
                 redirectAttributes.addFlashAttribute("errorMessage", "Vehicle not found.");
                 return "redirect:/user/vehicles";
             }
 
+            // Sprawdź czy idOferty istnieje
+            if (v.getIdOferty() == null) {
+                redirectAttributes.addFlashAttribute("errorMessage", "This vehicle has no offer assigned.");
+                return "redirect:/user/vehicles/" + idPojazdu;
+            }
+
             // Check if vehicle is already sold/reserved
             if (v.isSprzedany()) {
                 redirectAttributes.addFlashAttribute("errorMessage", "This vehicle is already sold or reserved.");
-                return "redirect:/user/vehicles/" + idOferty;
+                return "redirect:/user/vehicles/" + idPojazdu;
             }
 
             // Check if user already reserved this specific vehicle
             if (reservationDAO.existsForOffer(v.getIdOferty())) {
                 redirectAttributes.addFlashAttribute("errorMessage", "Reservation already exists for this vehicle.");
-                return "redirect:/user/vehicles/" + idOferty;
+                return "redirect:/user/vehicles/" + idPojazdu;
             }
 
+            // **FIX: Sprawdź czy oferta ma przypisanego pracownika, jeśli nie - przypisz domyślnego**
+            Integer idPracownikaOferty = vehicleDAO.getEmployeeIdForOffer(v.getIdOferty());
+            if (idPracownikaOferty == null) {
+                // Przypisz pierwszego dostępnego pracownika lub konkretnego
+                Integer defaultEmployeeId = pracownicyDAO.findFirstAvailableEmployeeId();
+                if (defaultEmployeeId != null) {
+                    vehicleDAO.assignEmployeeToOffer(v.getIdOferty(), defaultEmployeeId);
+                } else {
+                    redirectAttributes.addFlashAttribute("errorMessage", "No employee available to handle this reservation.");
+                    return "redirect:/user/vehicles/" + idPojazdu;
+                }
+            }
+
+            // Zapisz rezerwację
             reservationDAO.save(v.getIdOferty(), idKlienta);
 
             redirectAttributes.addFlashAttribute("successMessage",
                     "Vehicle reserved successfully! Wait for seller contact.");
-            return "redirect:/user/vehicles/" + idOferty;
+            return "redirect:/user/vehicles/" + idPojazdu;
 
         } catch (Exception e) {
-
             redirectAttributes.addFlashAttribute("errorMessage", "Reservation failed: " + e.getMessage());
-            return "redirect:/user/vehicles/" + idOferty;
+            return "redirect:/user/vehicles/" + idPojazdu;
         }
     }
 }

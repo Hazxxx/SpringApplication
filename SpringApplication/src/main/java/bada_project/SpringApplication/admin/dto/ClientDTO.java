@@ -6,8 +6,6 @@ public class ClientDTO {
     private String imie;
     private String nazwisko;
     private String telefon;
-
-    // Adres
     private Long idAdresu;
     private String miasto;
     private String ulica;
@@ -15,13 +13,11 @@ public class ClientDTO {
     private String numerLokalu;
     private String kodPocztowy;
     private String kraj;
-
-    // Salon
     private Long idSalonu;
     private String nazwaSalonu;
 
-    // Constructors
-    public ClientDTO() {}
+    // New field for password change
+    private String newPassword;
 
     // Getters and Setters
     public Long getIdKlienta() { return idKlienta; }
@@ -66,16 +62,20 @@ public class ClientDTO {
     public String getNazwaSalonu() { return nazwaSalonu; }
     public void setNazwaSalonu(String nazwaSalonu) { this.nazwaSalonu = nazwaSalonu; }
 
-    public String getFullName() {
-        return imie + " " + nazwisko;
-    }
+    public String getNewPassword() { return newPassword; }
+    public void setNewPassword(String newPassword) { this.newPassword = newPassword; }
 
-    public String getFullAddress() {
-        String addr = ulica + " " + numerBudynku;
-        if (numerLokalu != null && !numerLokalu.isEmpty() && !numerLokalu.equals("0")) {
-            addr += "/" + numerLokalu;
+    // Computed property for full name
+    public String getFullName() {
+        if (imie == null && nazwisko == null) {
+            return "";
         }
-        addr += ", " + kodPocztowy + " " + miasto;
-        return addr;
+        if (imie == null) {
+            return nazwisko;
+        }
+        if (nazwisko == null) {
+            return imie;
+        }
+        return imie + " " + nazwisko;
     }
 }

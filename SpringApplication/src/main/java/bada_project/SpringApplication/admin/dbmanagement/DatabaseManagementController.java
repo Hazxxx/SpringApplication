@@ -768,7 +768,9 @@ public class DatabaseManagementController {
         }
     }
 
-    @GetMapping("/sprzedaze/{id}")
+
+
+    @GetMapping("/sprzedaze/{id}/edit")
     public String sprzedazeEdit(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
         Optional<Sprzedaze> sprzedazOpt = sprzedazeDAO.findById(id);
         if (sprzedazOpt.isEmpty()) {
@@ -865,5 +867,71 @@ public class DatabaseManagementController {
             redirectAttributes.addFlashAttribute("error", "Błąd podczas usuwania sprzedaży: " + e.getMessage());
         }
         return "redirect:/admin/database/sprzedaze";
+    }
+
+    // ===== WYNAGRODZENIA =====
+    @GetMapping("/wynagrodzenia")
+    public String wynagrodzeniaList(Model model) {
+        model.addAttribute("wynagrodzenia", wynagrodzeniaDAO.findAll());
+        return "admin/database/wynagrodzenia/list";
+    }
+
+    @GetMapping("/wynagrodzenia/new")
+    public String wynagrodzeniaNew(Model model) {
+        model.addAttribute("wynagrodzenie", new Wynagrodzenia());
+        model.addAttribute("isEdit", false);
+        return "admin/database/wynagrodzenia/form";
+    }
+
+    @PostMapping("/wynagrodzenia")
+    public String wynagrodzeniaCreate(@ModelAttribute Wynagrodzenia wynagrodzenie, RedirectAttributes redirectAttributes) {
+        try {
+            wynagrodzeniaDAO.insert(wynagrodzenie);
+            redirectAttributes.addFlashAttribute("success", "Wynagrodzenie zostało dodane pomyślnie");
+            return "redirect:/admin/database/wynagrodzenia";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Błąd podczas dodawania wynagrodzenia: " + e.getMessage());
+            return "redirect:/admin/database/wynagrodzenia/new";
+        }
+    }
+
+    @GetMapping("/wynagrodzenia/{id}/edit")
+    public String wynagrodzeniaEdit(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
+        Optional<Wynagrodzenia> wynagrodzenieOpt = wynagrodzeniaDAO.findById(id);
+        if (wynagrodzenieOpt.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Wynagrodzenie nie zostało znalezione");
+            return "redirect:/admin/database/wynagrodzenia";
+        }
+        model.addAttribute("wynagrodzenie", wynagrodzenieOpt.get());
+        model.addAttribute("isEdit", true);
+        return "admin/database/wynagrodzenia/form";
+    }
+
+    @PostMapping("/wynagrodzenia/{id}")
+    public String wynagrodzeniaUpdate(@PathVariable Long id, @ModelAttribute Wynagrodzenia wynagrodzenie, RedirectAttributes redirectAttributes) {
+        try {
+            wynagrodzenie.setIdWynagrodzenia(id);
+            wynagrodzeniaDAO.update(wynagrodzenie);
+            redirectAttributes.addFlashAttribute("success", "Wynagrodzenie zostało zaktualizowane pomyślnie");
+            return "redirect:/admin/database/wynagrodzenia";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Błąd podczas aktualizacji wynagrodzenia: " + e.getMessage());
+            return "redirect:/admin/database/wynagrodzenia/" + id + "/edit";
+        }
+    }
+
+    @PostMapping("/wynagrodzenia/{id}/delete")
+    public String wynagrodzeniaDelete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            wynagrodzeniaDAO.delete(id);
+            redirectAttributes.addFlashAttribute("success", "Wynagrodzenie zostało usunięte pomyślnie");
+        } catch (DataIntegrityViolationException e) {
+            redirectAttributes.addFlashAttribute("error",
+                    "Nie można usunąć wynagrodzenia. Istnieją przypisani pracownicy.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Błąd podczas usuwania wynagrodzenia: " + e.getMessage());
+        }
+        return "redirect:/admin/database/wynagrodzenia";
+
     }
 }

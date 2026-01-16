@@ -8,19 +8,15 @@ public class EmployeeDTO {
     private String imie;
     private String nazwisko;
     private String telefon;
-    private BigDecimal pensja;
-
-    // Stanowisko
+    private BigDecimal idWynagrodzenia;
     private Long idStanowiska;
     private String nazwaStanowiska;
     private boolean czyAdmin;
-
-    // Salon
     private Long idSalonu;
     private String nazwaSalonu;
 
-    // Constructors
-    public EmployeeDTO() {}
+    // New field for password change
+    private String newPassword;
 
     // Getters and Setters
     public Long getIdPracownika() { return idPracownika; }
@@ -38,8 +34,8 @@ public class EmployeeDTO {
     public String getTelefon() { return telefon; }
     public void setTelefon(String telefon) { this.telefon = telefon; }
 
-    public BigDecimal getIdWynagrodzenia() { return pensja; }
-    public void setIdWynagrodzenia(BigDecimal pensja) { this.pensja = pensja; }
+    public BigDecimal getIdWynagrodzenia() { return idWynagrodzenia; }
+    public void setIdWynagrodzenia(BigDecimal idWynagrodzenia) { this.idWynagrodzenia = idWynagrodzenia; }
 
     public Long getIdStanowiska() { return idStanowiska; }
     public void setIdStanowiska(Long idStanowiska) { this.idStanowiska = idStanowiska; }
@@ -56,11 +52,20 @@ public class EmployeeDTO {
     public String getNazwaSalonu() { return nazwaSalonu; }
     public void setNazwaSalonu(String nazwaSalonu) { this.nazwaSalonu = nazwaSalonu; }
 
-    public String getFullName() {
-        return imie + " " + nazwisko;
-    }
+    public String getNewPassword() { return newPassword; }
+    public void setNewPassword(String newPassword) { this.newPassword = newPassword; }
 
-    public String getRoleDisplay() {
-        return czyAdmin ? "Admin" : "Employee";
+    // Computed property for full name
+    public String getFullName() {
+        if (imie == null && nazwisko == null) {
+            return "";
+        }
+        if (imie == null) {
+            return nazwisko;
+        }
+        if (nazwisko == null) {
+            return imie;
+        }
+        return imie + " " + nazwisko;
     }
 }

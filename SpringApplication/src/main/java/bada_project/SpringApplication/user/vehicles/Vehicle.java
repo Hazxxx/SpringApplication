@@ -52,6 +52,10 @@ public class Vehicle {
     public Vehicle() {
     }
 
+    public String getZdjecieUrl() {
+        return zdjecieUrl;
+    }
+
     // Gettery i settery
     public Integer getIdPojazdu() {
         return idPojazdu;

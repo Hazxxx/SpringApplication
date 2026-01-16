@@ -3,6 +3,7 @@ package bada_project.SpringApplication.admin;
 import bada_project.SpringApplication.admin.dto.EmployeeDTO;
 import bada_project.SpringApplication.audit.AuditService;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +15,12 @@ public class AdminEmployeesController {
 
     private final AdminEmployeesDAO dao;
     private final AuditService auditService;
+    private final PasswordEncoder passwordEncoder;
 
-    public AdminEmployeesController(AdminEmployeesDAO dao, AuditService auditService) {
+    public AdminEmployeesController(AdminEmployeesDAO dao, AuditService auditService, PasswordEncoder passwordEncoder) {
         this.dao = dao;
         this.auditService = auditService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /* =========================
@@ -59,12 +62,23 @@ public class AdminEmployeesController {
             employee.setIdPracownika(id);
             dao.update(employee);
 
+            // Update password if provided
+            if (employee.getNewPassword() != null && !employee.getNewPassword().trim().isEmpty()) {
+                String hashedPassword = passwordEncoder.encode(employee.getNewPassword());
+                dao.updatePassword(id, hashedPassword);
+
+                auditService.log(
+                        auth.getName(),
+                        "UPDATE_EMPLOYEE_PASSWORD",
+                        "Changed password for employee with email: " + employee.getEmail()
+                );
+            }
+
             auditService.log(
                     auth.getName(),
                     "UPDATE_EMPLOYEE",
                     "Updated employee with email: " + employee.getEmail()
             );
-
 
             redirectAttributes.addFlashAttribute("success", "Employee updated successfully");
             return "redirect:/admin/employees";
@@ -98,7 +112,6 @@ public class AdminEmployeesController {
                     "DELETE_EMPLOYEE",
                     "Deleted employee with email: " + employee.getEmail()
             );
-
 
             redirectAttributes.addFlashAttribute("success", "Employee deleted successfully");
 

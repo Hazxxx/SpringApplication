@@ -24,6 +24,7 @@ public class PojazdyDAO {
                 p.kolor,
                 p.VIN,
                 p.id_modelu,
+                p.zdjecie_url,
                 mo.rocznik_modelowy,
                 mo.typ_nadwozia,
                 ma.nazwa as nazwa_marki,
@@ -32,7 +33,7 @@ public class PojazdyDAO {
             LEFT JOIN MODELE mo ON p.id_modelu = mo.id_modelu
             LEFT JOIN MARKI ma ON mo.id_marki = ma.id_marki
             LEFT JOIN OFERTY o ON p.id_pojazdu = o.id_pojazdu
-            GROUP BY p.id_pojazdu, p.kolor, p.VIN, p.id_modelu, 
+            GROUP BY p.id_pojazdu, p.kolor, p.VIN, p.id_modelu, p.zdjecie_url,
                      mo.rocznik_modelowy, mo.typ_nadwozia, ma.nazwa
             ORDER BY p.id_pojazdu DESC
             """;
@@ -46,6 +47,7 @@ public class PojazdyDAO {
                 p.kolor,
                 p.VIN,
                 p.id_modelu,
+                p.zdjecie_url,
                 mo.rocznik_modelowy,
                 mo.typ_nadwozia,
                 ma.nazwa as nazwa_marki,
@@ -55,7 +57,7 @@ public class PojazdyDAO {
             LEFT JOIN MARKI ma ON mo.id_marki = ma.id_marki
             LEFT JOIN OFERTY o ON p.id_pojazdu = o.id_pojazdu
             WHERE p.id_pojazdu = ?
-            GROUP BY p.id_pojazdu, p.kolor, p.VIN, p.id_modelu,
+            GROUP BY p.id_pojazdu, p.kolor, p.VIN, p.id_modelu, p.zdjecie_url,
                      mo.rocznik_modelowy, mo.typ_nadwozia, ma.nazwa
             """;
         List<Pojazdy> results = jdbc.query(sql, pojazdRowMapper(), id);
@@ -63,13 +65,14 @@ public class PojazdyDAO {
     }
 
     public void insert(Pojazdy pojazd) {
-        String sql = "INSERT INTO POJAZDY (kolor, VIN, id_modelu) VALUES (?, ?, ?)";
-        jdbc.update(sql, pojazd.getKolor(), pojazd.getVin(), pojazd.getIdModelu());
+        String sql = "INSERT INTO POJAZDY (kolor, VIN, id_modelu, zdjecie_url) VALUES (?, ?, ?, ?)";
+        jdbc.update(sql, pojazd.getKolor(), pojazd.getVin(), pojazd.getIdModelu(), pojazd.getZdjecieUrl());
     }
 
     public void update(Pojazdy pojazd) {
-        String sql = "UPDATE POJAZDY SET kolor = ?, VIN = ?, id_modelu = ? WHERE id_pojazdu = ?";
-        jdbc.update(sql, pojazd.getKolor(), pojazd.getVin(), pojazd.getIdModelu(), pojazd.getIdPojazdu());
+        String sql = "UPDATE POJAZDY SET kolor = ?, VIN = ?, id_modelu = ?, zdjecie_url = ? WHERE id_pojazdu = ?";
+        jdbc.update(sql, pojazd.getKolor(), pojazd.getVin(), pojazd.getIdModelu(),
+                pojazd.getZdjecieUrl(), pojazd.getIdPojazdu());
     }
 
     public void delete(Long id) {
@@ -90,6 +93,7 @@ public class PojazdyDAO {
             p.setKolor(rs.getString("kolor"));
             p.setVin(rs.getString("VIN"));
             p.setIdModelu(rs.getLong("id_modelu"));
+            p.setZdjecieUrl(rs.getString("zdjecie_url"));
             p.setRocznikModelowy(rs.getInt("rocznik_modelowy"));
             p.setTypNadwozia(rs.getString("typ_nadwozia"));
             p.setNazwaMarki(rs.getString("nazwa_marki"));

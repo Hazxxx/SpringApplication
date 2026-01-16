@@ -21,7 +21,6 @@
       color: #fff;
     }
 
-    /* NAVBAR */
     .theme-nav {
       background: rgba(10, 12, 14, 0.55) !important;
       backdrop-filter: blur(10px);
@@ -48,16 +47,14 @@
       background: rgba(255, 255, 255, .10);
     }
 
-    /* PAGE OVERLAY */
     .page-overlay {
       min-height: calc(100vh - 64px);
       background: linear-gradient(90deg,
-          rgba(0, 0, 0, 0.85) 0%,
-          rgba(0, 0, 0, 0.65) 100%);
+      rgba(0, 0, 0, 0.85) 0%,
+      rgba(0, 0, 0, 0.65) 100%);
       padding: 44px 0;
     }
 
-    /* GLASS CARD */
     .glass-card {
       border-radius: 18px;
       background: rgba(40, 44, 52, 0.55);
@@ -112,159 +109,184 @@
       margin-top: 1.5rem;
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
+
+    .vehicle-image-container {
+      position: relative;
+      width: 100%;
+      height: 400px;
+      overflow: hidden;
+      border-radius: 12px;
+      background: #111;
+      margin-bottom: 2rem;
+    }
+
+    .vehicle-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .no-image-placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      color: rgba(255, 255, 255, 0.3);
+      font-size: 1.2em;
+    }
   </style>
 </head>
 
 <body>
 
-  <!-- NAVBAR -->
-  <nav class="navbar navbar-expand-lg navbar-dark static-top theme-nav">
-    <div class="container">
-      <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
-        Alpha&Omega Motors
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item">
-            <a class="nav-link" th:href="@{/main}">Main</a>
-          </li>
-          <li class="nav-item" sec:authorize="!hasRole('EMPLOYEE')">
-            <a class="nav-link" th:href="@{/user/vehicles}">Catalog</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-
-  <!-- CONTENT -->
-  <div class="page-overlay">
-    <div class="container">
-
-      <!-- Breadcrumb / Back -->
-      <div class="mb-4" sec:authorize="!hasRole('EMPLOYEE')">
-        <a th:href="@{/user/vehicles}" class="text-decoration-none text-light opacity-75">&larr; Back to Catalog</a>
-      </div>
-
-      <div class="row">
-        <!-- Left Column: Image & Specs -->
-        <div class="col-lg-8">
-          <div class="glass-card">
-            <h2 class="mb-4" th:text="${vehicle.fullName}">Porsche 911</h2>
-
-            <!-- Main Image Placeholder -->
-            <div style="
-    position: relative;
-    width: 100%;
-    height: 320px;
-    overflow: hidden;
-    border-radius: 12px;
-    background: #111;
-    margin-bottom: 2rem;
-  ">
-              <img th:src="@{/assets/vehicles/{img}.jpg(
-      img=${#strings.toLowerCase(vehicle.nazwaMarki)}
-    )}" alt="Vehicle image" style="
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    " onerror="this.onerror=null;this.src='/assets/vehicles/placeholder.jpg';" />
-            </div>
-
-
-            <h4 class="mb-3">Specifications</h4>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="spec-label">Engine</div>
-                <div class="spec-value" th:text="|${vehicle.pojemnoscSilnika} cm3, ${vehicle.mocSilnika} KM|">3000 cm3
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="spec-label">Fuel Type</div>
-                <div class="spec-value" th:text="${vehicle.typPaliwa}">Petrol</div>
-              </div>
-              <div class="col-md-6">
-                <div class="spec-label">Body Type</div>
-                <div class="spec-value" th:text="${vehicle.typNadwozia}">Coupe</div>
-              </div>
-              <div class="col-md-6">
-                <div class="spec-label">Model Year</div>
-                <div class="spec-value" th:text="${vehicle.rocznikModelowy}">2024</div>
-              </div>
-              <div class="col-md-6">
-                <div class="spec-label">Color</div>
-                <div class="spec-value" th:text="${vehicle.kolor}">Red</div>
-              </div>
-              <div class="col-md-6">
-                <div class="spec-label">VIN</div>
-                <div class="spec-value" th:text="${vehicle.vin}">XYZ123...</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right Column: Offer & Seller -->
-        <div class="col-lg-4">
-          <div class="glass-card">
-            <div class="spec-label">Catalog Price</div>
-            <div class="price-tag mb-4" th:text="${vehicle.priceFormatted}">500 000 PLN</div>
-
-            <hr style="border-color: rgba(255,255,255,0.1)" />
-
-            <div class="mb-3">
-              <div class="spec-label">Showroom</div>
-              <div class="fw-bold" th:text="${vehicle.nazwaSalonu}">Salon Warszawa</div>
-              <div class="small opacity-75" th:text="|${vehicle.miastoSalonu}, ${vehicle.ulicaSalonu}|">Warszawa, Ulica
-                1</div>
-            </div>
-
-            <!-- Seller Info -->
-            <div class="seller-card" th:if="${vehicle.imieSprzedawcy != null}">
-              <h5 class="mb-3" style="color: #a0aec0;">Vehicle Sales Advisor</h5>
-              <div class="d-flex align-items-center mb-2">
-                <div
-                  style="width: 40px; height: 40px; background: #4a5568; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
-                  <span th:text="${#strings.substring(vehicle.imieSprzedawcy,0,1)}">J</span>
-                </div>
-                <div>
-                  <div class="fw-bold" th:text="|${vehicle.imieSprzedawcy} ${vehicle.nazwiskoSprzedawcy}|">Jan Kowalski
-                  </div>
-                </div>
-              </div>
-              <div class="small opacity-75">
-                <div th:if="${vehicle.emailSprzedawcy}" th:text="|Email: ${vehicle.emailSprzedawcy}|">email@bada.pl
-                </div>
-                <div th:if="${vehicle.telefonSprzedawcy}" th:text="|Tel: ${vehicle.telefonSprzedawcy}|">123 456 789
-                </div>
-              </div>
-            </div>
-
-            <!-- Action Button -->
-            <form sec:authorize="!hasRole('EMPLOYEE')"
-              th:action="@{/user/vehicles/{id}/reserve(id=${vehicle.idPojazdu})}" method="post" class="mt-4">
-              <button type="submit" class="btn btn-reserve" th:disabled="${vehicle.sprzedany}">
-                <span th:text="${vehicle.sprzedany ? 'Sold / Reserved' : 'Reserve Now'}">Reserve Now</span>
-              </button>
-            </form>
-
-            <div th:if="${successMessage}" class="alert alert-success mt-3" role="alert" th:text="${successMessage}">
-              Reservation successful!
-            </div>
-            <div th:if="${errorMessage}" class="alert alert-danger mt-3" role="alert" th:text="${errorMessage}">
-              Error.
-            </div>
-
-          </div>
-        </div>
-      </div>
-
+<nav class="navbar navbar-expand-lg navbar-dark static-top theme-nav">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+      Alpha&Omega Motors
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/main}">Main</a>
+        </li>
+        <li class="nav-item" sec:authorize="!hasRole('EMPLOYEE')">
+          <a class="nav-link" th:href="@{/user/vehicles}">Catalog</a>
+        </li>
+      </ul>
     </div>
   </div>
+</nav>
 
-  <script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<div class="page-overlay">
+  <div class="container">
+
+    <div class="mb-4" sec:authorize="!hasRole('EMPLOYEE')">
+      <a th:href="@{/user/vehicles}" class="text-decoration-none text-light opacity-75">&larr; Back to Catalog</a>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-8">
+        <div class="glass-card">
+          <h2 class="mb-4" th:text="${vehicle.fullName}">Porsche 911</h2>
+
+          <!-- Updated Image Display with Individual Vehicle Images -->
+          <div class="vehicle-image-container">
+            <!-- Check if vehicle has a custom image -->
+            <img th:if="${vehicle.zdjecieUrl != null && !vehicle.zdjecieUrl.isEmpty()}"
+                 th:src="${vehicle.zdjecieUrl}"
+                 alt="Vehicle image"
+                 class="vehicle-image"
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+
+            <!-- Fallback to brand image if no custom image -->
+            <img th:if="${vehicle.zdjecieUrl == null || vehicle.zdjecieUrl.isEmpty()}"
+                 th:src="@{/assets/vehicles/{img}.jpg(img=${#strings.toLowerCase(vehicle.nazwaMarki)})}"
+                 alt="Vehicle image"
+                 class="vehicle-image"
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+
+            <!-- Placeholder if no image available -->
+            <div class="no-image-placeholder" style="display: none;">
+              <div class="text-center">
+                <i class="bi bi-car-front" style="font-size: 3em;"></i>
+                <div class="mt-2">No Image Available</div>
+              </div>
+            </div>
+          </div>
+
+          <h4 class="mb-3">Specifications</h4>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="spec-label">Engine</div>
+              <div class="spec-value" th:text="|${vehicle.pojemnoscSilnika} cm3, ${vehicle.mocSilnika} KM|">3000 cm3
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="spec-label">Fuel Type</div>
+              <div class="spec-value" th:text="${vehicle.typPaliwa}">Petrol</div>
+            </div>
+            <div class="col-md-6">
+              <div class="spec-label">Body Type</div>
+              <div class="spec-value" th:text="${vehicle.typNadwozia}">Coupe</div>
+            </div>
+            <div class="col-md-6">
+              <div class="spec-label">Model Year</div>
+              <div class="spec-value" th:text="${vehicle.rocznikModelowy}">2024</div>
+            </div>
+            <div class="col-md-6">
+              <div class="spec-label">Color</div>
+              <div class="spec-value" th:text="${vehicle.kolor}">Red</div>
+            </div>
+            <div class="col-md-6">
+              <div class="spec-label">VIN</div>
+              <div class="spec-value" th:text="${vehicle.vin}">XYZ123...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="glass-card">
+          <div class="spec-label">Catalog Price</div>
+          <div class="price-tag mb-4" th:text="${vehicle.priceFormatted}">500 000 PLN</div>
+
+          <hr style="border-color: rgba(255,255,255,0.1)" />
+
+          <div class="mb-3">
+            <div class="spec-label">Showroom</div>
+            <div class="fw-bold" th:text="${vehicle.nazwaSalonu}">Salon Warszawa</div>
+            <div class="small opacity-75" th:text="|${vehicle.miastoSalonu}, ${vehicle.ulicaSalonu}|">Warszawa, Ulica
+              1</div>
+          </div>
+
+          <div class="seller-card" th:if="${vehicle.imieSprzedawcy != null}">
+            <h5 class="mb-3" style="color: #a0aec0;">Vehicle Sales Advisor</h5>
+            <div class="d-flex align-items-center mb-2">
+              <div
+                      style="width: 40px; height: 40px; background: #4a5568; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                <span th:text="${#strings.substring(vehicle.imieSprzedawcy,0,1)}">J</span>
+              </div>
+              <div>
+                <div class="fw-bold" th:text="|${vehicle.imieSprzedawcy} ${vehicle.nazwiskoSprzedawcy}|">Jan Kowalski
+                </div>
+              </div>
+            </div>
+            <div class="small opacity-75">
+              <div th:if="${vehicle.emailSprzedawcy}" th:text="|Email: ${vehicle.emailSprzedawcy}|">email@bada.pl
+              </div>
+              <div th:if="${vehicle.telefonSprzedawcy}" th:text="|Tel: ${vehicle.telefonSprzedawcy}|">123 456 789
+              </div>
+            </div>
+          </div>
+
+          <form sec:authorize="!hasRole('EMPLOYEE')"
+                th:action="@{/user/vehicles/{id}/reserve(id=${vehicle.idPojazdu})}" method="post" class="mt-4">
+            <button type="submit" class="btn btn-reserve" th:disabled="${vehicle.sprzedany}">
+              <span th:text="${vehicle.sprzedany ? 'Sold / Reserved' : 'Reserve Now'}">Reserve Now</span>
+            </button>
+          </form>
+
+          <div th:if="${successMessage}" class="alert alert-success mt-3" role="alert" th:text="${successMessage}">
+            Reservation successful!
+          </div>
+          <div th:if="${errorMessage}" class="alert alert-danger mt-3" role="alert" th:text="${errorMessage}">
+            Error.
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
 </body>
 
 </html>

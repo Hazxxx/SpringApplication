@@ -100,6 +100,17 @@ public class AdminEmployeesDAO {
     }
 
     /* =========================
+       UPDATE EMPLOYEE PASSWORD
+       ========================= */
+    public void updatePassword(Long employeeId, String passwordHash) {
+        jdbc.update(
+                "UPDATE PRACOWNICY SET HASLO = ? WHERE ID_PRACOWNIKA = ?",
+                passwordHash,
+                employeeId
+        );
+    }
+
+    /* =========================
        DELETE EMPLOYEE
        ========================= */
     @Transactional

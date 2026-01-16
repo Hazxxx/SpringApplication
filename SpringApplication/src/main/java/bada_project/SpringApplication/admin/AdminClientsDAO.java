@@ -123,6 +123,17 @@ public class AdminClientsDAO {
     }
 
     /* =========================
+       UPDATE CLIENT PASSWORD
+       ========================= */
+    public void updatePassword(Long clientId, String passwordHash) {
+        jdbc.update(
+                "UPDATE KLIENCI SET HASLO = ? WHERE ID_KLIENTA = ?",
+                passwordHash,
+                clientId
+        );
+    }
+
+    /* =========================
        DELETE CLIENT
        ========================= */
     @Transactional

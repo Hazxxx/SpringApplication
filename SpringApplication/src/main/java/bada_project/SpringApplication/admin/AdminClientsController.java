@@ -3,6 +3,7 @@ package bada_project.SpringApplication.admin;
 import bada_project.SpringApplication.admin.dto.ClientDTO;
 import bada_project.SpringApplication.audit.AuditService;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +15,12 @@ public class AdminClientsController {
 
     private final AdminClientsDAO dao;
     private final AuditService auditService;
+    private final PasswordEncoder passwordEncoder;
 
-    public AdminClientsController(AdminClientsDAO dao, AuditService auditService) {
+    public AdminClientsController(AdminClientsDAO dao, AuditService auditService, PasswordEncoder passwordEncoder) {
         this.dao = dao;
         this.auditService = auditService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /* =========================
@@ -58,12 +61,23 @@ public class AdminClientsController {
             client.setIdKlienta(id);
             dao.update(client);
 
+            // Update password if provided
+            if (client.getNewPassword() != null && !client.getNewPassword().trim().isEmpty()) {
+                String hashedPassword = passwordEncoder.encode(client.getNewPassword());
+                dao.updatePassword(id, hashedPassword);
+
+                auditService.log(
+                        auth.getName(),
+                        "UPDATE_CLIENT_PASSWORD",
+                        "Changed password for client with email: " + client.getEmail()
+                );
+            }
+
             auditService.log(
                     auth.getName(),
                     "UPDATE_CLIENT",
                     "Updated client with email: " + client.getEmail()
             );
-
 
             redirectAttributes.addFlashAttribute("success", "Client updated successfully");
             return "redirect:/admin/clients";
@@ -97,7 +111,6 @@ public class AdminClientsController {
                     "DELETE_CLIENT",
                     "Deleted client with ID=" + id + ", email=" + client.getEmail()
             );
-
 
             redirectAttributes.addFlashAttribute("success", "Client deleted successfully");
 

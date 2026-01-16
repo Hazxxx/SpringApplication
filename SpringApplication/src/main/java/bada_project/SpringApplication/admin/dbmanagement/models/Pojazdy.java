@@ -1,45 +1,93 @@
 package bada_project.SpringApplication.admin.dbmanagement.models;
 
 public class Pojazdy {
+
+    // === POJAZDY ===
     private Long idPojazdu;
     private String kolor;
     private String vin;
     private Long idModelu;
+    private String zdjecieUrl;
 
-    // For display
+    // === DO WYSWIETLANIA (JOINY) ===
     private String nazwaMarki;
-    private String nazwaModelu;
     private Integer rocznikModelowy;
     private String typNadwozia;
-    private Integer liczbaOfert; // statistics
+    private Integer liczbaOfert;
 
     public Pojazdy() {}
 
-    // Getters & Setters
-    public Long getIdPojazdu() { return idPojazdu; }
-    public void setIdPojazdu(Long idPojazdu) { this.idPojazdu = idPojazdu; }
+    // ===== GETTERY / SETTERY =====
 
-    public String getKolor() { return kolor; }
-    public void setKolor(String kolor) { this.kolor = kolor; }
+    public Long getIdPojazdu() {
+        return idPojazdu;
+    }
 
-    public String getVin() { return vin; }
-    public void setVin(String vin) { this.vin = vin; }
+    public void setIdPojazdu(Long idPojazdu) {
+        this.idPojazdu = idPojazdu;
+    }
 
-    public Long getIdModelu() { return idModelu; }
-    public void setIdModelu(Long idModelu) { this.idModelu = idModelu; }
+    public String getKolor() {
+        return kolor;
+    }
 
-    public String getNazwaMarki() { return nazwaMarki; }
-    public void setNazwaMarki(String nazwaMarki) { this.nazwaMarki = nazwaMarki; }
+    public void setKolor(String kolor) {
+        this.kolor = kolor;
+    }
 
-    public String getNazwaModelu() { return nazwaModelu; }
-    public void setNazwaModelu(String nazwaModelu) { this.nazwaModelu = nazwaModelu; }
+    public String getVin() {
+        return vin;
+    }
 
-    public Integer getRocznikModelowy() { return rocznikModelowy; }
-    public void setRocznikModelowy(Integer rocznikModelowy) { this.rocznikModelowy = rocznikModelowy; }
+    public void setVin(String vin) {
+        this.vin = vin;
+    }
 
-    public String getTypNadwozia() { return typNadwozia; }
-    public void setTypNadwozia(String typNadwozia) { this.typNadwozia = typNadwozia; }
+    public Long getIdModelu() {
+        return idModelu;
+    }
 
-    public Integer getLiczbaOfert() { return liczbaOfert; }
-    public void setLiczbaOfert(Integer liczbaOfert) { this.liczbaOfert = liczbaOfert; }
+    public void setIdModelu(Long idModelu) {
+        this.idModelu = idModelu;
+    }
+
+    public String getZdjecieUrl() {
+        return zdjecieUrl;
+    }
+
+    public void setZdjecieUrl(String zdjecieUrl) {
+        this.zdjecieUrl = zdjecieUrl;
+    }
+
+    public String getNazwaMarki() {
+        return nazwaMarki;
+    }
+
+    public void setNazwaMarki(String nazwaMarki) {
+        this.nazwaMarki = nazwaMarki;
+    }
+
+    public Integer getRocznikModelowy() {
+        return rocznikModelowy;
+    }
+
+    public void setRocznikModelowy(Integer rocznikModelowy) {
+        this.rocznikModelowy = rocznikModelowy;
+    }
+
+    public String getTypNadwozia() {
+        return typNadwozia;
+    }
+
+    public void setTypNadwozia(String typNadwozia) {
+        this.typNadwozia = typNadwozia;
+    }
+
+    public Integer getLiczbaOfert() {
+        return liczbaOfert;
+    }
+
+    public void setLiczbaOfert(Integer liczbaOfert) {
+        this.liczbaOfert = liczbaOfert;
+    }
 }

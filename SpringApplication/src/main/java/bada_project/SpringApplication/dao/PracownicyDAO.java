@@ -3,6 +3,7 @@ package bada_project.SpringApplication.dao;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -60,6 +61,26 @@ public class PracownicyDAO {
                 Integer.class
         );
     }
+
+    /**
+     * Znajdź pierwszego dostępnego pracownika (np. z rolą EMPLOYEE)
+     */
+    public Integer findFirstAvailableEmployeeId() {
+        String sql = """
+        SELECT id_pracownika
+        FROM (
+            SELECT p.id_pracownika
+            FROM PRACOWNICY p
+            JOIN STANOWISKA s ON p.id_stanowiska = s.id_stanowiska
+            WHERE s.nazwa = 'Sprzedawca'
+            ORDER BY p.id_pracownika
+        )
+        WHERE ROWNUM = 1
+    """;
+
+        return jdbc.query(sql, rs -> rs.next() ? rs.getInt(1) : null);
+    }
+
 
     /**
      * Check if employee email exists
