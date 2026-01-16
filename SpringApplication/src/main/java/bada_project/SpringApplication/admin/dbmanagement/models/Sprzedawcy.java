@@ -1,5 +1,8 @@
 package bada_project.SpringApplication.admin.dbmanagement.models;
 
+import jakarta.validation.constraints.NotNull;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 public class Sprzedawcy {
@@ -10,7 +13,11 @@ public class Sprzedawcy {
     private String email;
     private Character plec;
     private String pesel;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @NotNull
     private Date dataUrodzenia;
+
     private Long idAdresu;
     private Long idSalonu;
     private Long idStanowiska;
