@@ -145,6 +145,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark static-top theme-nav">
   <div class="container">
     <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+      <img th:src="@{/assets/img/aando8.png}" alt="Logo" style="height:26px; margin-right:10px;">
       Alpha&Omega Motors
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
@@ -157,6 +158,11 @@
         </li>
         <li class="nav-item" sec:authorize="!hasRole('EMPLOYEE')">
           <a class="nav-link" th:href="@{/user/vehicles}">Catalog</a>
+        </li>
+        <li class="nav-item">
+          <form method="post" th:action="@{/logout}" class="d-inline">
+            <button class="nav-link btn btn-link">Logout</button>
+          </form>
         </li>
       </ul>
     </div>
