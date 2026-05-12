@@ -9,6 +9,8 @@ This repository contains a robust backend application built with the **Spring Bo
 
 It serves as a showcase of modern Java backend engineering, integrating seamless API communication with database management and following the best practices of enterprise software development.
 
+Developed in collaboration with **Michał Starczewski** at Warsaw University of Technology.
+
 ## 🏗️ Architecture & Design Patterns
 The application follows a strict **N-Tier Architecture** to ensure maintainability and testability:
 * **Controller Layer**: Exposes RESTful endpoints, handles HTTP request/response mapping, and performs basic input validation.
