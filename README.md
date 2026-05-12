@@ -1,4 +1,4 @@
-# SpringBoot Enterprise Application
+# SpringBoot Application
 
 ![Java](https://img.shields.io/badge/Java-17%2B-orange.svg)
 ![Spring Boot](https://img.shields.io/badge/Spring--Boot-3.x-brightgreen.svg)
